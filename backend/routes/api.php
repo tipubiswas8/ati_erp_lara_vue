@@ -24,5 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', function () {
         return app(UserController::class)->users();
     });
-    Route::post('/register', [UserController::class, 'registration']);
+    Route::post('/user-register', [UserController::class, 'registration']);
+    Route::put('/user-update', [UserController::class, 'update']);
+    Route::patch('/user-status', [UserController::class, 'status']);
+    Route::delete('/user-delete', [UserController::class, 'destroy']);
 });

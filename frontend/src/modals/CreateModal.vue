@@ -71,7 +71,7 @@ const formState = reactive({
 
 const onFinish = async () => {
   try {
-    const response = await axios.post('http://localhost:8000/api/register', formState.user)
+    const response = await axios.post('http://localhost:8000/api/user-register', formState.user)
     console.log(response.data)
     handleCancel()
   } catch (error) {

@@ -1,23 +1,28 @@
-<template>
-  <ATable :columns="columns" :data-source="data" @change="onChange" />
-  <EditModal v-if="openEditModal" @close="closeEditModal" />
-</template>
-
 <script lang="ts" setup>
 import { ref, onMounted, h } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '../stores/auth'
-import { Button } from 'ant-design-vue'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { Button, Popconfirm, message } from 'ant-design-vue'
+import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons-vue'
 import EditModal from '../modals/EditModal.vue'
+import StatusDrawer from '../modals/StatusDrawer.vue'
+
+message.config({
+  top: '50px',
+  duration: 5,
+  maxCount: 3,
+  rtl: true,
+  prefixCls: 'my-message',
+})
 
 const authStore = useAuthStore()
 authStore.loadToken()
 const token = authStore.token
 
 const data = ref([])
+const userData = ref({})
 const openEditModal = ref(false)
-const editData = ref(null)
+const openStatusDrawer = ref(false)
 
 const columns = [
   {
@@ -49,16 +54,46 @@ const columns = [
       return h('div', [
         h(Button, {
           type: 'primary',
+          size: 'small',
           icon: h(EditOutlined),
           onClick: () => handleEdit(record.id),
-          style: { marginRight: '8px' }, // Add some margin between buttons
+          style: { marginRight: '8px' },
         }),
-        h(Button, {
-          type: 'primary',
-          danger: true,
-          icon: h(DeleteOutlined),
-          onClick: () => handleDelete(record.id),
-        }),
+        record.status === 1
+          ? h(Button, {
+            type: 'default',
+            size: 'small',
+            icon: h(CheckCircleOutlined),
+            onClick: () => showDrawer(record.id),
+            style: { marginRight: '8px' },
+          })
+          : h(Button, {
+            type: 'default',
+            size: 'small',
+            danger: true,
+            icon: h(PauseCircleOutlined),
+            onClick: () => showDrawer(record.id),
+            style: { marginRight: '8px' },
+          }),
+        h(
+          Popconfirm,
+          {
+            title: 'Are you sure delete this task?',
+            okText: 'Yes',
+            cancelText: 'No',
+            onConfirm: () => handleDelete(record.id),
+            onCancel: cancel,
+          },
+          {
+            default: () =>
+              h(Button, {
+                type: 'primary',
+                size: 'small',
+                danger: true,
+                icon: h(DeleteOutlined),
+              }),
+          },
+        ),
       ])
     },
   },
@@ -73,15 +108,13 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 async function fetchData() {
   try {
     const response = await axios.get('http://localhost:8000/api/users')
-    // console.log('Response:', response.data)
-    // Add serial number to each data item
     data.value = response.data.map((item, index) => ({
       ...item,
       sl: index + 1,
       key: item.id,
     }))
   } catch (error) {
-    // console.error('Error fetching data:', error)
+    // Handle error
   }
 }
 
@@ -90,17 +123,47 @@ onMounted(() => {
 })
 
 const handleEdit = (id: number) => {
-  const user = data.value.find((item) => item.id === id)
-  openEditModal.value = true;
-  editData.value = user;
+  const selectedUser = data.value.find((item) => item.id === id)
+  if (selectedUser) {
+    userData.value = selectedUser
+    openEditModal.value = true
+  }
 }
+
 
 const closeEditModal = () => {
   openEditModal.value = false
-  editData.value = false;
+  userData.value = {}
 }
 
-const handleDelete = (id: number) => {
-  console.log(`Delete user with id: ${id}`)
+const showDrawer = () => {
+  if (openStatusDrawer.value === false) {
+    openStatusDrawer.value = true;
+  } else {
+    openStatusDrawer.value = false;
+  }
+}
+
+const handleDelete = async (id: number) => {
+  try {
+    const response = await axios.delete('http://localhost:8000/api/user-delete', { params: { id: id } })
+    if (response.data.status === 200) {
+      message.success(response.data.message)
+    } else if (response.data.status === 300) {
+      message.error(response.data.message)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const cancel = () => {
+  // message.error('Click on No')
 }
 </script>
+
+<template>
+  <ATable :columns="columns" :data-source="data" @change="onChange" />
+  <EditModal v-if="openEditModal" :edit-data="userData" @close="closeEditModal" />
+  <StatusDrawer v-if="openStatusDrawer" :status-data="userData" />
+</template>
