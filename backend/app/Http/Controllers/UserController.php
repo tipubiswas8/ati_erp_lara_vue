@@ -64,14 +64,11 @@ class UserController extends Controller
     public function status(Request $request)
     {
         $user = User::find($request->id);
-    
         if (!$user) {
             return response()->json(['status' => 404, 'message' => 'User not found!']);
         }
-    
         try {
-            // Toggle the status
-            $user->status2 = !$request->status;
+            $user->status = !$request->status;
             $update = $user->save();
     
             if ($update) {
