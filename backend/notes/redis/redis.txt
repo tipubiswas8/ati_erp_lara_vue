@@ -1,0 +1,27 @@
+
+
+## install redi
+    ------------
+    composer require predis/predis:^2.0
+
+
+## check redis install or not
+    --------------------------
+    composer show predis/predis
+
+
+## start redis server
+    -----------------
+    Download the Redis executable for Windows.
+    link: https://github.com/microsoftarchive/redis/releases
+    run this for start redis server 
+    redis-server.exe
+    run this for check connectin 
+    redis-cli.exe
+    type ping in here and hit enter
+    127.0.0.1:6379>ping
+
+
+## set the REDIS_CLIENT variable in your .env
+    -----------------------------------------
+    REDIS_CLIENT=predis

@@ -1,0 +1,17 @@
+.customButton {
+    max-width: 10px; /* Set your desired width */
+    padding-left: 5px;
+  }
+
+  .firstButton{
+    background-color: aquamarine;
+  }
+  .secondButton{
+    background-color: chartreuse
+  }
+  .thirdButton{
+    background-color: cadetblue;
+  }
+  
+
+  
