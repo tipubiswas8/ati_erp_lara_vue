@@ -1,13 +1,13 @@
 <?php
 
-namespace Database\Seeders\MySql\Sa\User;
+namespace Database\Seeders\Sa;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Sa\SaUser;
 use App\Models\Hr\HrEmployee;
 
-// php artisan db:seed Database\Seeders\MySql\Sa\User\UserSeeder
+// php artisan db:seed Database\Seeders\UserSeeder
 class UserSeeder extends Seeder
 {
     /**

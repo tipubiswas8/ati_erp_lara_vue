@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Seeders\MySql\Hr\Employee;
+namespace Database\Seeders\Hr;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Hr\HrEmployee;
 
-// php artisan db:seed Database\Seeders\MySql\Hr\Employee\EmployeeSeeder
+// php artisan db:seed Database\Seeders\EmployeeSeeder
 class EmployeeSeeder extends Seeder
 {
     /**

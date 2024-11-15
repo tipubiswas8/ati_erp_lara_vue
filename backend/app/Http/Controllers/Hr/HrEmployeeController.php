@@ -71,6 +71,9 @@ class HrEmployeeController extends Controller
 
     public function allEmployee()
     {
+
+        return response()->json(['all data' => HrEmployee::paginate(10)], 200);
+
         ini_set('memory_limit', '1024M');
         $startMicrotime = microtime(true); // Start time in seconds and microseconds
         $data = Redis::get('emp_data');

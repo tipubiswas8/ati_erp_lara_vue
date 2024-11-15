@@ -1,0 +1,25 @@
+
+## download postgre database and install
+
+## check your pgsql server running or not 
+    -----------------------------------------
+    go to services.msc and check PostgreSQL Server  running or not
+    or you can connect your postgre sql database to heidie sql software or another software 
+    
+
+## configure database of your laravel project
+    ---------------------------------------
+    DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_DATABASE=postger_test
+    DB_USERNAME=postgres
+    DB_PASSWORD=12345678
+
+
+## enable pdo_pgsql and pgsql extension from php.ini file
+    -----------------------------------------------------
+    pdo_pgsql
+    extension=pgsql
+
+## now migrate your migration files

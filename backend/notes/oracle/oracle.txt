@@ -1,0 +1,113 @@
+
+## Download Oracle Database Software
+------------------------------------
+Oracle Database 12c for Microsoft Windows x64 (64-bit)
+or
+Oracle Database 19c for Microsoft Windows x64 (64-bit)
+or
+Oracle Database 21c for Microsoft Windows x64 (64-bit)
+
+## Install Oracle Database Software
+-----------------------------------
+Oracle Database 12c or Oracle Database 19c or Oracle Database 21c
+
+## Download UI Software
+-----------------------
+Download Oracle SQL Developer
+
+## Install UI Software
+-----------------------
+Install Oracle SQL Developer
+
+
+## Listener Configaration
+--------------------------
+Go to oracle database installation directory (folder)
+ex: C:\app\oracle\product\12.2.0\dbhome_1\network\admin
+or 
+ex: network\admin 
+
+open listener.ora file
+change the port no 1539 to 1521
+ex: PORT = 1521
+
+start listener
+method 1:
+run cmd as administratot mode
+For Verify the Oracle Listener status run the below commend to terminal
+lsnrctl status
+
+for start the listener run the below commend to terminal
+lsnrctl start
+
+method 2:
+goto services.msc
+find OracleOraDBHomeTnsListener
+start it
+
+after start listener
+
+## Connect Oracle Database to Oracle SQL Developer
+-----------------------------------------------
+Open Oracle SQL Developer
+Create new connection
+
+Connection Name: Test Connection
+Username: system
+Password: 12345678 (your provided password that's set you during installation)
+Hostname: localhost
+Port: 1521
+SID: orcl (your provided database name that's set you during installation)
+
+Test connection
+Then Connect 
+
+After successfully connection
+
+## enable oci8_19 or oci8_12c extension from php.ini file
+-----------------------------------------------------
+oci8_12c
+extension=oci8_12c
+or
+oci8_19
+extension=oci8_19
+
+
+## Configure Oracle in Laravel
+    ---------------------------
+        'oracle' => [
+            'driver'         => 'oracle',
+            'tns'            => env('DB_TNS', ''),
+            'host'           => env('DB_HOST', '127.0.0.1'),
+            'port'           => env('DB_PORT', '1521'),
+            'database'       => env('DB_DATABASE', 'orcl'),
+            'username'       => env('DB_USERNAME', 'system'),
+            'password'       => env('DB_PASSWORD', '12345678'),
+            'charset'        => env('DB_CHARSET', 'AL32UTF8'),
+            'prefix'         => env('DB_PREFIX', ''),
+            'prefix_schema'  => env('DB_SCHEMA_PREFIX', '')
+        ]
+
+  .env
+    DB_CONNECTION=oracle
+    DB_HOST=127.0.0.1
+    DB_PORT=1521
+    DB_DATABASE=orcl
+    DB_USERNAME=system
+    DB_PASSWORD=12345678
+
+now run laravel project 
+php artisan serve
+migrate your migration
+php artisan migrate
+seed your db
+php artisan db seed
+
+
+## After that you can create new database using Oracle Database Configaration Assistance Software
+----------------------------------------------------------------------------------------------
+then you can connect your new database insted of orcl database to your laravel roject
+
+
+
+

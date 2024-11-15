@@ -1,0 +1,60 @@
+
+## Download and Installing the MongoDB PHP Extension with PECL
+    -----------------------------------------------------------
+    link: https://pecl.php.net/package/mongodb
+    or
+    link: https://pecl.php.net/package/mongodb/1.20.0/windows
+    then unzip the downloded file
+    then find php_mongodb.dll file
+
+
+## add mongodb Extension to C:\xampp\php\ext
+    ---------------------------------------------
+    copy php_mongodb.dll and paste to C:\xampp\php\ext
+
+
+## add mongodb Extension to C:\xampp\php\php.ini file
+    -------------------------------------------------
+    extension=php_mongodb.dll
+
+
+## install mongodb package on laravel
+    ---------------------------------
+    composer require mongodb/laravel-mongodb
+
+
+## Configure MongoDB in Laravel
+    ---------------------------
+        'mongodb' => [
+            'driver'   => 'mongodb',
+            'host'     => env('DB_HOST', '127.0.0.1'),
+            'port'     => env('DB_PORT', 27017),
+            'database' => env('DB_DATABASE'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'options' => [
+                // 'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'), // Uncomment if authentication is needed
+            ],
+        ],
+
+        .env 
+        DB_CONNECTION=mongodb
+        DB_HOST=127.0.0.1
+        DB_PORT=27017
+        DB_DATABASE=test_mongo
+        DB_USERNAME=
+        DB_PASSWORD=
+
+## download and mongodb shell or mongodb server
+## also download and install mongodb composer
+## create a database name: test_mongo
+
+## add migration and seeder for test
+
+
+use MongoDB\Laravel\Eloquent\Model as MongoModel;
+
+class HrEmployee extends MongoModel
+
+    
+

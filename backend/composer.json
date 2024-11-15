@@ -12,8 +12,10 @@
         "laravel/framework": "^11.9",
         "laravel/passport": "^12.0",
         "laravel/tinker": "^2.9",
+        "mongodb/laravel-mongodb": "^5.1",
         "predis/predis": "2.0",
-        "theanik/laravel-more-command": "^1.3"
+        "theanik/laravel-more-command": "^1.3",
+        "yajra/laravel-oci8": "dev-master"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
