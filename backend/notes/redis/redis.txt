@@ -25,3 +25,26 @@
 ## set the REDIS_CLIENT variable in your .env
     -----------------------------------------
     REDIS_CLIENT=predis
+    REDIS_HOST=127.0.0.1
+    REDIS_PORT=6379
+    REDIS_PASSWORD=null
+
+
+## connect redis cloud to laravel
+    ------------------------------
+    logon redis 
+    goto database
+    select a database
+    goto configuration 
+    find Public endpoint
+    copy Public endpoint as your redis host and port for laravel  
+    goto security
+    find username and password 
+    copy username and password as your username and password for laravel
+
+    example:
+    REDIS_CLIENT=predis
+    REDIS_HOST=redis-17675.c14.us-east-1-2.ec2.redns.redis-cloud.com
+    REDIS_PORT=17675
+    REDIS_USERNAME=default
+    REDIS_PASSWORD=izhta8xrCk3za2zcH1RQnoFfFYPLq7wP

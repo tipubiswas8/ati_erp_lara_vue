@@ -1,4 +1,18 @@
 
+## download and mongodb server
+## also download and install mongodb compass
+## start manually MongoDB Server (MongoDB) (if don't started autometically)
+   -----------------------------------------------------------------------
+   goto services.msc 
+   find MongoDB Server
+   do start 
+
+## connect mongodb to mongo compass
+    -------------------------------
+    localhost:27017
+
+## create a database name: test_mongo
+
 ## Download and Installing the MongoDB PHP Extension with PECL
     -----------------------------------------------------------
     link: https://pecl.php.net/package/mongodb
@@ -29,9 +43,9 @@
             'driver'   => 'mongodb',
             'host'     => env('DB_HOST', '127.0.0.1'),
             'port'     => env('DB_PORT', 27017),
-            'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
+            'database' => env('DB_DATABASE', 'admin'),
+            'username' => env('DB_USERNAME', ''),
+            'password' => env('DB_PASSWORD', ''),
             'options' => [
                 // 'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'), // Uncomment if authentication is needed
             ],
@@ -45,16 +59,68 @@
         DB_USERNAME=
         DB_PASSWORD=
 
-## download and mongodb shell or mongodb server
-## also download and install mongodb composer
-## create a database name: test_mongo
 
 ## add migration and seeder for test
 
 
-use MongoDB\Laravel\Eloquent\Model as MongoModel;
+---------------------------------------------------------
+use MongoDB\Laravel\Auth\User as Authenticatable;
+insted of
+use Illuminate\Foundation\Auth\User as Authenticatable;
+to your user model for authentication like
+class SaUser extends Authenticatable
+{
+    //
+}
 
-class HrEmployee extends MongoModel
+and 
 
+use MongoDB\Laravel\Eloquent\Model;
+insted of
+use Illuminate\Database\Eloquent\Model;
+to your model like
+class HrEmployee extends Model
+{
+    //
+}
+---------------------------------------------------------
+
+you can set environment variable for swich database
+like set environment variable USE_MONGODB to .env file:
+
+USE_MONGODB=false
+
+full example:
+---------------------------------------------------------
+// use Illuminate\Foundation\Auth\User as Authenticatable;
+// use MongoDB\Laravel\Auth\User as Authenticatable;
+
+if (env('USE_MONGODB', false)) {
+    class Authenticatable extends \MongoDB\Laravel\Auth\User {}
+} else {
+    class Authenticatable extends \Illuminate\Foundation\Auth\User {}
+}
+
+class SaUser extends Authenticatable
+{
+    //
+}
+
+and 
+
+// use Illuminate\Database\Eloquent\Model;
+// use MongoDB\Laravel\Eloquent\Model;
+
+if (env('USE_MONGODB', false)) {
+    class Model extends \MongoDB\Laravel\Eloquent\Model {}
+} else {
+    class Model extends \Illuminate\Database\Eloquent\Model {}
+}
+
+class HrEmployee extends Model
+{
+    //
+}
+-------------------------------------------------------------
     
 

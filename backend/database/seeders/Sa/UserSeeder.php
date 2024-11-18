@@ -31,6 +31,7 @@ class UserSeeder extends Seeder
         //             // Prepare the individual user data
         //             $userData = [
         //                 'user_name' => 'tipu' . $employee->employe_id,
+        //                 // 'email' => fake()->unique()->safeEmail(), // when use mongodb
         //                 'emp_id' => $employee->employe_id,
         //                 'role_id' => fake()->numberBetween(1, 20),
         //                 'password' => Hash::make('123456'),
