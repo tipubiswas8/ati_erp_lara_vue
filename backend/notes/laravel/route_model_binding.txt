@@ -1,0 +1,44 @@
+
+
+  /*  Handling Route Model Binding for Tables Without an id Column
+        ============================================================
+        If your table does not have the default id column and uses a custom primary key (e.g., employee_id), 
+        you can still use Laravel's resource routes and route model binding seamlessly by following these steps:
+
+        Step 1: Define the Custom Primary Key in the Model
+                protected $primaryKey = 'employee_id';
+
+        Step 2: Set Up Custom Route Model Binding
+                Since the table does not have an id column, you need to explicitly tell Laravel which column to use for binding.
+                
+                class RouteServiceProvider extends ServiceProvider
+                {
+                    public function boot()
+                    {
+                        // Custom route model binding for the `HrEmployee` model
+                        Route::bind('employee', function ($value) {
+                            return HrEmployee::where('employee_id', $value)->firstOrFail();
+                        });
+                    }
+                } 
+            
+                Here, 'employee' must match the route parameter used in your resource routes (Route::resource('employees', HrEmployeeController::class)).       
+
+
+        Step 3: Define the Resource Route
+                Route::resource('employees', HrEmployeeController::class);
+
+        Step 4: Implement the show Method in the Controller
+
+                class HrEmployeeController extends Controller
+                {
+                    public function show(HrEmployee $hrEmployee)
+                    {
+                        // Automatically resolves using `employee_id`
+                        return response()->json($hrEmployee);
+                    }
+                }
+
+        This setup ensures that Laravel's route model binding and resource routes work correctly for tables without a standard id column.        
+
+    */

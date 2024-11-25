@@ -27,15 +27,16 @@ class UserSeeder extends Seeder
         // HrEmployee::chunk(100, function ($employees) use ($emojis) {
         //     foreach ($employees as $index => $employee) {
         //         // Check if a user with the same emp_id already exists
-        //         if (!SaUser::where('emp_id', $employee->employe_id)->exists()) {
+        //         if (!SaUser::where('emp_id', $employee->employee_id)->exists()) {
         //             // Prepare the individual user data
         //             $userData = [
-        //                 'user_name' => 'tipu' . $employee->employe_id,
+        //                 'user_name' => 'tipu' . $employee->employee_id,
         //                 // 'email' => fake()->unique()->safeEmail(), // when use mongodb
-        //                 'emp_id' => $employee->employe_id,
+        //                 'emp_id' => $employee->employee_id,
         //                 'role_id' => fake()->numberBetween(1, 20),
         //                 'password' => Hash::make('123456'),
         //                 'emoji' => $emojis[$index % count($emojis)], // Rotate through emojis
+        //                 'created_by' => 1,
         //             ];
         //             // Create the user
         //             SaUser::create($userData);

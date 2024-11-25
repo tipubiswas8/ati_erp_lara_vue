@@ -16,7 +16,7 @@ class UserResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-            'employe_id' => $this->employee->employe_id,
+            'employee_id' => $this->employee->employee_id,
             'efull_name' => $this->employee->efull_name,
             'deprtmn_id' => $this->employee->deprtmn_id,
             'desgton_id' => $this->employee->desgton_id,
@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'ofie_email' => $this->employee->ofie_email,
             'omobile_no' => $this->employee->omobile_no,
             'pmobile_no' => $this->employee->pmobile_no,
+            'user_id' => $this->id,
             'user_name' => $this->user_name,
             'emp_id' => $this->emp_id,
             'role_id' => $this->role_id,

@@ -14,15 +14,16 @@ class EmployeeResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        // return parent::toArray($request);
+        // return $this->resource;
         return [
-            'employe_id' => $this->employe_id,
-            'efull_name' => $this->efull_name,
-            'ofie_email' => $this->ofie_email,
-            'omobile_no' => $this->omobile_no,
-            'pres_addrs' => $this->pres_addrs,
-            'astatus_fg' => $this->astatus_fg,
-            'user_name' => $this->user ? $this->user->user_name : null,
+            'EMPLOYEE_ID' => $this->employee_id,
+            'EFULL_NAME' => $this->efull_name,
+            'OFIE_EMAIL' => $this->ofie_email,
+            'OMOBILE_NO' => $this->omobile_no,
+            'PRES_ADDRS' => $this->pres_addrs,
+            'ASTATUS_FG' => $this->astatus_fg,
+            'USER_NAME' => $this->user ? $this->user->user_name : null,
         ];
     }
 }

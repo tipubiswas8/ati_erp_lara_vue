@@ -24,7 +24,7 @@ class EmployeeSeeder extends Seeder
         // // Generate 10 employee entries
         // foreach (range(1, 10) as $i) {
         //     $employees[] = [ // Append each employee entry to the array
-        //         'employe_id' => $i,
+        //         'employee_id' => $i,
         //         'efull_name' => 'John Doe ' . $i,
         //         'deprtmn_id' => $i + 20,
         //         'desgton_id' => $i + 40,

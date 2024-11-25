@@ -19,18 +19,50 @@ export default {
       },
     },
     {
-      name: 'users',
-      displayName: 'menu.users',
+      name: 'security-access',
+      displayName: 'menu.security-access',
+      meta: {
+        icon: 'security',
+      },
+      children: [
+        {
+          name: 'users',
+          displayName: 'menu.users',
+          meta: {
+            icon: 'group',
+          },
+        },
+        {
+          name: 'role',
+          displayName: 'menu.role',
+          meta: {
+            icon: 'android',
+          },
+        },
+        {
+          name: 'permission',
+          displayName: 'menu.permission',
+          meta: {
+            icon: 'android',
+          },
+        },
+      ],
+    },
+    {
+      name: 'hr',
+      displayName: 'menu.hr',
       meta: {
         icon: 'group',
       },
-    },
-    {
-      name: 'employees',
-      displayName: 'menu.employees',
-      meta: {
-        icon: 'laptop',
-      },
+      children: [
+        {
+          name: 'employees',
+          displayName: 'menu.employees',
+          meta: {
+            icon: 'laptop',
+          },
+        }
+      ],
     },
     {
       name: 'test',
@@ -49,14 +81,23 @@ export default {
         {
           name: 'payment-methods',
           displayName: 'menu.payment-methods',
+          meta: {
+            icon: 'android',
+          },
         },
         {
           name: 'pricing-plans',
           displayName: 'menu.pricing-plans',
+          meta: {
+            icon: 'android',
+          },
         },
         {
           name: 'billing',
           displayName: 'menu.billing',
+          meta: {
+            icon: 'android',
+          },
         },
       ],
     },
@@ -70,10 +111,16 @@ export default {
         {
           name: 'login',
           displayName: 'menu.login',
+          meta: {
+            icon: 'android',
+          },
         },
         {
           name: 'signup',
           displayName: 'menu.signup',
+          meta: {
+            icon: 'android',
+          },
         },
       ],
     },

@@ -22,11 +22,11 @@ class HrEmployeeFactory extends Factory
         // Increment the employee ID for each factory instance
         if (is_null($employeeIdCounter)) {
             // Get the current maximum employee ID from the database
-            $maxEmployeeId = HrEmployee::max('employe_id');
+            $maxEmployeeId = HrEmployee::max('employee_id');
             $employeeIdCounter = is_null($maxEmployeeId) ? 1 : $maxEmployeeId + 1; // Start from the next number
         }
         return [
-            'employe_id' => $employeeIdCounter++, // Max Employee ID
+            'employee_id' => $employeeIdCounter++, // Max Employee ID
             'efull_name' => $faker->name(),
             'deprtmn_id' => $faker->numberBetween(1, 100), // Random department ID
             'desgton_id' => $faker->numberBetween(1, 100), // Random designation ID

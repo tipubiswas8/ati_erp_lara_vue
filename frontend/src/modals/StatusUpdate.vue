@@ -6,39 +6,48 @@
 import { NotificationPlacement, notification, Button } from 'ant-design-vue'
 import { h, onMounted, defineEmits, defineProps } from 'vue'
 import axios from 'axios'
+import { reactive } from 'vue';
 
-// for response notification
-const [api, contextHolder] = notification.useNotification()
-const openResponseNotification = (
-  placement: NotificationPlacement,
-  response: { responseStatus: boolean; responseUserName: string },
+const emit = defineEmits<{
+  (event: 'sendToParent', data: { statusUpdate: boolean; responseFeedback: boolean }): void;
+}>();
+
+// Define emitData as a reactive object
+const emitData = reactive({
+  statusUpdate: false,
+  responseFeedback: false,
+});
+
+const openNotificationWithIcon = (
+type: 'success' | 'info' | 'warning' | 'error', 
+response: { responseStatus: boolean; responseUserName: string },
 ) => {
-  const action = response.responseStatus === false ? 'deactivated' : 'activated'
-  api.info({
+  const action = response.responseStatus === false ? 'deactivated' : 'activated';
+  notification[type]({
     message: 'Response Notification',
-    description: `${response.responseUserName} was ${action} successfully`,
-    placement,
-  })
-}
+    description: `${response.responseUserName} was ${action} successfully!`,
+    placement: 'topRight',
+    duration: 1
+  });
+  emit('sendToParent', { ...emitData });
+};
 
-// Define emits
-const emit = defineEmits(['statusUpdate'])
 const props = defineProps({
   statusData: Object,
 })
 
 const close = () => {
-  emit('statusUpdate', false) // Emit event to parent with 'false' value
+  emitData.statusUpdate = false;
 }
 
 const openNotification = () => {
   const key = '1'
 
   const userData = {
+    url: props.statusData?.status_url,
     id: props.statusData?.id,
     status: props.statusData?.status,
   }
-
   const statusType = props.statusData?.status === 1 ? 'deactivate' : 'activate'
   const userName = props.statusData?.name
 
@@ -60,20 +69,20 @@ const openNotification = () => {
             onClick: async () => {
               notification.close(key)
               try {
-                const response = await axios.patch('http://localhost:8000/api/user-status', {
+                const response = await axios.patch(userData.url, {
                   id: userData.id,
                   status: userData.status,
                 })
-                console.log(response.data.name)
                 if (response.status === 200) {
+                  emitData.responseFeedback = true;
                   const responseData = {
                     responseStatus: response.data.data.status,
-                    responseUserName: response.data.data.name,
+                    responseUserName: response.data.data.user_name,
                   }
-                  openResponseNotification('topRight', responseData)
+                  openNotificationWithIcon('success', { responseStatus: responseData.responseStatus, responseUserName: responseData.responseUserName });
                   setTimeout(() => {
-                    emit('statusUpdate', false)
-                  }, 5000)
+                    emitData.statusUpdate = false;
+                  }, 1000)
                 }
               } catch (error) {
                 console.log(error)
@@ -89,7 +98,8 @@ const openNotification = () => {
             size: 'small',
             onClick: () => {
               notification.close(key)
-              emit('statusUpdate', false) // Emit event to parent with 'false' value
+              emitData.statusUpdate = false;
+
             },
           },
           { default: () => 'No' },

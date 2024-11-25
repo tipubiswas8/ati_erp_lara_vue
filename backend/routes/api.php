@@ -2,7 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Sa\RoleController;
 use App\Http\Controllers\Sa\SaUserController;
+use App\Http\Controllers\Sa\PermissionController;
 use App\Http\Controllers\Hr\HrEmployeeController;
 
 Route::post('/login', function (Request $request) {
@@ -11,14 +13,46 @@ Route::post('/login', function (Request $request) {
 
 
 // Route::middleware('auth:api')->group(function () {
-Route::get('/users', function () {
-    return app(SaUserController::class)->users();
+// user
+Route::prefix('security-access')->group(function () {
+    Route::get('/users', function () {
+        return app(SaUserController::class)->users();
+    });
+    Route::post('/user-register', [SaUserController::class, 'registration']);
+    Route::put('/user-update', [SaUserController::class, 'update']);
+    Route::patch('/user-status', [SaUserController::class, 'status']);
+    Route::delete('/user-delete/{id}', [SaUserController::class, 'destroy']);
+    // role and permission
+    Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
 });
-Route::get('/employees', function () {
+Route::prefix('hr')->group(function () {
+// employees
+Route::get('/all-employees', function () {
     return app(HrEmployeeController::class)->allEmployee();
 });
-Route::post('/user-register', [SaUserController::class, 'registration']);
-Route::put('/user-update', [SaUserController::class, 'update']);
-Route::patch('/user-status', [SaUserController::class, 'status']);
-Route::delete('/user-delete', [SaUserController::class, 'destroy']);
+Route::resource('employees', HrEmployeeController::class);
+Route::get('employees/restore', [HrEmployeeController::class, 'restore']);
+});
 // });
+
+// Route::middleware(['role:admin'])->group(function () {
+//     Route::get('/admin', [AdminController::class, 'index']);
+// });
+
+// Route::middleware(['permission:create-post'])->group(function () {
+//     Route::post('/posts', [PostController::class, 'store']);
+// });
+
+
+// $user = User::find(1);
+// $role = Role::where('name', 'admin')->first();
+// $user->assignRole($role);
+
+// if ($user->hasRole('admin')) {
+//     echo "User is an admin.";
+// }
+
+// if ($user->hasPermission('edit-post')) {
+//     echo "User can edit posts.";
+// }

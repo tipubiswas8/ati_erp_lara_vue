@@ -21,6 +21,8 @@ class RepositoryServiceProvider extends ServiceProvider
         } else {
             $interfaces = [
                 'App\Interface\Sa\SaUserInterface' => 'App\Repositories\Sa\SaUserRepository',
+                'App\Interface\Sa\SaRoleInterface' => 'App\Repositories\Sa\SaRoleRepository',
+                'App\Interface\Sa\SaPermissionInterface' => 'App\Repositories\Sa\SaPermissionRepository',
                 'App\Interface\Hr\HrEmployeeInterface' => 'App\Repositories\Hr\HrEmployeeRepository',
             ];
         }

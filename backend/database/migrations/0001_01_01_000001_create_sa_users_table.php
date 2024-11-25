@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('emoji')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->integer('created_by');
+            $table->integer('updated_by')->nullable();
+            $table->softDeletes();
+            $table->integer('deleted_by')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

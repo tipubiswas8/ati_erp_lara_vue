@@ -29,7 +29,7 @@ app.use(createVuestic({ config: vuesticGlobalConfig }))
 app.directive("only-number", onlyNumber);
 // Define the validatePhone function globally
 
-app.config.globalProperties.$validatePhone = async (value) => {
+app.config.globalProperties.$validatePhone = async (value: any) => {
   if (!/^\d+$/.test(value)) {
     return Promise.reject(new Error('Phone number is not valid!'));
   }
@@ -37,7 +37,7 @@ app.config.globalProperties.$validatePhone = async (value) => {
 };
 
 // Define the blockNonNumericKeys function globally
-app.config.globalProperties.$blockNonNumericKeys = (event) => {
+app.config.globalProperties.$blockNonNumericKeys = (event: any) => {
   if (['e', 'f', 'j', 'k', 'l'].includes(event.key)) {
     event.preventDefault();
   }
@@ -70,7 +70,7 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response) {
       if (isAxiosError(error)) {
-        const messages = error.response.data.message || {}
+        const messages = error.response.data.error_message || {}
         switch (error.response?.status) {
           case 400:
             Object.values(messages).forEach((messageArray: any) => {
@@ -82,16 +82,16 @@ axios.interceptors.response.use(
             })
             break
           case 401:
-            showToast(error.response?.data.message)
+            showToast(error.response?.data.error_message)
             break
           case 404:
             router.push({
               path: '/404',
-              query: { message: error.response?.data.message },
+              query: { message: error.response?.data.error_message },
             })
             break
           case 500:
-            showToast(error.response?.data.message)
+            showToast(error.response?.data.error_message)
             break
         }
       }

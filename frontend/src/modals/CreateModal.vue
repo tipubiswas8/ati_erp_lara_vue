@@ -6,12 +6,12 @@ import SuccessNotification from '../notifications/SuccessNotification.vue'
 
 const props = defineProps({
   success_message: String,
-  userModalData: Object,
+  userCreateModalData: Object,
   userData: Object,
 })
 
-const modalHeight = props.userModalData?.config.height;
-const modalWidth = props.userModalData?.config.width;
+const modalHeight = props.userCreateModalData?.config.height;
+const modalWidth = props.userCreateModalData?.config.width;
 
 
 
@@ -73,15 +73,15 @@ const onFinish = async () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: props.userModalData?.config.titleBgColor || '#74e3e1',
-        color: props.userModalData?.config.titleTextColor || '#323635',
+        backgroundColor: props.userCreateModalData?.config.titleBgColor || '#74e3e1',
+        color: props.userCreateModalData?.config.titleTextColor || '#323635',
         padding: '2px',
         borderRadius: '4px',
         margin: '-10px -15px 0px -15px'
       }">
         <!-- Centered Title Content -->
         <div style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">
-          {{ props.userModalData?.config.title }}
+          {{ props.userCreateModalData?.config.title }}
         </div>
         <!-- Custom Close Button -->
         <button @click="handleCancel"
@@ -95,9 +95,9 @@ const onFinish = async () => {
     <template #footer>
       <div :style="{ display: 'flex', justifyContent: 'right' }">
         <!-- Example custom footer content -->
-        <div v-if="props.userModalData?.config.footer">
-          <AButton @click="handleCancel" :style="props.userModalData?.config.footerButtonBgColor
-            ? { backgroundColor: props.userModalData.config.footerButtonBgColor }
+        <div v-if="props.userCreateModalData?.config.footer">
+          <AButton @click="handleCancel" :style="props.userCreateModalData?.config.footerButtonBgColor
+            ? { backgroundColor: props.userCreateModalData.config.footerButtonBgColor }
             : {}">
             Close
           </AButton>

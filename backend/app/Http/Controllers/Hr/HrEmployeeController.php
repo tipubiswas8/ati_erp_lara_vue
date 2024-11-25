@@ -74,4 +74,8 @@ class HrEmployeeController extends Controller
     {
         return $this->hrEmployeeInterface->allEmployee();
     }
+    public function restore()
+    {
+        return $this->hrEmployeeInterface->restore();
+    }
 }

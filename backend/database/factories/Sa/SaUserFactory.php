@@ -26,7 +26,7 @@ class SaUserFactory extends Factory
     public function definition(): array
     {
         // Get an employee who does not already have a user account
-        $employee = HrEmployee::whereNotIn('employe_id', SaUser::pluck('emp_id'))->inRandomOrder()->first();
+        $employee = HrEmployee::whereNotIn('employee_id', SaUser::pluck('emp_id'))->inRandomOrder()->first();
         // If no available employees without users, return an empty array to avoid issues
         if (!$employee) {
             return null;
@@ -42,11 +42,12 @@ class SaUserFactory extends Factory
 
         return [
             'user_name' => $fakeUsername,
-            'emp_id' => $employee->employe_id,
+            'emp_id' => $employee->employee_id,
             'role_id' => fake()->numberBetween(1, 20),
             'password' => static::$password ??= Hash::make('123456'),
             'emoji' => fake()->emoji(),
             'remember_token' => Str::random(10),
+            'created_by' => fake()->numberBetween(1, 20),
         ];
     }
 

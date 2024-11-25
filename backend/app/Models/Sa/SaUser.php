@@ -4,6 +4,7 @@ namespace App\Models\Sa;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Models\Hr\HrEmployee;
@@ -13,14 +14,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use MongoDB\Laravel\Auth\User as Authenticatable;
 
 if (env('USE_MONGODB', false)) {
-    class Authenticatable extends \MongoDB\Laravel\Auth\User {}
+    class Authenticatable2 extends \MongoDB\Laravel\Auth\User {}
 } else {
-    class Authenticatable extends \Illuminate\Foundation\Auth\User {}
+    class Authenticatable2 extends \Illuminate\Foundation\Auth\User {}
 }
 
-class SaUser extends Authenticatable
+class SaUser extends Authenticatable2
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -61,11 +62,33 @@ class SaUser extends Authenticatable
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(HrEmployee::class, 'emp_id', 'employe_id');
+        return $this->belongsTo(HrEmployee::class, 'emp_id', 'employee_id');
     }
 
     // public function employee()
     // {
-    //     return $this->hasOne(HrEmployee::class, 'employe_id', 'emp_id');
+    //     return $this->hasOne(HrEmployee::class, 'employee_id', 'emp_id');
     // }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'sa_users');
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    public function hasPermission($permission)
+    {
+        return $this->roles()->whereHas('permissions', function ($query) use ($permission) {
+            $query->where('name', $permission);
+        })->exists();
+    }
+
+    public function assignRole($role)
+    {
+        $this->roles()->attach($role);
+    }
 }

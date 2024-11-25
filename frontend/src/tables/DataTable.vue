@@ -2,9 +2,11 @@
 import { ref, onMounted, h, computed } from 'vue'
 import axios from 'axios'
 import { Button, Popconfirm, message } from 'ant-design-vue'
-import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import EditModal from '@src/modals/EditModal.vue'
 import StatusUpdate from '@src/modals/StatusUpdate.vue'
+
+const setEmit = defineEmits(['isViewModalOpen', 'userDataForView']);
 
 message.config({
   top: '50px',
@@ -23,6 +25,7 @@ const props = defineProps({
 const tableData = ref([])
 const userData = ref({})
 const openEditModal = ref(false)
+const openViewModal = ref(false)
 const openStatusUpdate = ref(false)
 const pagination = ref({
   current: 1,          // Current page
@@ -36,9 +39,14 @@ const selectedUserId = ref<number | null>(null)
 
 // Computed property to get the selected user based on the ID
 // eslint-disable-next-line prettier/prettier
-const selectedUserForStatusChange = computed(() =>
-  tableData.value.find((user) => user.id === selectedUserId.value) || {}
-);
+const selectedUserForStatusChange = computed(() => {
+  const user = tableData.value.find((user) => user.id === selectedUserId.value) || {};
+  return {
+    ...user,
+    status_url: props.requestData?.urls.status_url // Adding the additional property to selectedUserForStatusChange
+  };
+});
+
 
 let columns = [];
 const tableHead = props.requestData?.th_name;
@@ -88,6 +96,13 @@ if (tableHead) {
             onClick: () => handleEdit(record.id),
             style: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
           }),
+          h(Button, {
+            type: 'primary',
+            size: 'small',
+            icon: h(EyeOutlined),
+            onClick: () => handleView(record.id),
+            style: { display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1234', color: 'black', borderColor: '#ff5733' },
+          }),
           record.status === 1
             ? h(Button, {
               type: 'default',
@@ -131,27 +146,37 @@ if (tableHead) {
 }
 
 
+// Transform the response data to ensure "id" is consistent
+const transformData = (data: any[]) => {
+  return data.map(item => ({
+    ...item,
+    id: props.requestData?.custom_id ? item[props.requestData?.custom_id] : item.id,
+    name: props.requestData?.custom_name ? item[props.requestData?.custom_name] : item.name,
+  }));
+};
+
+
+
 async function fetchData() {
   try {
-    const response = await axios.get(props.requestData?.data_source.url)
+    const response = await axios.get(props.requestData?.urls.data_url);
     if (response.status === 200) {
-      tableData.value = response.data.data.map((item: object, index: number) => ({
+      tableData.value = transformData(response.data.data.map((item: object, index: number) => ({
         ...item,
         sl: index + 1,
-      }))
-      console.log(tableData.value);
+      })));
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
+
 
 onMounted(() => {
   fetchData()
 })
 
 const handleEdit = (id: number) => {
-  console.log(id);
   const selectedUser = tableData.value.find((item) => item.id === id)
   if (selectedUser) {
     userData.value = selectedUser
@@ -164,14 +189,27 @@ const closeEditModal = () => {
   userData.value = {}
 }
 
+const handleView = (id: number) => {
+  setEmit('isViewModalOpen', true);
+  const selectedUser = tableData.value.find((item) => item.id === id)
+  if (selectedUser) {
+    setEmit('userDataForView', selectedUser);
+  }
+}
+
+const closeViewModal = () => {
+  setEmit('isViewModalOpen', false);
+  openViewModal.value = false
+  userData.value = {}
+}
+
 const handleDelete = async (id: number) => {
   try {
-    const response = await axios.delete('/user-delete', { params: { id: id } })
+    const response = await axios.delete(props.requestData?.urls.delete_url + '/' + id);
     if (response.status === 200) {
       message.success(response.data.message)
       tableData.value = tableData.value.filter((user) => user.id !== id)
       // Recalculate the sl (serial numbers) for the remaining users
-      console.log(tableData.value);
       tableData.value = tableData.value.map((item, index) => ({
         ...item,
         sl: index + 1,
@@ -187,13 +225,13 @@ const cancelDelete = () => {
 }
 
 const showStatusUpdater = (id: number) => {
-  console.log('status')
   selectedUserId.value = id
   openStatusUpdate.value = !openStatusUpdate.value
 }
 
-const handleStatusUpdate = (status: boolean) => {
-  openStatusUpdate.value = status
+const handleStatusUpdate = (receiveData: object) => {
+  // console.log(receiveData.responseFeedback);
+  openStatusUpdate.value = receiveData.statusUpdate
 }
 function handleTableChange(paginationInfo: any) {
   pagination.value.current = paginationInfo.current;
@@ -210,5 +248,5 @@ function handleTableChange(paginationInfo: any) {
     showQuickJumper: pagination.showQuickJumper,
   }" @change="handleTableChange" />
   <EditModal v-if="openEditModal" :edit-data="userData" @close="closeEditModal" />
-  <StatusUpdate v-if="openStatusUpdate" :status-data="selectedUserForStatusChange" @statusUpdate="handleStatusUpdate" />
+  <StatusUpdate v-if="openStatusUpdate" :status-data="selectedUserForStatusChange" @sendToParent="handleStatusUpdate" />
 </template>

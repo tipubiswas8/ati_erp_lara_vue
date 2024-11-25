@@ -9,20 +9,107 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use App\Http\Resources\Hr\Employee\EmployeeResource;
 use App\Models\Hr\HrEmployee;
+use App\Models\Sa\Permission;
 
 class HrEmployeeRepository implements HrEmployeeInterface
 {
-    public function index() {}
+    public function index()
+    {
+        return responseSuccess('All employee fetch', EmployeeResource::collection(HrEmployee::with('user')->get()), 200);
+
+        // try {
+        //     $employees = HrEmployee::with('users')->paginate(10);
+        //     // Prepare the data using EmployeeResource
+        //     $response = [
+        //         'status' => true,
+        //         'message' => 'All emplyee fetch',
+        //         'data' => EmployeeResource::collection($employees),
+        //         'meta' => [
+        //             'current_page' => $employees->currentPage(),
+        //             'last_page' => $employees->lastPage(),
+        //             'per_page' => $employees->perPage(),
+        //             'total' => $employees->total(),
+        //         ],
+        //     ];
+        //     return response()->json($response, 200);
+        // } catch (Exception $e) {
+        //     $response = [
+        //         'status' => false,
+        //         'message' => $e->getMessage()
+        //     ];
+        //     Log::error('Unable to load data', [
+        //         'error_message' => $e->getMessage(),
+        //     ]);
+        //     return response()->json($response, 500);
+        // }
+    }
     public function create() {}
     public function store(Request $requestData) {}
-    public function show(HrEmployee $hrEmployee) {}
+
+    public function show(HrEmployee $hrEmployee)
+    {
+        try {
+            return response()->json(new EmployeeResource($hrEmployee->employee_id), 200);
+        } catch (Exception $e) {
+            logError($e, 'Unable to load employee data');
+            return handleException($e, 'Unable to load employee data', 500);
+        }
+    }
     public function edit(HrEmployee $hrEmployee) {}
     public function update(Request $requestData, HrEmployee $hrEmployee) {}
-    public function destroy(HrEmployee $hrEmployee) {}
+
+    public function destroy(HrEmployee $hrEmployee)
+    {
+        // $employee = HrEmployee::find($hrEmployee->employee_id);
+        // $employee = HrEmployee::where('employee_id', $hrEmployee->employee_id)->first();
+        if ($hrEmployee) {
+            try {
+                $delete = HrEmployee::destroy($hrEmployee->employee_id);
+                // $delete = $employee->delete(); 
+                if ($delete) {
+                    logInfo('Employee Deleted Successfully!', $hrEmployee);
+                    return responseSuccess('Employee Deleted Successfully!');
+                } else {
+                    return responseFailed('Unable to delete employee, please try again later');
+                }
+            } catch (\Exception $e) {
+                logError($e, 'Unable to delete employee, please try again!', $hrEmployee);
+                return handleException($e, 'Unable to delete employee, please try again!');
+            }
+        } else {
+            return responseNotFound('Employee not found');
+        }
+    }
+
+
+    public function restore()
+    {
+        // $restoredEmployee = HrEmployee::onlyTrashed()->get();
+        $restoredEmployee = HrEmployee::onlyTrashed()->restore();
+
+        if ($restoredEmployee) {
+            try {
+                Log::info('Employee restore successful', [
+                    'employee' => $restoredEmployee
+                ]);
+                return response()->json(['status' => true, 'message' => 'Employee Restore Successfully!', 'employee' => $restoredEmployee], 200);
+            } catch (\Exception $e) {
+                Log::error('Unable to restore employee, please try again!', [
+                    'employee' => $restoredEmployee,
+                    'error_message' => $e->getMessage(),
+                ]);
+                return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
+            }
+            return response()->json(['status' => false, 'message' => 'No deleted employee found'], 404);
+        }
+    }
+
     public function allEmployee()
     {
+
+        // // block-1
         // ini_set('memory_limit', '1024M');
-        
+
         // $startMicrotime = microtime(true); // Start time in seconds and microseconds
         // $data = Redis::get('emp_data');
         // $data = unserialize($data);
@@ -41,7 +128,11 @@ class HrEmployeeRepository implements HrEmployeeInterface
         // //     'data' => $data,
         // // ];
         // // return response()->json($response, 200);
-        
+
+
+
+
+        // block 2
         try {
             $startMicrotime = microtime(true); // Start time in seconds and microseconds
             $data_source = 'data from redis';
@@ -99,31 +190,5 @@ class HrEmployeeRepository implements HrEmployeeInterface
             ]);
             return response()->json($response, 500);
         }
-
-        // try {
-        //     $employees = HrEmployee::with('user')->paginate(10);
-        //     // Prepare the data using EmployeeResource
-        //     $response = [
-        //         'status' => true,
-        //         'message' => 'All emplyee fetch',
-        //         'data' => EmployeeResource::collection($employees),
-        //         'meta' => [
-        //             'current_page' => $employees->currentPage(),
-        //             'last_page' => $employees->lastPage(),
-        //             'per_page' => $employees->perPage(),
-        //             'total' => $employees->total(),
-        //         ],
-        //     ];
-        //     return response()->json($response, 200);
-        // } catch (Exception $e) {
-        //     $response = [
-        //         'status' => false,
-        //         'message' => $e->getMessage()
-        //     ];
-        //     Log::error('Unable to load data', [
-        //         'error_message' => $e->getMessage(),
-        //     ]);
-        //     return response()->json($response, 500);
-        // }
     }
 }

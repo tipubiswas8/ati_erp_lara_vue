@@ -4,6 +4,7 @@ namespace App\Models\Hr;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Sa\SaUser;
 
 // use Illuminate\Database\Eloquent\Model;
@@ -17,17 +18,17 @@ if (env('USE_MONGODB', false)) {
 
 class HrEmployee extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $primaryKey = 'employe_id'; // Set the primary key
+    protected $primaryKey = 'employee_id'; // Set the primary key
 
     public function user(): HasOne
     {
-        return $this->hasOne(SaUser::class, 'emp_id', 'employe_id');
+        return $this->hasOne(SaUser::class, 'emp_id', 'employee_id');
     }
 
     // public function user()
     // {
-    //     return $this->belongsTo(SaUser::class, 'employe_id', 'emp_id');
+    //     return $this->belongsTo(SaUser::class, 'employee_id', 'emp_id');
     // }
 }

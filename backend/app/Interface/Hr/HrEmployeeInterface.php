@@ -14,4 +14,5 @@ interface HrEmployeeInterface
     public function update(Request $requestData, HrEmployee $hrEmployee);
     public function destroy(HrEmployee $hrEmployee);
     public function allEmployee();
+    public function restore();
 }

@@ -38,14 +38,14 @@ class SaUserRepositoryMongo implements SaUserInterface
             if ($employee) {
                 // Use employee ID to create credentials
                 $credential = [
-                    'emp_id' => $employee->employe_id,
+                    'emp_id' => $employee->employee_id,
                     'password' => $user_password,
                 ];
             } else {
                 // If no employee found, check using mobile number
                 $employee = HrEmployee::where('omobile_no', $user_email)->first();
                 if ($employee) {
-                    $userId = SaUser::where('emp_id', $employee->employe_id)->select('id')->first()->id;
+                    $userId = SaUser::where('emp_id', $employee->employee_id)->select('id')->first()->id;
                     if ($userId) {
                         $credential = [
                             'id' => $userId,
@@ -252,7 +252,7 @@ class SaUserRepositoryMongo implements SaUserInterface
 
     public function destroy(Request $request)
     {
-        $user = SaUser::find($request->id);
+        $user = SaUser::where('emp_id', $request->id)->first();
         if ($user) {
             try {
                 $delete = SaUser::destroy($user->id);

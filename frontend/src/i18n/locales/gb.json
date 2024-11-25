@@ -57,6 +57,10 @@
     "employees": "Employees",
     "test": "Test",
     "projects": "Projects",
+    "security-access": "Security Access",
+    "hr": "HR",
+    "role": "Role",
+    "permission": "Permission",
     "prescription": "Prescription"
   },
   "messages": {

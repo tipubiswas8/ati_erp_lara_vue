@@ -14,9 +14,14 @@ const closeModal = () => {
 };
 
 const sendDataToTable = {
-  data_source: {
-    'url': 'employees'
+  urls: {
+    'data_url': 'hr/employees',
+    'view_url': 'hr/employees',
+    'edit_url': 'hr/employees',
+    'status_url': 'hr/employees',
+    'delete_url': 'hr/employees'
   },
+  custom_id: 'EMPLOYEE_ID',
   th_name: {
     '1': 'Sl',
     '2': 'Employee Name',
@@ -31,7 +36,7 @@ const sendDataToTable = {
   td_data: {
     '1': 'sl', // not change
     '2': 'EFULL_NAME',
-    '3': 'user_name',
+    '3': 'USER_NAME',
     '4': 'OFIE_EMAIL',
     '5': 'OMOBILE_NO',
     '6': 'PRES_ADDRS',

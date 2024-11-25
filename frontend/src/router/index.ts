@@ -22,6 +22,40 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
       },
       {
+        name: 'security-access',
+        path: '/security-access',
+        component: RouteViewComponent,
+        children: [
+          {
+            name: 'users',
+            path: '/users',
+            component: () => import('../pages/sa/users/UsersPage.vue'),
+          },
+          {
+            name: 'role',
+            path: '/role',
+            component: () => import('../pages/sa/role/RolePage.vue'),
+          },
+          {
+            name: 'permission',
+            path: 'permission',
+            component: () => import('../pages/sa/permission/PermissionPage.vue'),
+          },
+        ],
+      },
+      {
+        name: 'hr',
+        path: '/hr',
+        component: RouteViewComponent,
+        children: [
+          {
+            name: 'employees',
+            path: '/employees',
+            component: () => import('../pages/hr/employee/EmployeesPage.vue'),
+          }
+        ]
+      },
+      {
         name: 'settings',
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),
@@ -30,16 +64,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'preferences',
         path: 'preferences',
         component: () => import('../pages/preferences/Preferences.vue'),
-      },
-      {
-        name: 'users',
-        path: 'users',
-        component: () => import('../pages/sa/users/UsersPage.vue'),
-      },
-      {
-        name: 'employees',
-        path: 'employees',
-        component: () => import('@src/pages/hr/employee/EmployeesPage.vue'),
       },
       {
         name: 'test',
