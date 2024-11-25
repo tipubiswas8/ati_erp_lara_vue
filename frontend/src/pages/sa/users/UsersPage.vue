@@ -136,11 +136,11 @@ const userDataForViewModal = (userData: object) => {
 
 const sendPropDataForVm = reactive({
   config: {
-    title: 'View Modal', /* modal title */
+    title: 'User Information', /* modal title */
     titleBgColor: '#82c953', /* modal title */
     titleTextColor: 'white', /* title text color*/
-    height: 30, /* modal height */
-    width: 70, /* modal width*/
+    height: 52, /* modal height */
+    width: 40, /* modal width*/
     footer: true, /* modal footer*/
     footerButtonBgColor: 'red', /* modal close button background color*/
   }
