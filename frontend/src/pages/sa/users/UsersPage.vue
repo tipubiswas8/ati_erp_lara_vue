@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import DataTable from '@src/tables/DataTable.vue'
 import CreateModal from '@src/modals/CreateModal.vue'
+import CreateModalSlotData from '@src/pages/sa/users/CreateSlotData.vue'
+import EditModalSlotData from '@src/pages/sa/users/EditSlotData.vue'
 import ViewModal from '@src/modals/ViewModal.vue'
-import CreateModalSlotData from '@src/pages/sa/users/CreateSloatData.vue'
-import ViewModalSlotData from '@src/pages/sa/users/ViewSloatData.vue'
+import ViewModalSlotData from '@src/pages/sa/users/ViewSlotData.vue'
+
 import { ref, reactive } from 'vue'
 
 
@@ -43,8 +45,8 @@ const sendDataToTable = {
 
 // for create table
 // ================
-const isCMOpen = ref(false)
-
+const isCMOpen = ref(false);
+const uData = ref({});
 const showCreateModal = () => {
   isCMOpen.value = true
 };
@@ -53,14 +55,10 @@ const closeCreateModal = () => {
   isCMOpen.value = false
 };
 
-let clickOnFinished = {};
-const finish = () => {
-  clickOnFinished = formState;
-  console.log(clickOnFinished);
-}
 
 // Push the newly added user to the data array
 const addNewUser = (newUser: object) => {
+  uData.value = newUser;
   const sl = data.value.length + 1 // Generate new serial number for the user
   data.value.push({
     ...newUser,
@@ -68,46 +66,19 @@ const addNewUser = (newUser: object) => {
   })
 }
 
-const formState = reactive({
-  user: {
-    name: '' as string,
-    email: '' as string,
-    phone: '' as string | number,
-    address: '' as string,
-    password: '' as string,
-  },
-})
-// For field-specific errors
-const fieldErrors = reactive({
-  name: '',
-  email: '',
-  phone: '',
-  address: '',
-  password: ''
-})
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-}
-
-const validateMessages = {
-  required: '${label} is required!',
-  types: {
-    email: '${label} is not a valid email!',
-    number: '${label} is not a valid number!',
+const sendUserDataToCreateForm = {
+  create_url: 'security-access/user-register',
   }
-};
 
 const sendPropDataForCm = reactive({
   config: {
-    title: 'Create Modal', /* modal title */
-    // titleBgColor: '#82c953', /* modal title */
-    // titleTextColor: 'white', /* title text color*/
-    // height: 30, /* modal height */
-    // width: 70, /* modal width*/
-    // footer: true, /* modal footer*/
-    // footerButtonBgColor: 'red', /* modal close button background color*/
+    title: 'Add New User', /* modal title */
+    titleBgColor: '#82c953', /* modal title */
+    titleTextColor: 'white', /* title text color*/
+    // height: 45, /* modal height */
+    // width: 35, /* modal width*/
+    footer: true, /* modal footer*/
+    footerButtonBgColor: 'red', /* modal close button background color*/
   }
 });
 
@@ -139,12 +110,22 @@ const sendPropDataForVm = reactive({
     title: 'User Information', /* modal title */
     titleBgColor: '#82c953', /* modal title */
     titleTextColor: 'white', /* title text color*/
-    height: 52, /* modal height */
-    width: 40, /* modal width*/
+    // height: 52, /* modal height */
+    // width: 40, /* modal width*/
     footer: true, /* modal footer*/
     footerButtonBgColor: 'red', /* modal close button background color*/
   }
 });
+
+let clickOnFinished = {};
+
+
+// for edit
+const sendEditSlotToTable = {
+  editComponent: EditModalSlotData, // Pass the Vue file as a prop
+};
+
+
 </script>
 
 <template>
@@ -154,16 +135,16 @@ const sendPropDataForVm = reactive({
     </a-col>
     <a-col :span="16"></a-col>
     <a-col :span="6">
-      <a-input v-model:value="value" placeholder="Search here" />
+      <!-- <a-input v-model:value="value" placeholder="Search here" /> -->
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" @isViewModalOpen="emitDataForView" @userDataForView="userDataForViewModal" />
-  <CreateModal v-if="isCMOpen" @close="closeCreateModal" @userAdded="addNewUser" :user-data="clickOnFinished"
-    :user-create-modal-data="sendPropDataForCm">
-    <CreateModalSlotData />
+  <DataTable :request-data="sendDataToTable" :edit-data="sendEditSlotToTable" @isViewModalOpen="emitDataForView"
+    @userDataForView="userDataForViewModal" />
+  <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCm">
+    <CreateModalSlotData @formData="addNewUser" :user-data="sendUserDataToCreateForm" />
   </CreateModal>
   <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :user-view-modal-data="sendPropDataForVm">
-    <ViewModalSlotData :selected-user-information="userInformation"/>
+    <ViewModalSlotData :selected-user-information="userInformation" />
   </ViewModal>
 </template>

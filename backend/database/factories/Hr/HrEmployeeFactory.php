@@ -57,7 +57,7 @@ class HrEmployeeFactory extends Factory
             'emp_id' => $faker->unique()->numberBetween(1, 1000), // Unique Employee ID
             'empl_photo' => 'photos/' . $faker->unique()->userName() . '.jpg', // Unique photo path
             'empshow_fg' => $faker->boolean(), // Show employee flag
-            'company_id' => $faker->numberBetween(1, 5), // Company ID
+            'company_id' => 100,
             'cbranch_id' => $faker->numberBetween(1, 5), // Branch ID
             'cobunit_id' => $faker->numberBetween(1, 5), // Unit ID
             'ptgunit_id' => $faker->numberBetween(1, 5), // Target unit ID

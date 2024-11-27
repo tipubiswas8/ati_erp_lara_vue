@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email', 191)->unique()->nullable();
             $table->integer('emp_id');
             $table->smallInteger('role_id')->nullable();
+            $table->integer('company_id')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

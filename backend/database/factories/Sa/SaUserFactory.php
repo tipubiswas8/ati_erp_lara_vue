@@ -44,6 +44,7 @@ class SaUserFactory extends Factory
             'user_name' => $fakeUsername,
             'emp_id' => $employee->employee_id,
             'role_id' => fake()->numberBetween(1, 20),
+            'company_id' => 100,
             'password' => static::$password ??= Hash::make('123456'),
             'emoji' => fake()->emoji(),
             'remember_token' => Str::random(10),

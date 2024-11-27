@@ -18,8 +18,8 @@ class RolePermissionSeeder extends Seeder
     public function run(): void
     {
         // Check for existing roles and create if not found
-        $admin = Role::firstOrCreate(['name' => 'admin'], ['created_by' => 1]);
-        $editor = Role::firstOrCreate(['name' => 'editor'], ['created_by' => 1]);
+        $admin = Role::firstOrCreate(['name' => 'admin'], ['company_id' => 100, 'created_by' => 1]);
+        $editor = Role::firstOrCreate(['name' => 'editor'], ['company_id' => 100, 'created_by' => 1]);
 
         // Permissions array
         $permissions = [
@@ -31,18 +31,18 @@ class RolePermissionSeeder extends Seeder
 
         // Assign permissions
         foreach ($permissions as $permissionName) {
-            $permission = Permission::firstOrCreate(['name' => $permissionName], ['created_by' => 1]);
+            $permission = Permission::firstOrCreate(['name' => $permissionName], ['company_id' => 100, 'created_by' => 1]);
         
             // Check before attaching the permission
             if (!$admin->permissions()->where('permissions.id', $permission->id)->exists()) {
-                $admin->permissions()->attach($permission, ['created_by' => 1]);
+                $admin->permissions()->attach($permission, ['company_id' => 100, 'created_by' => 1]);
             }
         }
         
         // Attach 'view-post' permission to editor role
         $viewPostPermission = Permission::where('name', 'view-post')->first();
         if ($viewPostPermission && !$editor->permissions()->where('permissions.id', $viewPostPermission->id)->exists()) {
-            $editor->permissions()->attach($viewPostPermission, ['created_by' => 1]);
+            $editor->permissions()->attach($viewPostPermission, ['company_id' => 100, 'created_by' => 1]);
         }
         
     }

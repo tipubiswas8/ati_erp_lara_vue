@@ -19,6 +19,11 @@ message.config({
 const props = defineProps({
   requestData: {
     type: Object,
+    required: true
+  },
+  editData: {
+    type: Object,
+    required: true,
   },
 })
 
@@ -237,6 +242,9 @@ function handleTableChange(paginationInfo: any) {
   pagination.value.current = paginationInfo.current;
   pagination.value.pageSize = paginationInfo.pageSize;
 }
+
+const editComponent = props.editData?.editComponent;
+
 </script>
 
 <template>
@@ -247,6 +255,8 @@ function handleTableChange(paginationInfo: any) {
     showSizeChanger: pagination.showSizeChanger,
     showQuickJumper: pagination.showQuickJumper,
   }" @change="handleTableChange" />
-  <EditModal v-if="openEditModal" :edit-data="userData" @close="closeEditModal" />
+  <EditModal v-if="openEditModal" :edit-data="userData" @close="closeEditModal">
+    <component :is="editComponent" />
+  </EditModal>
   <StatusUpdate v-if="openStatusUpdate" :status-data="selectedUserForStatusChange" @sendToParent="handleStatusUpdate" />
 </template>

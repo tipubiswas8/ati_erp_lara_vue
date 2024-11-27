@@ -18,7 +18,7 @@ class Permission extends BaseModel
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'created_by'];
+    protected $fillable = ['name', 'company_id', 'created_by'];
 
     public function roles()
     {

@@ -1,6 +1,6 @@
 <template>
-  <AModal :open="true" :bodyStyle="{ height: modalHeight + 'vh' }" :width="modalWidth ? modalWidth + 'vw' : '30vw'"
-    :closable="false">
+  <AModal :open="true" :closable="false" :bodyStyle="modalHeight ? { height: modalHeight + 'vh' } : {}"
+    :width="modalWidth ? modalWidth + 'vw' : undefined">
     <template #title>
       <div :style="{
         display: 'flex',

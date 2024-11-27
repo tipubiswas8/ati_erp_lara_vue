@@ -33,6 +33,7 @@ class UserSeeder extends Seeder
         //                 'user_name' => 'tipu' . $employee->employee_id,
         //                 // 'email' => fake()->unique()->safeEmail(), // when use mongodb
         //                 'emp_id' => $employee->employee_id,
+        //                 'company_id' => 100,
         //                 'role_id' => fake()->numberBetween(1, 20),
         //                 'password' => Hash::make('123456'),
         //                 'emoji' => $emojis[$index % count($emojis)], // Rotate through emojis

@@ -1,87 +1,32 @@
 <script lang="ts" setup>
-import { defineEmits, reactive, ref } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
-import SuccessNotification from '../notifications/SuccessNotification.vue'
-
 const props = defineProps({
-  success_message: String,
-  userCreateModalData: Object,
-  userData: Object,
+  modalConfigData: Object,
 })
-
-const modalHeight = props.userCreateModalData?.config.height;
-const modalWidth = props.userCreateModalData?.config.width;
-
-
-
-const emit = defineEmits(['close', 'userAdded'])
-const success = ref(false);
+const modalHeight = props.modalConfigData?.config.height;
+const modalWidth = props.modalConfigData?.config.width;
+const emit = defineEmits(['close'])
 const handleCancel = () => {
   emit('close')
 }
-const router = useRouter()
-
-const successMessage = reactive({
-  message: props.success_message
-})
-
-const onFinish = async () => {
-  try {
-    const response = await axios.post('/user-register', formState.user)
-    if (response.status === 201) {
-      emit('userAdded', response.data.user)
-      success.value = true
-      successMessage.message = response.data.message
-      // handleCancel()
-    }
-  } catch (error) {
-    if (error.response) {
-      // console.error('Error status:', error.response.status) // Get the status code
-      // console.error('Error data:', error.response.data) // Get the error response data
-      if (error.response.status === 400) {
-        // console.error('Validation error:', error.response.data.message)
-        const errors = error.response.data.message || {}
-        // fieldErrors.name = errors.name ? errors.name[0] : ''
-        // fieldErrors.email = errors.email ? errors.email[0] : ''
-        // fieldErrors.phone = errors.phone ? errors.phone[0] : ''
-        // fieldErrors.address = errors.address ? errors.address[0] : ''
-        // fieldErrors.password = errors.password ? errors.password[0] : ''
-        // Trigger form validation after setting errors
-        Object.keys(fieldErrors).forEach((key) => {
-          fieldErrors[key] = errors[key] ? errors[key][0] : ''
-        })
-      }
-    } else if (error.request) {
-      console.error('No response received:', error.request)
-    } else {
-      console.error('Error:', error.message)
-    }
-  } finally {
-    router.push({ name: 'users' })
-  }
-}
 </script>
 
-
 <template>
-  <SuccessNotification v-if="success" :message="successMessage.message" />
-  <AModal :open="true" :bodyStyle="{ height: modalHeight + 'vh' }" :width="modalWidth ? modalWidth + 'vw' : '30vw'"
-    :closable="false">
+  <AModal :open="true" :closable="false" :bodyStyle="modalHeight ? { height: modalHeight + 'vh' } : {}"
+    :width="modalWidth ? modalWidth + 'vw' : undefined">
     <template #title>
       <div :style="{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: props.userCreateModalData?.config.titleBgColor || '#74e3e1',
-        color: props.userCreateModalData?.config.titleTextColor || '#323635',
+        backgroundColor: props.modalConfigData?.config.titleBgColor || '#74e3e1',
+        color: props.modalConfigData?.config.titleTextColor || '#323635',
         padding: '2px',
         borderRadius: '4px',
         margin: '-10px -15px 0px -15px'
       }">
         <!-- Centered Title Content -->
         <div style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">
-          {{ props.userCreateModalData?.config.title }}
+          {{ props.modalConfigData?.config.title }}
         </div>
         <!-- Custom Close Button -->
         <button @click="handleCancel"
@@ -95,9 +40,9 @@ const onFinish = async () => {
     <template #footer>
       <div :style="{ display: 'flex', justifyContent: 'right' }">
         <!-- Example custom footer content -->
-        <div v-if="props.userCreateModalData?.config.footer">
-          <AButton @click="handleCancel" :style="props.userCreateModalData?.config.footerButtonBgColor
-            ? { backgroundColor: props.userCreateModalData.config.footerButtonBgColor }
+        <div v-if="props.modalConfigData?.config.footer">
+          <AButton @click="handleCancel" :style="props.modalConfigData?.config.footerButtonBgColor
+            ? { backgroundColor: props.modalConfigData.config.footerButtonBgColor }
             : {}">
             Close
           </AButton>
@@ -106,4 +51,3 @@ const onFinish = async () => {
     </template>
   </AModal>
 </template>
-
