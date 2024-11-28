@@ -1,91 +1,164 @@
 <template>
   <SuccessNotification v-if="success" :message="successMessage.message" />
-  <AForm :model="formState" v-bind="layout" name="nest-messages" :validate-messages="validateMessages"
+  <AForm :model="formState" :rules="rules" v-bind="layout" name="nest-messages" :validate-messages="validateMessages" ref="formRef"
     @finish="onFinish">
-    
-    <AFormItem :name="['user', 'employee']" label="Employee" :rules="[{ required: true }]">
-      <a-select v-model:value="value" show-search placeholder="Please Select a employee" :options="options"
-        :filter-option="filterOption" @focus="handleFocus" @blur="handleBlur" @change="handleChange"></a-select>
+
+    <AFormItem :name="['user', 'employee']" label="Employee"
+      :rules="[{ required: true, message: 'Please select an employee!' }]">
+      <a-select v-model:value="emp_full_name" show-search placeholder="Please Select an employee"
+        :options="employeeOptions" @change="handleEmployeeChange" :loading="isLoadingEmp"></a-select>
     </AFormItem>
 
     <AFormItem :name="['user', 'roles']" label="Role" :rules="[{ required: true }]">
-      <a-select v-model:value="value" mode="multiple" placeholder="Please select roles"
-        :options="[...Array(25)].map((_, i) => ({ value: (i + 10).toString(36) + (i + 1) }))"
-        @change="handleChange"></a-select>
+      <a-select v-model:value="role_name" mode="multiple" placeholder="Please select roles" :options="roleOptions"
+        @change="handleRoleChange" :loading="isLoadingRole"></a-select>
     </AFormItem>
 
+    <AFormItem :name="['user', 'email']" label="Email">
+      <AInput v-model:value="formState.user.email" disabled style="background-color: #f5f5f5;" />
+      <a-label :style="{ color: '#780650' }">{{ fieldErrors.email }}</a-label>
+    </AFormItem>
 
-    <AFormItem :name="['user', 'phone']" label="Phone" :rules="[{ validator: validatePhone }]">
-      <AInput type="number" v-model:value="formState.user.phone" @keydown="blockNonNumericKeys" @input="castToNumber"
-        autocomplete="off" />
+    <AFormItem :name="['user', 'phone']" label="Phone">
+      <AInput type="number" v-model:value="formState.user.phone"
+        style="pointer-events: none; background-color: #f5f5f5;" />
       <a-label :style="{ color: '#780650' }">{{ fieldErrors.phone }}</a-label>
     </AFormItem>
 
-    <AFormItem :name="['user', 'address']" label="Address">
-      <AInput v-model:value="formState.user.address" autocomplete="off" />
-      <a-label :style="{ color: '#780650' }">{{ fieldErrors.address }}</a-label>
+    <AFormItem :name="['user', 'company_id']" label="Company Name">
+      <AInput v-model:value="formState.user.company_id" />
+      <a-label :style="{ color: '#780650' }">{{ fieldErrors.company_id }}</a-label>
     </AFormItem>
 
-    <AFormItem :name="['user', 'password']" label="Password">
-      <AInput v-model:value="formState.user.password" autocomplete="off" />
+    <a-form-item has-feedback label="Password" :name="['user', 'password']">
+      <a-input v-model:value="formState.user.password" type="password" autocomplete="off" />
       <a-label :style="{ color: '#780650' }">{{ fieldErrors.password }}</a-label>
-    </AFormItem>
+    </a-form-item>
+    <a-form-item has-feedback label="Confirm" :name="['user', 'checkPass']">
+      <a-input v-model:value="formState.user.checkPass" type="password" autocomplete="off" />
+      <a-label :style="{ color: '#780650' }">{{ fieldErrors.checkPass }}</a-label>
+    </a-form-item>
 
-    <AFormItem :wrapper-col="{ ...layout.wrapperCol, offset: 10 }" style="margin-left: -10px;">
+    <a-form-item :name="['user', 'status']" label="Active Status">
+      <a-switch v-model:checked="formState.user.status" />
+    </a-form-item>
+
+    <AFormItem :wrapper-col="{ ...layout.wrapperCol, offset: 8 }">
       <AButton type="primary" html-type="submit">Submit</AButton>
+      <a-button style="margin-left: 10px; background-color: #dde32d;" @click="resetForm">Reset</a-button>
     </AFormItem>
   </AForm>
 </template>
 
 <script lang="ts" setup>
-
-import type { SelectProps } from 'ant-design-vue';
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import SuccessNotification from '../../../notifications/SuccessNotification.vue'
+import { RuleObject } from 'ant-design-vue/es/form/interface';
 
-
-
-const options = ref<SelectProps['options']>([
-  { value: 'jack', label: 'Jack' },
-  { value: 'lucy', label: 'Lucy' },
-  { value: 'tom', label: 'Tom' },
-]);
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
-const handleBlur = () => {
-  console.log('blur');
-};
-const handleFocus = () => {
-  console.log('focus');
-};
-const filterOption = (input: string, option: any) => {
-  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+const isLoadingEmp = ref(true);
+const isLoadingRole = ref(true);
+const formRef = ref();
+const resetForm = () => {
+  formRef.value.resetFields();
+  emp_full_name.value = undefined; // Reset employee selection
+  role_name.value = undefined; // Reset role selection
 };
 
-const value = ref<string | undefined>(undefined);
+interface EmployeeOption {
+  value: string; // ID of the employee
+  label: string; // Name of the employee
+  phone: string; // Phone number
+  email: string; // Email address
+  company_id?: string; // Optional company ID
+}
 
+const employeeOptions = ref<EmployeeOption[]>([]);
+
+const emp_full_name = ref<string | undefined>(employeeOptions.value[0]?.value); // Set default if available
+
+const role_name = ref<string | undefined>(undefined);
+
+const roleOptions = ref([]);
+
+const handleEmployeeChange = (eId: string) => {
+  const selectedEmployee = employeeOptions.value.find((employee) => employee.value === eId);
+  if (selectedEmployee) {
+    formState.user.email = selectedEmployee.email;
+    formState.user.phone = selectedEmployee.phone;
+    formState.user.company_id = selectedEmployee.company_id ?? '';
+  }
+  formRef.value?.validateFields();
+}
+
+const handleRoleChange = (rId: string[]) => {
+  console.log('Roles selected:', rId);
+}
+
+async function fetchAllEmployees() {
+  try {
+    const response = await axios.get(props.userData?.employee_get_url);
+    if (response.status === 200) {
+      employeeOptions.value = response.data.data.map((item: any) => ({
+        value: item.EMPLOYEE_ID,
+        label: item.EFULL_NAME,
+        phone: item.OMOBILE_NO,
+        email: item.OFIE_EMAIL,
+        company_id: item.COMPANY_ID
+      }));
+    }
+
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoadingEmp.value = false;
+  }
+}
+
+async function fetchAllRoles() {
+  try {
+    const response = await axios.get(props.userData?.role_get_url);
+    if (response.status === 200) {
+      roleOptions.value = response.data.data.map((item: any) => ({
+        value: item.id,
+        label: item.role_name,
+      }));
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoadingRole.value = false;
+  }
+}
+
+onMounted(() => {
+  fetchAllRoles();
+  fetchAllEmployees();
+});
 
 const sendToUserPage = defineEmits(['formData'])
 
 const formState = reactive({
   user: {
-    name: '' as string,
-    email: '' as string,
+    employee: null, // Selected employee
+    roles: [], // Selected roles
     phone: '' as string | number,
-    address: '' as string,
+    email: '' as string,
     password: '' as string,
+    checkPass: '' as string,
+    company_id: '' as string | null,
+    status: '' as string | number
   },
 })
 // For field-specific errors
 const fieldErrors = reactive({
-  name: '',
   email: '',
   phone: '',
   address: '',
-  password: ''
+  password: '',
+  checkPass: '',
+  company_id: '',
 })
 
 const layout = {
@@ -101,29 +174,31 @@ const validateMessages = {
   }
 };
 
-// Function to block non-numeric keys like 'e', '+', and '-'
-const blockNonNumericKeys = (event: KeyboardEvent) => {
-  if (['e', 'E', '+', '-', '.'].includes(event.key)) {
-    event.preventDefault();
-  }
-}
 
-// Custom phone number validation
-const validatePhone = async (_: any, value: string) => {
-  if (!/^\d+$/.test(value)) {
-    return Promise.reject(new Error('Phone number is not valid!'));
+let validatePass = async (rule: RuleObject, value: string) => {
+  if (value === '') {
+    return Promise.reject('Please input the password');
+  } else {
+    if (formState.user.checkPass !== '') {
+      formRef.value.validateFields('checkPass');
+    }
+    return Promise.resolve();
+  }
+};
+let validatePass2 = async (rule: RuleObject, value: string) => {
+  if (value === '') {
+    return Promise.reject('Please input the password again');
+  } else if (value !== formState.user.password) {
+    return Promise.reject("Two inputs don't match!");
   } else {
     return Promise.resolve();
   }
-}
-// Convert input value to a number to avoid string issues
-const castToNumber = (event: any) => {
-  const value = event.target.value;
-  if (value !== '' && !isNaN(value)) {
-    formState.user.phone = parseInt(value);
-  }
-}
+};
 
+const rules = {
+  pass: [{ required: true, validator: validatePass, trigger: 'change' }],
+  checkPass: [{ validator: validatePass2, trigger: 'change' }]
+};
 
 const props = defineProps({
   success_message: String,
@@ -146,29 +221,35 @@ const onFinish = async () => {
       // handleCancel()
     }
   } catch (error) {
-    if (error.response) {
-      // console.error('Error status:', error.response.status) // Get the status code
-      // console.error('Error data:', error.response.data) // Get the error response data
-      if (error.response.status === 400) {
-        // console.error('Validation error:', error.response.data.message)
-        const errors = error.response.data.message || {}
-        // fieldErrors.name = errors.name ? errors.name[0] : ''
-        // fieldErrors.email = errors.email ? errors.email[0] : ''
-        // fieldErrors.phone = errors.phone ? errors.phone[0] : ''
-        // fieldErrors.address = errors.address ? errors.address[0] : ''
-        // fieldErrors.password = errors.password ? errors.password[0] : ''
-        // Trigger form validation after setting errors
-        Object.keys(fieldErrors).forEach((key) => {
-          fieldErrors[key] = errors[key] ? errors[key][0] : ''
-        })
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // console.error('Error status:', error.response.status) // Get the status code
+        // console.error('Error data:', error.response.data) // Get the error response data
+        if (error.response.status === 400) {
+          // console.error('Validation error:', error.response.data.message)
+          const errors = error.response.data.message || {}
+          // fieldErrors.name = errors.name ? errors.name[0] : ''
+          // fieldErrors.email = errors.email ? errors.email[0] : ''
+          // fieldErrors.phone = errors.phone ? errors.phone[0] : ''
+          // fieldErrors.address = errors.address ? errors.address[0] : ''
+          // fieldErrors.password = errors.password ? errors.password[0] : ''
+          // Trigger form validation after setting errors
+          Object.keys(fieldErrors).forEach((key) => {
+            fieldErrors[key] = errors[key] ? errors[key][0] : ''
+          })
+        }
+      } else if (error.request) {
+        console.error('No response received:', error.request)
+      } else {
+        console.error('Error:', error.message)
       }
-    } else if (error.request) {
-      console.error('No response received:', error.request)
-    } else {
-      console.error('Error:', error.message)
+    }
+    else {
+      console.error('Unexpected error:', error);
     }
   } finally {
     router.push({ name: 'users' })
   }
 }
+
 </script>

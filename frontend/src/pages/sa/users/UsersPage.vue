@@ -68,6 +68,8 @@ const addNewUser = (newUser: object) => {
 
 const sendUserDataToCreateForm = {
   create_url: 'security-access/user-register',
+  employee_get_url: 'hr/all-employees',
+  role_get_url: 'security-access/roles',
   }
 
 const sendPropDataForCm = reactive({

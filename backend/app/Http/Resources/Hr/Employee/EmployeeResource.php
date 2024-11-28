@@ -22,6 +22,7 @@ class EmployeeResource extends JsonResource
             'OFIE_EMAIL' => $this->ofie_email,
             'OMOBILE_NO' => $this->omobile_no,
             'PRES_ADDRS' => $this->pres_addrs,
+            'COMPANY_ID' => $this->company_id,
             'ASTATUS_FG' => $this->astatus_fg,
             'USER_NAME' => $this->user ? $this->user->user_name : null,
         ];
