@@ -5,6 +5,7 @@ namespace Database\Seeders\Hr;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Hr\HrEmployee;
+use App\Models\Hr\HrOrganization;
 
 // php artisan db:seed Database\Seeders\EmployeeSeeder
 class EmployeeSeeder extends Seeder
@@ -17,12 +18,15 @@ class EmployeeSeeder extends Seeder
         // create for save data to database
         HrEmployee::factory(100)->create();
 
-        // //  make for make factory data without save to database
-        // // HrEmployee::factory(10)->make();
+        //  make for make factory data without save to database
+        // HrEmployee::factory(10)->make();
+
 
         // $employees = []; // Initialize an empty array to hold employee data
         // // Generate 10 employee entries
         // foreach (range(1, 10) as $i) {
+        //     // Randomly select an organization
+        //     $organization = HrOrganization::inRandomOrder()->first();
         //     $employees[] = [ // Append each employee entry to the array
         //         'employee_id' => $i,
         //         'efull_name' => 'John Doe ' . $i,
@@ -55,7 +59,7 @@ class EmployeeSeeder extends Seeder
         //         'emp_id' => $i,
         //         'empl_photo' => 'photos/johndoe' . $i . '.jpg',
         //         'empshow_fg' => 1,
-        //         'company_id' => 100,
+        //         'org_id' => $organization->org_id ? $organization->org_id : null,
         //         'cbranch_id' => 1,
         //         'cobunit_id' => 1,
         //         'ptgunit_id' => 1,

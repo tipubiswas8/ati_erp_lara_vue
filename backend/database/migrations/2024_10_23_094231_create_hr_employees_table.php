@@ -51,7 +51,7 @@ return new class extends Migration
             $table->integer('emp_id')->nullable();
             $table->string('empl_photo', 200)->nullable();
             $table->integer('empshow_fg')->default(1)->nullable();
-            $table->integer('company_id')->nullable();
+            $table->string('org_id')->nullable();
             $table->integer('cbranch_id')->default(0)->nullable();
             $table->integer('cobunit_id')->default(0)->nullable();
             $table->integer('ptgunit_id')->default(0)->nullable();

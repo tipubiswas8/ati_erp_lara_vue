@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Sa\SaUser;
 use App\Models\Hr\HrEmployee;
+use App\Models\Hr\HrOrganization;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -40,11 +41,17 @@ class SaUserFactory extends Factory
             $fakeUsername = fake()->unique()->userName();
         }
 
+        // Randomly select an organization
+        $organization = HrOrganization::inRandomOrder()->first();
+        if (!$organization) {
+            return null; // Ensure an organization exists
+        }
+
         return [
             'user_name' => $fakeUsername,
             'emp_id' => $employee->employee_id,
             'role_id' => fake()->numberBetween(1, 20),
-            'company_id' => 100,
+            'org_id' => $organization->org_id,
             'password' => static::$password ??= Hash::make('123456'),
             'emoji' => fake()->emoji(),
             'remember_token' => Str::random(10),

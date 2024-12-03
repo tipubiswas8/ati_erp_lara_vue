@@ -4,6 +4,7 @@ namespace Database\Factories\Hr;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use app\Models\Hr\HrEmployee;
+use app\Models\Hr\HrOrganization;
 use Faker\Factory as Faker;
 
 // php artisan make:factory Database\Factories\MySql\Hr\Employee\EmployeeFactory
@@ -25,6 +26,13 @@ class HrEmployeeFactory extends Factory
             $maxEmployeeId = HrEmployee::max('employee_id');
             $employeeIdCounter = is_null($maxEmployeeId) ? 1 : $maxEmployeeId + 1; // Start from the next number
         }
+
+        // Randomly select an organization
+        $organization = HrOrganization::inRandomOrder()->first();
+        if (!$organization) {
+            return null; // Ensure an organization exists
+        }
+
         return [
             'employee_id' => $employeeIdCounter++, // Max Employee ID
             'efull_name' => $faker->name(),
@@ -57,7 +65,7 @@ class HrEmployeeFactory extends Factory
             'emp_id' => $faker->unique()->numberBetween(1, 1000), // Unique Employee ID
             'empl_photo' => 'photos/' . $faker->unique()->userName() . '.jpg', // Unique photo path
             'empshow_fg' => $faker->boolean(), // Show employee flag
-            'company_id' => 100,
+            'org_id' => $organization->org_id,
             'cbranch_id' => $faker->numberBetween(1, 5), // Branch ID
             'cobunit_id' => $faker->numberBetween(1, 5), // Unit ID
             'ptgunit_id' => $faker->numberBetween(1, 5), // Target unit ID

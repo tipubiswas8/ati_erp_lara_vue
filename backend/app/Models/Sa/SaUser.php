@@ -33,7 +33,7 @@ class SaUser extends Authenticatable2
         'email',
         'phone',
         'address',
-        'company_id',
+        'org_id',
         'password',
         'status'
     ];

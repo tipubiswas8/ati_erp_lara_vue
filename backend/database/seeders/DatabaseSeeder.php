@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\Hr\EmployeeSeeder;
+use Database\Seeders\Hr\OrganizationSeeder;
 use Database\Seeders\Sa\UserSeeder;
 use Database\Seeders\Sa\RolePermissionSeeder;
 
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(OrganizationSeeder::class);
         $this->call(EmployeeSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(RolePermissionSeeder::class);
