@@ -73,7 +73,7 @@ class SaUser extends Authenticatable2
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'sa_users');
+        return $this->belongsToMany(SaRole::class, 'sa_users');
     }
 
     public function hasRole($role)

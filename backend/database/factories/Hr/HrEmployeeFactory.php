@@ -3,8 +3,10 @@
 namespace Database\Factories\Hr;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use app\Models\Hr\HrEmployee;
-use app\Models\Hr\HrOrganization;
+use App\Models\Hr\HrEmployee;
+use App\Models\Hr\HrOrganization;
+use App\Models\Hr\HrDepartment;
+use App\Models\Hr\HrDesignation;
 use Faker\Factory as Faker;
 
 // php artisan make:factory Database\Factories\MySql\Hr\Employee\EmployeeFactory
@@ -27,17 +29,54 @@ class HrEmployeeFactory extends Factory
             $employeeIdCounter = is_null($maxEmployeeId) ? 1 : $maxEmployeeId + 1; // Start from the next number
         }
 
+        $organization = [];
         // Randomly select an organization
-        $organization = HrOrganization::inRandomOrder()->first();
-        if (!$organization) {
-            return null; // Ensure an organization exists
+        if (env('USE_MONGODB', false)) {
+            // data get randomly for mongodb
+            $organization = HrOrganization::raw(function ($collection) {
+                return $collection->aggregate([
+                    ['$sample' => ['size' => 1]]
+                ]);
+            })->first();
+        } else {
+            // inRandomOrder method is not supported mongodb
+            $organization = HrOrganization::inRandomOrder()->first();
+        }
+
+        $department = [];
+        // Randomly select an department
+        if (env('USE_MONGODB', false)) {
+            // data get randomly for mongodb
+            $department = HrDepartment::raw(function ($collection) {
+                return $collection->aggregate([
+                    ['$sample' => ['size' => 1]]
+                ]);
+            })->first();
+        } else {
+            // inRandomOrder method is not supported mongodb
+            $department = HrDepartment::inRandomOrder()->first();
+        }
+
+
+        $designation = [];
+        // Randomly select an designation
+        if (env('USE_MONGODB', false)) {
+            // data get randomly for mongodb
+            $designation = HrDesignation::raw(function ($collection) {
+                return $collection->aggregate([
+                    ['$sample' => ['size' => 1]]
+                ]);
+            })->first();
+        } else {
+            // inRandomOrder method is not supported mongodb
+            $designation = HrDesignation::inRandomOrder()->first();
         }
 
         return [
             'employee_id' => $employeeIdCounter++, // Max Employee ID
-            'efull_name' => $faker->name(),
-            'deprtmn_id' => $faker->numberBetween(1, 100), // Random department ID
-            'desgton_id' => $faker->numberBetween(1, 100), // Random designation ID
+            'en_full_name' => $faker->name(),
+            'dept_id' => $department ? $department->dept_id : 'DPT' . date('Ymd') . '000001', // Random department ID
+            'desig_id' => $designation ? $designation->desig_id : date('Ymd') . '000001', // Random designation ID
             'usrdemp_id' => 'JD' . $faker->unique()->numberBetween(1000, 9999), // Unique user ID
             'astatus_fg' => $faker->boolean(), // Active status flag
             'userdsl_no' => $faker->unique()->numberBetween(1000, 2000), // Unique user serial number
@@ -62,10 +101,9 @@ class HrEmployeeFactory extends Factory
             'idnty_mark' => $faker->sentence(3), // Identity mark
             'pres_addrs' => $faker->address(), // Present address
             'perm_addrs' => $faker->address(), // Permanent address
-            'emp_id' => $faker->unique()->numberBetween(1, 1000), // Unique Employee ID
             'empl_photo' => 'photos/' . $faker->unique()->userName() . '.jpg', // Unique photo path
             'empshow_fg' => $faker->boolean(), // Show employee flag
-            'org_id' => $organization->org_id,
+            'org_id' => $organization ? $organization->org_id : '',
             'cbranch_id' => $faker->numberBetween(1, 5), // Branch ID
             'cobunit_id' => $faker->numberBetween(1, 5), // Unit ID
             'ptgunit_id' => $faker->numberBetween(1, 5), // Target unit ID
@@ -73,7 +111,6 @@ class HrEmployeeFactory extends Factory
             'emp_temp_to' => 'None', // Temporary employment status
             'emp_temp_cc' => 'None', // Temporary employment CC
             'rperson_id' => 1, // Responsible person ID
-            'designation' => $faker->jobTitle(), // Job title
             'emer_addrs' => $faker->address(), // Emergency address
             'emp_sigimg' => 'signatures/' . $faker->unique()->userName() . '.png', // Unique signature image path
             'emp_nidimg' => 'nid_images/' . $faker->unique()->userName() . '_nid.png', // Unique NID image path
@@ -100,7 +137,7 @@ class HrEmployeeFactory extends Factory
             'empltp_dur' => $faker->numberBetween(1, 36), // Employment duration in months
             'old_emp_id' => 'OLD' . $faker->unique()->numberBetween(1000, 9999), // Unique old employee ID
             'hireemp_id' => $faker->numberBetween(1, 10),
-            'emp_bn_name' => $faker->name() . ' ' . $faker->lastName(), // Unique Bangladeshi name
+            'bn_full_name' => $faker->name() . ' ' . $faker->lastName(), // Unique Bangladeshi name
         ];
     }
 

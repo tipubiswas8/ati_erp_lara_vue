@@ -4,14 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateSaRolesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
-        Schema::create('permissions', function (Blueprint $table) {
+        Schema::create('sa_roles', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->string('org_id')->nullable();
@@ -26,6 +23,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('roles');
     }
-};
+}

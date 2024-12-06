@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('hr_employees', function (Blueprint $table) {
             // $table->id('employee_id');
             $table->unsignedBigInteger('employee_id')->primary();
-            $table->string('efull_name', 50);
-            $table->string('deprtmn_id', 20);
-            $table->integer('desgton_id');
+            $table->string('en_full_name', 50);
+            $table->string('dept_id', 20);
+            $table->bigInteger('desig_id');
             $table->string('usrdemp_id', 20);
             $table->integer('astatus_fg');
             $table->integer('userdsl_no');
@@ -86,7 +86,7 @@ return new class extends Migration
             $table->integer('empltp_dur')->nullable();
             $table->string('old_emp_id', 16)->nullable();
             $table->integer('hireemp_id', false, true)->nullable();
-            $table->string('emp_bn_name', 300)->nullable();
+            $table->string('bn_full_name', 300)->nullable();
         });        
     }
 

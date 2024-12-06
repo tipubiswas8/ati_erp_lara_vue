@@ -25,9 +25,9 @@
       <a-label :style="{ color: '#780650' }">{{ fieldErrors.phone }}</a-label>
     </AFormItem>
 
-    <AFormItem :name="['user', 'company_id']" label="Company Name">
-      <AInput v-model:value="formState.user.company_id" />
-      <a-label :style="{ color: '#780650' }">{{ fieldErrors.company_id }}</a-label>
+    <AFormItem :name="['user', 'organization_id']" label="Company Name">
+      <AInput v-model:value="formState.user.organization_id" />
+      <a-label :style="{ color: '#780650' }">{{ fieldErrors.organization_id }}</a-label>
     </AFormItem>
 
     <a-form-item has-feedback label="Password" :name="['user', 'password']">
@@ -71,7 +71,7 @@ interface EmployeeOption {
   label: string; // Name of the employee
   phone: string; // Phone number
   email: string; // Email address
-  company_id?: string; // Optional company ID
+  organization_id?: string; // Optional company ID
 }
 
 const employeeOptions = ref<EmployeeOption[]>([]);
@@ -87,7 +87,7 @@ const handleEmployeeChange = (eId: string) => {
   if (selectedEmployee) {
     formState.user.email = selectedEmployee.email;
     formState.user.phone = selectedEmployee.phone;
-    formState.user.company_id = selectedEmployee.company_id ?? '';
+    formState.user.organization_id = selectedEmployee.organization_id ?? '';
   }
   formRef.value?.validateFields();
 }
@@ -100,12 +100,14 @@ async function fetchAllEmployees() {
   try {
     const response = await axios.get(props.userData?.employee_get_url);
     if (response.status === 200) {
+      console.log(response.data);
+      
       employeeOptions.value = response.data.data.map((item: any) => ({
         value: item.EMPLOYEE_ID,
         label: item.EFULL_NAME,
         phone: item.OMOBILE_NO,
         email: item.OFIE_EMAIL,
-        company_id: item.COMPANY_ID
+        organization_id: item.ORG_ID
       }));
     }
 
@@ -147,7 +149,7 @@ const formState = reactive({
     email: '' as string,
     password: '' as string,
     checkPass: '' as string,
-    company_id: '' as string | null,
+    organization_id: '' as string | null,
     status: '' as string | number
   },
 })
@@ -158,7 +160,7 @@ const fieldErrors = reactive({
   address: '',
   password: '',
   checkPass: '',
-  company_id: '',
+  organization_id: '',
 })
 
 const layout = {

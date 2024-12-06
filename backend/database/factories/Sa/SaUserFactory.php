@@ -29,9 +29,7 @@ class SaUserFactory extends Factory
         // Get an employee who does not already have a user account
         $employee = HrEmployee::whereNotIn('employee_id', SaUser::pluck('emp_id'))->inRandomOrder()->first();
         // If no available employees without users, return an empty array to avoid issues
-        if (!$employee) {
-            return null;
-        }
+
 
         // Generate a unique username
         $fakeUsername = fake()->unique()->userName();
@@ -41,17 +39,25 @@ class SaUserFactory extends Factory
             $fakeUsername = fake()->unique()->userName();
         }
 
+        $organization = [];
         // Randomly select an organization
-        $organization = HrOrganization::inRandomOrder()->first();
-        if (!$organization) {
-            return null; // Ensure an organization exists
+        if (env('USE_MONGODB', false)) {
+            // data get randomly for mongodb
+            $organization = HrOrganization::raw(function ($collection) {
+                return $collection->aggregate([
+                    ['$sample' => ['size' => 1]]
+                ]);
+            })->first();
+        } else {
+            // inRandomOrder method is not supported mongodb
+            $organization = HrOrganization::inRandomOrder()->first();
         }
 
         return [
             'user_name' => $fakeUsername,
-            'emp_id' => $employee->employee_id,
+            'emp_id' => $employee ? $employee->employee_id : 0,
             'role_id' => fake()->numberBetween(1, 20),
-            'org_id' => $organization->org_id,
+            'org_id' => $organization ? $organization->org_id : '',
             'password' => static::$password ??= Hash::make('123456'),
             'emoji' => fake()->emoji(),
             'remember_token' => Str::random(10),

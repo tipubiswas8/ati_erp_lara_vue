@@ -9,22 +9,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // use MongoDB\Laravel\Eloquent\Model;
 
 if (env('USE_MONGODB', false)) {
-    class BaseModel extends \MongoDB\Laravel\Eloquent\Model {}
+    class Model extends \MongoDB\Laravel\Eloquent\Model {}
 } else {
-    class BaseModel extends \Illuminate\Database\Eloquent\Model {}
+    class Model extends \Illuminate\Database\Eloquent\Model {}
 }
 
-class Permission extends BaseModel
+class SaRole extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'org_id', 'created_by'];
 
-    public function roles()
+    public function permissions()
     {
-        return $this->belongsToMany(Role::class)
+        return $this->belongsToMany(SaPermission::class)
             ->withPivot('created_by')
             ->withTimestamps();
     }
-}
 
+    public function users()
+    {
+        return $this->belongsToMany(SaUser::class, 'sa_users');
+    }
+}
