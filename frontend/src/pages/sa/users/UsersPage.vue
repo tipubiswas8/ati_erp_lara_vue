@@ -20,7 +20,7 @@ const sendDataToTable = {
     'delete_url': 'security-access/user-delete'
   },
   custom_id: 'user_id',
-  custom_name: 'efull_name',
+  custom_name: 'en_full_name',
   th_name: {
     '1': 'Sl',
     '2': 'Username',
@@ -34,7 +34,7 @@ const sendDataToTable = {
   td_data: {
     '1': 'sl', // not change
     '2': 'user_name',
-    '3': 'efull_name',
+    '3': 'en_full_name',
     '4': 'ofie_email',
     '5': 'omobile_no',
   },

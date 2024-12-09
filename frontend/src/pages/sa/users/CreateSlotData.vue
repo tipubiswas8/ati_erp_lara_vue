@@ -25,9 +25,24 @@
       <a-label :style="{ color: '#780650' }">{{ fieldErrors.phone }}</a-label>
     </AFormItem>
 
-    <AFormItem :name="['user', 'organization_id']" label="Company Name">
+    <AFormItem :name="['user', 'organization_id']" label="Organization Id">
       <AInput v-model:value="formState.user.organization_id" />
       <a-label :style="{ color: '#780650' }">{{ fieldErrors.organization_id }}</a-label>
+    </AFormItem>
+
+    <AFormItem :name="['user', 'organization_name']" label="Organization">
+      <AInput v-model:value="formState.user.organization_name" />
+      <a-label :style="{ color: '#780650' }">{{ fieldErrors.organization_name }}</a-label>
+    </AFormItem>
+
+    <AFormItem :name="['user', 'department_name']" label="Department">
+      <AInput v-model:value="formState.user.department_name" />
+      <a-label :style="{ color: '#780650' }">{{ fieldErrors.department_name }}</a-label>
+    </AFormItem>
+
+    <AFormItem :name="['user', 'designation_name']" label="Designation">
+      <AInput v-model:value="formState.user.designation_name" />
+      <a-label :style="{ color: '#780650' }">{{ fieldErrors.designation_name }}</a-label>
     </AFormItem>
 
     <a-form-item has-feedback label="Password" :name="['user', 'password']">
@@ -72,6 +87,9 @@ interface EmployeeOption {
   phone: string; // Phone number
   email: string; // Email address
   organization_id?: string; // Optional company ID
+  organization_name?: string; // Optional company ID
+  department_name?: string; // Optional company ID
+  designation_name?: string; // Optional company ID
 }
 
 const employeeOptions = ref<EmployeeOption[]>([]);
@@ -88,6 +106,9 @@ const handleEmployeeChange = (eId: string) => {
     formState.user.email = selectedEmployee.email;
     formState.user.phone = selectedEmployee.phone;
     formState.user.organization_id = selectedEmployee.organization_id ?? '';
+    formState.user.organization_name = selectedEmployee.organization_name ?? '';
+    formState.user.department_name = selectedEmployee.department_name ?? '';
+    formState.user.designation_name = selectedEmployee.designation_name ?? '';
   }
   formRef.value?.validateFields();
 }
@@ -104,10 +125,13 @@ async function fetchAllEmployees() {
       
       employeeOptions.value = response.data.data.map((item: any) => ({
         value: item.EMPLOYEE_ID,
-        label: item.EFULL_NAME,
+        label: item.EN_FULL_NAME,
         phone: item.OMOBILE_NO,
         email: item.OFIE_EMAIL,
-        organization_id: item.ORG_ID
+        organization_id: item.ORG_ID,
+        organization_name: item.ORG_NAME,
+        department_name: item.DEPT_NAME,
+        designation_name: item.DESIG_NAME
       }));
     }
 
@@ -150,6 +174,9 @@ const formState = reactive({
     password: '' as string,
     checkPass: '' as string,
     organization_id: '' as string | null,
+    organization_name: '' as string | null,
+    department_name: '' as string | null,
+    designation_name: '' as string | null,
     status: '' as string | number
   },
 })
@@ -161,6 +188,9 @@ const fieldErrors = reactive({
   password: '',
   checkPass: '',
   organization_id: '',
+  organization_name: '',
+  department_name: '',
+  designation_name: '',
 })
 
 const layout = {

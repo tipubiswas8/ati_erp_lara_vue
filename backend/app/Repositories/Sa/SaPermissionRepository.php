@@ -3,7 +3,7 @@
 namespace App\Repositories\Sa;
 
 use App\Interface\Sa\SaPermissionInterface;
-use App\Models\Sa\Permission;
+use App\Models\Sa\SaPermission;
 use App\Models\Sa\SaUser;
 use Exception;
 use Illuminate\Validation\ValidationException;
@@ -19,7 +19,7 @@ class SaPermissionRepository implements SaPermissionInterface
     public function index()
     {
         try {
-            return response()->json(new PermissionCollection(Permission::all()), Response::HTTP_OK);
+            return response()->json(new PermissionCollection(SaPermission::all()), Response::HTTP_OK);
         } catch (Exception $e) {
             logError($e, 'Unable to load role data');
             return handleException($e, 'Unable to load role data', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -37,7 +37,7 @@ class SaPermissionRepository implements SaPermissionInterface
             // Validation passed
             try {
                 $validatedData['created_by'] = 1;
-                $permission = Permission::create($validatedData);
+                $permission = SaPermission::create($validatedData);
                 logInfo('Permission Created Successfully!', $permission);
                 responseSuccess('Permission Created Successfully!', new PermissionResource($permission), 201);
             } catch (\Exception $e) {
@@ -50,7 +50,7 @@ class SaPermissionRepository implements SaPermissionInterface
         }
     }
 
-    public function show(Permission $permission)
+    public function show(SaPermission $permission)
     {
         try {
             return response()->json(new PermissionResource($permission), Response::HTTP_OK);
@@ -60,11 +60,11 @@ class SaPermissionRepository implements SaPermissionInterface
         }
     }
 
-    public function edit(Permission $permission) {}
+    public function edit(SaPermission $permission) {}
 
-    public function update(Request $request, Permission $permission)
+    public function update(Request $request, SaPermission $permission)
     {
-        $user = Permission::find($request->id);
+        $user = SaPermission::find($request->id);
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found'], 404); // 404 Not Found
         }
@@ -117,7 +117,7 @@ class SaPermissionRepository implements SaPermissionInterface
     }
     public function status(Request $request)
     {
-        $user = Permission::find($request->id);
+        $user = SaPermission::find($request->id);
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found!'], 404);
         }
@@ -142,9 +142,9 @@ class SaPermissionRepository implements SaPermissionInterface
         }
     }
 
-    public function destroy(Permission $permission)
+    public function destroy(SaPermission $permission)
     {
-        $permission = Permission::find($permission->id);
+        $permission = SaPermission::find($permission->id);
         if ($permission) {
             try {
                 // $delete = Permission::destroy($permission->id);

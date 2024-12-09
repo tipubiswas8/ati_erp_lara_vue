@@ -35,7 +35,7 @@ const sendDataToTable = {
   last_th_align: 'center',
   td_data: {
     '1': 'sl', // not change
-    '2': 'EFULL_NAME',
+    '2': 'EN_FULL_NAME',
     '3': 'USER_NAME',
     '4': 'OFIE_EMAIL',
     '5': 'OMOBILE_NO',

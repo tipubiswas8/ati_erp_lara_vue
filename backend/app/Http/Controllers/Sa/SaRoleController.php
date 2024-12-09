@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Sa;
 
 use App\Http\Controllers\Controller;
-use App\Models\Sa\Role;
+use App\Models\Sa\SaRole;
 use Illuminate\Http\Request;
 use App\Interface\Sa\SaRoleInterface;
 
-class RoleController extends Controller
+class SaRoleController extends Controller
 {
 
     protected $saRoleInterface;
@@ -42,7 +42,7 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show(SaRole $role)
     {
         return $this->saRoleInterface->show($role);
     }
@@ -50,7 +50,7 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Role $role)
+    public function edit(SaRole $role)
     {
         return $this->saRoleInterface->edit($role);
     }
@@ -58,7 +58,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, SaRole $role)
     {
         return $this->saRoleInterface->update($request, $role);
     }
@@ -66,7 +66,7 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy(SaRole $role)
     {
         return $this->saRoleInterface->destroy($role);
     }

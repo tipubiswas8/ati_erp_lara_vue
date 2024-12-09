@@ -3,7 +3,7 @@
 namespace App\Repositories\Sa;
 
 use App\Interface\Sa\SaRoleInterface;
-use App\Models\Sa\Role;
+use App\Models\Sa\SaRole;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +17,7 @@ class SaRoleRepository implements SaRoleInterface
     public function index()
     {
         try {
-            return responseSuccess('All role fetch', RoleResource::collection(Role::all()), Response::HTTP_OK);
+            return responseSuccess('All role fetch', RoleResource::collection(SaRole::all()), Response::HTTP_OK);
         } catch (Exception $e) {
             logError($e, 'Unable to load role data');
             return handleException($e, 'Unable to load role data', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -45,7 +45,7 @@ class SaRoleRepository implements SaRoleInterface
 
         $validated = $validator->validated();
         try {
-            $role = Role::create($validated);
+            $role = SaRole::create($validated);
             logInfo('Role Created Successfully!', $role);
             responseSuccess('Role Created Successfully!', new RoleResource($role), 201);
         } catch (\Exception $e) {
@@ -54,7 +54,7 @@ class SaRoleRepository implements SaRoleInterface
         }
     }
 
-    public function show(Role $role)
+    public function show(SaRole $role)
     {
         try {
             return response()->json(new RoleResource($role), Response::HTTP_OK);
@@ -64,11 +64,11 @@ class SaRoleRepository implements SaRoleInterface
         }
     }
 
-    public function edit(Role $role) {}
+    public function edit(SaRole $role) {}
 
-    public function update(Request $request, Role $role)
+    public function update(Request $request, SaRole $role)
     {
-        $user = Role::find($request->id);
+        $user = SaRole::find($request->id);
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found'], 404); // 404 Not Found
         }
@@ -122,7 +122,7 @@ class SaRoleRepository implements SaRoleInterface
 
     public function status(Request $request)
     {
-        $user = Role::find($request->id);
+        $user = SaRole::find($request->id);
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found!'], 404);
         }
@@ -147,12 +147,12 @@ class SaRoleRepository implements SaRoleInterface
         }
     }
 
-    public function destroy(Role $role)
+    public function destroy(SaRole $role)
     {
-        $role = Role::find($role->id);
+        $role = SaRole::find($role->id);
         if ($role) {
             try {
-                $delete = Role::destroy($role->id);
+                $delete = SaRole::destroy($role->id);
                 // $delete = $role->delete(); 
                 if ($delete) {
                     logInfo('Role Deleted Successfully!', $role);

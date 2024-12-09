@@ -2,9 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Sa\RoleController;
+use App\Http\Controllers\Sa\SaRoleController;
 use App\Http\Controllers\Sa\SaUserController;
-use App\Http\Controllers\Sa\PermissionController;
+use App\Http\Controllers\Sa\SaPermissionController;
 use App\Http\Controllers\Hr\HrEmployeeController;
 
 Route::post('/login', function (Request $request) {
@@ -23,8 +23,8 @@ Route::prefix('security-access')->group(function () {
     Route::patch('/user-status', [SaUserController::class, 'status']);
     Route::delete('/user-delete/{id}', [SaUserController::class, 'destroy']);
     // role and permission
-    Route::resource('roles', RoleController::class);
-    Route::resource('permissions', PermissionController::class);
+    Route::resource('roles', SaRoleController::class);
+    Route::resource('permissions', SaPermissionController::class);
 });
 Route::prefix('hr')->group(function () {
 // employees

@@ -22,6 +22,18 @@ class HrEmployee extends Model
 
     protected $primaryKey = 'employee_id'; // Set the primary key
 
+    public function organization(): HasOne
+    {
+        return $this->hasOne(HrOrganization::class, 'org_id', 'org_id');
+    }
+    public function department(): HasOne
+    {
+        return $this->hasOne(HrDepartment::class, 'dept_id', 'dept_id');
+    }
+    public function designationTable(): HasOne
+    {
+        return $this->hasOne(HrDesignation::class, 'desig_id', 'desig_id');
+    }
     public function user(): HasOne
     {
         return $this->hasOne(SaUser::class, 'emp_id', 'employee_id');

@@ -18,12 +18,21 @@ class EmployeeResource extends JsonResource
         // return $this->resource;
         return [
             'EMPLOYEE_ID' => $this->employee_id,
-            'EFULL_NAME' => $this->efull_name,
+            'EN_FULL_NAME' => $this->en_full_name,
             'OFIE_EMAIL' => $this->ofie_email,
             'OMOBILE_NO' => $this->omobile_no,
             'PRES_ADDRS' => $this->pres_addrs,
-            'ORG_ID' => $this->org_id,
             'ASTATUS_FG' => $this->astatus_fg,
+            'ORG_ID' => $this->organization ? $this->organization->org_id : null,
+            'ORG_NAME' => $this->organization ? $this->organization->org_name : null,
+            'ORG_ABBR' => $this->organization ? $this->organization->org_abbr : null,
+            'DEPT_ID' => $this->department?->dept_id,
+            'DEPT_NAME' => $this->department?->dept_name,
+            'DEPT_ABBR' => $this->department?->dept_abbr,
+            'DESIG_ID' => $this->designationTable?->desig_id,
+            'DESIG_NAME' => $this->designationTable?->desig_name,
+            'DESIG_ABBR' => $this->designationTable?->desig_abbr,
+            'USER_ID' => $this->user ? $this->user->id : null,
             'USER_NAME' => $this->user ? $this->user->user_name : null,
         ];
     }

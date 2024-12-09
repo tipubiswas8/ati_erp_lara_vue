@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Sa;
 
-use App\Models\Sa\Permission;
+use App\Models\Sa\SaPermission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Interface\Sa\SaPermissionInterface;
 
-class PermissionController extends Controller
+class SaPermissionController extends Controller
 {
 
     protected $saPermissionInterface;
@@ -42,7 +42,7 @@ class PermissionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Permission $permission)
+    public function show(SaPermission $permission)
     {
         return $this->saPermissionInterface->show($permission);
     }
@@ -50,7 +50,7 @@ class PermissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Permission $permission)
+    public function edit(SaPermission $permission)
     {
         return $this->saPermissionInterface->edit($permission);
     }
@@ -58,7 +58,7 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Permission $permission)
+    public function update(Request $request, SaPermission $permission)
     {
         return $this->saPermissionInterface->update($request, $permission);
     }
@@ -66,7 +66,7 @@ class PermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Permission $permission)
+    public function destroy(SaPermission $permission)
     {
         return $this->saPermissionInterface->destroy($permission);
     }

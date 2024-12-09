@@ -15,7 +15,7 @@ class HrEmployeeRepository implements HrEmployeeInterface
 {
     public function index()
     {
-        return responseSuccess('All employee fetch', EmployeeResource::collection(HrEmployee::with('user')->get()), 200);
+        return responseSuccess('All employee fetch', EmployeeResource::collection(HrEmployee::where('astatus_fg', 1)->with('user')->get()), 200);
 
         // try {
         //     $employees = HrEmployee::with('users')->paginate(10);
@@ -150,7 +150,9 @@ class HrEmployeeRepository implements HrEmployeeInterface
             } catch (Exception $e) {
                 // Redis unavailable or data not in cache, fetch from database
                 $data_source = 'data from database';
-                $employees = HrEmployee::take(20000)->get();
+                // $employees = HrEmployee::take(20000)->get();
+                // $employees = HrEmployee::all()->where('astatus_fg', 1);
+                $employees = HrEmployee::with(['designationTable', 'organization', 'department', 'user'])->get();
                 $data = EmployeeResource::collection($employees);
 
                 // Attempt to cache in Redis if available
