@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, h, computed } from 'vue'
 import axios from 'axios'
-import { Button, Popconfirm, message } from 'ant-design-vue'
+import { Button, Popconfirm, message, Spin } from 'ant-design-vue'
 import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import EditModal from '@src/modals/EditModal.vue'
 import StatusUpdate from '@src/modals/StatusUpdate.vue'
@@ -30,6 +30,7 @@ const props = defineProps({
 const tableData = ref([])
 const userData = ref({})
 const openEditModal = ref(false)
+const isLoading = ref(false)
 const openViewModal = ref(false)
 const openStatusUpdate = ref(false)
 const pagination = ref({
@@ -160,9 +161,8 @@ const transformData = (data: any[]) => {
   }));
 };
 
-
-
 async function fetchData() {
+  isLoading.value = true; // Start loading
   try {
     const response = await axios.get(props.requestData?.urls.data_url);
     if (response.status === 200) {
@@ -173,9 +173,10 @@ async function fetchData() {
     }
   } catch (error) {
     console.log(error);
+  } finally {
+    isLoading.value = false; // End loading
   }
 }
-
 
 onMounted(() => {
   fetchData()
@@ -248,13 +249,15 @@ const editComponent = props.editData?.editComponent;
 </script>
 
 <template>
-  <ATable :columns="columns" :data-source="tableData" :pagination="{
-    current: pagination.current,
-    pageSize: pagination.pageSize,
-    total: pagination.total,
-    showSizeChanger: pagination.showSizeChanger,
-    showQuickJumper: pagination.showQuickJumper,
-  }" @change="handleTableChange" />
+  <Spin :spinning="isLoading" tip="Loading..." size="large">
+    <ATable :columns="columns" :data-source="tableData" :pagination="{
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+      total: pagination.total,
+      showSizeChanger: pagination.showSizeChanger,
+      showQuickJumper: pagination.showQuickJumper,
+    }" @change="handleTableChange" />
+  </Spin>
   <EditModal v-if="openEditModal" :edit-data="userData" @close="closeEditModal">
     <component :is="editComponent" />
   </EditModal>

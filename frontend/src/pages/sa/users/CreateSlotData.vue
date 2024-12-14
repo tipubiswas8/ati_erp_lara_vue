@@ -1,7 +1,7 @@
 <template>
   <SuccessNotification v-if="success" :message="successMessage.message" />
-  <AForm :model="formState" :rules="rules" v-bind="layout" name="nest-messages" :validate-messages="validateMessages" ref="formRef"
-    @finish="onFinish">
+  <AForm :model="formState" :rules="rules" v-bind="layout" name="nest-messages" :validate-messages="validateMessages"
+    ref="formRef" @finish="onFinish">
 
     <AFormItem :name="['user', 'employee']" label="Employee"
       :rules="[{ required: true, message: 'Please select an employee!' }]">
@@ -25,7 +25,7 @@
       <a-label :style="{ color: '#780650' }">{{ fieldErrors.phone }}</a-label>
     </AFormItem>
 
-    <AFormItem :name="['user', 'organization_id']" label="Organization Id">
+    <AFormItem :name="['user', 'organization_id']" label="Organization Id" :style="{ display: 'none' }">
       <AInput v-model:value="formState.user.organization_id" />
       <a-label :style="{ color: '#780650' }">{{ fieldErrors.organization_id }}</a-label>
     </AFormItem>
@@ -122,7 +122,7 @@ async function fetchAllEmployees() {
     const response = await axios.get(props.userData?.employee_get_url);
     if (response.status === 200) {
       console.log(response.data);
-      
+
       employeeOptions.value = response.data.data.map((item: any) => ({
         value: item.EMPLOYEE_ID,
         label: item.EN_FULL_NAME,
