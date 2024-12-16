@@ -52,6 +52,9 @@ const showCreateModal = () => {
 };
 
 const closeCreateModal = () => {
+
+  console.log('nnfnnfnf');
+
   isCMOpen.value = false
 };
 
@@ -78,7 +81,7 @@ const sendPropDataForCm = reactive({
     titleBgColor: '#82c953', /* modal title */
     titleTextColor: 'white', /* title text color*/
     // height: 45, /* modal height */
-    // width: 35, /* modal width*/
+    width: 60, /* modal width*/
     footer: true, /* modal footer*/
     footerButtonBgColor: 'red', /* modal close button background color*/
   }
@@ -119,9 +122,6 @@ const sendPropDataForVm = reactive({
   }
 });
 
-let clickOnFinished = {};
-
-
 // for edit
 const sendEditSlotToTable = {
   editComponent: EditModalSlotData, // Pass the Vue file as a prop
@@ -144,7 +144,7 @@ const sendEditSlotToTable = {
   <DataTable :request-data="sendDataToTable" :edit-data="sendEditSlotToTable" @isViewModalOpen="emitDataForView"
     @userDataForView="userDataForViewModal" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCm">
-    <CreateModalSlotData @formData="addNewUser" :user-data="sendUserDataToCreateForm" />
+    <CreateModalSlotData @closeCM="closeCreateModal" @formData="addNewUser" :user-data="sendUserDataToCreateForm" />
   </CreateModal>
   <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :user-view-modal-data="sendPropDataForVm">
     <ViewModalSlotData :selected-user-information="userInformation" />

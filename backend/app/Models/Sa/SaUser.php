@@ -29,13 +29,15 @@ class SaUser extends Authenticatable2
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'user_name',
         'email',
-        'phone',
-        'address',
+        'emp_id',
+        'role_id',
         'org_id',
         'password',
-        'status'
+        'status',
+        'created_by',
+        'updated_by'
     ];
 
     /**

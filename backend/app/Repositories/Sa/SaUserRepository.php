@@ -13,6 +13,8 @@ use App\Http\Resources\Sa\User\UserResource;
 use App\Http\Resources\Sa\User\UserCollection;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Hr\HrEmployee;
+use Illuminate\Support\Facades\DB;
+
 
 class SaUserRepository implements SaUserInterface
 {
@@ -122,12 +124,16 @@ class SaUserRepository implements SaUserInterface
         //     $dbImagePath = $uniqueFileName;
         // }
 
+
         $rules = [
-            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:20|unique:sa_users,user_name',
             'email' => 'required|email|unique:sa_users,email',
-            'phone' => 'required|digits_between:10,11', // Correct phone validation
-            'address' => 'nullable|string|max:255',
-            'password' => 'required|string|min:6',
+            'emp_id' => 'required|digits_between:1,3',
+            // 'emp_id' => 'required|integer|between:1,3',
+            'org_id' => 'required|string',
+            'role_id' => 'required|array',
+            'status' => 'required|boolean',
+            'password' => 'required|string|min:6|confirmed',
         ];
 
         // Validate the request data against the dynamic rules
@@ -140,15 +146,46 @@ class SaUserRepository implements SaUserInterface
 
         // Get the validated data
         $validated = $validator->validated();
-        $validated['status'] = 1;
+        $validated['status'] = $validated['status'] ? 1 : 0;
+        $validated['role_id'] = $validated['role_id'][0];
+
         try {
-            $user = SaUser::create($validated);
-            logInfo('User registration successful!', $user);
-            responseSuccess('User registration successful!', new UserResource($user), 201);
+            DB::beginTransaction(); // Begin a transaction
+
+            // Check if the user exists (based on emp_id)
+            $user = SaUser::where('emp_id', $validated['emp_id'])->first();
+            $operation = $user ? 'update' : 'create'; // Determine the operation
+
+            // Dynamically set created_by or updated_by
+            if ($operation === 'update') {
+                $validated['updated_by'] = 2; // Existing user, set updated_by
+            } else {
+                $validated['created_by'] = 1; // New user, set created_by
+            }
+
+            // Update or Create the user
+            $user = SaUser::updateOrCreate(
+                ['emp_id' => $validated['emp_id']], // Search condition
+                $validated // Data to update or create
+            );
+
+            DB::commit(); // Commit the transaction
+
+            // Prepare response messages
+            $message = $operation === 'update'
+                ? 'User update successful!'
+                : 'User registration successful!';
+
+            // Log and respond
+            logInfo($message, $user);
+            return responseSuccess($message, new UserResource($user), $operation === 'update' ? 200 : 201);
         } catch (\Exception $e) {
-            logError($e, 'User registration failed!', $request->all());
-            return handleException($e, 'User registration failed!', Response::HTTP_INTERNAL_SERVER_ERROR);
+            DB::rollBack(); // Rollback the transaction on error
+            logError($e, 'User operation failed!', $request->all());
+            return handleException($e, 'User operation failed!', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        // return response()->json($user);
     }
     public function update(Request $request)
     {
