@@ -135,10 +135,10 @@ const fieldErrors = reactive({
   organization_name: '',
 })
 
-const sendToUserPage = defineEmits(['formData', 'closeCM']);
+const sendToUserPage = defineEmits(['newAddedUserData', 'updatedUserData', 'closeCM']);
 
 const handleCancel = () => {
-  sendToUserPage('closeCM')
+  sendToUserPage('closeCM');
 }
 
 const props = defineProps({
@@ -269,16 +269,17 @@ const onFinish = async () => {
   try {
     updatePassword();
     const response = await axios.post(props.userData?.create_url, formState.user);
-    console.log(response);
     if (response.status === 201) {
       success.value = true
       successMessage.message = response.data.message
+      sendToUserPage('newAddedUserData', response.data.data);
       setTimeout(function () {
         handleCancel();
       }, 0);
     } else if (response.status === 200) {
       success.value = true
       successMessage.message = response.data.message;
+      sendToUserPage('updatedUserData', response.data.data);
       setTimeout(function () {
         handleCancel();
       }, 0);

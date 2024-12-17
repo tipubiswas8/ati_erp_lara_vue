@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, h, computed } from 'vue'
+import { ref, onMounted, h, computed, watch } from 'vue'
 import axios from 'axios'
 import { Button, Popconfirm, message, Spin } from 'ant-design-vue'
 import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons-vue'
@@ -25,13 +25,14 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  newUserData: Object, // New user data
+  updatedUserData: Object, // updated user data
 })
 
 const tableData = ref([])
 const userData = ref({})
 const openEditModal = ref(false)
 const isLoading = ref(false)
-const openViewModal = ref(false)
 const openStatusUpdate = ref(false)
 const pagination = ref({
   current: 1,          // Current page
@@ -161,6 +162,46 @@ const transformData = (data: any[]) => {
   }));
 };
 
+// Watch for new user data
+watch(
+  () => props.newUserData,
+  (newUserInfo) => {
+    if (newUserInfo && Object.keys(newUserInfo).length > 0) {
+      const sl = tableData.value.length + 1; // Generate serial number
+      tableData.value.push({
+        ...newUserInfo,
+        sl,
+      });
+    }
+  },
+  { deep: true }
+);
+
+// Watch for updated user data
+watch(
+  () => props.updatedUserData,
+  (updatedUserInformation) => {
+    if (updatedUserInformation && Object.keys(updatedUserInformation).length > 0) {
+      // Find the index of the user in tableData based on a unique ID
+      const index = tableData.value.findIndex(
+        (user) => user.id === updatedUserInformation.user_id
+      );
+
+      if (index !== -1) {
+        // Update the specific user in the tableData array
+        tableData.value[index] = {
+          ...tableData.value[index], // Keep existing properties
+          ...updatedUserInformation, // Overwrite with updated properties
+        };
+      }
+    }
+  },
+  { deep: true }
+);
+
+
+
+
 async function fetchData() {
   isLoading.value = true; // Start loading
   try {
@@ -201,12 +242,6 @@ const handleView = (id: number) => {
   if (selectedUser) {
     setEmit('userDataForView', selectedUser);
   }
-}
-
-const closeViewModal = () => {
-  setEmit('isViewModalOpen', false);
-  openViewModal.value = false
-  userData.value = {}
 }
 
 const handleDelete = async (id: number) => {

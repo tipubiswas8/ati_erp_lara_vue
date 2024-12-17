@@ -46,34 +46,38 @@ const sendDataToTable = {
 // for create table
 // ================
 const isCMOpen = ref(false);
-const uData = ref({});
+const newData = ref({});
 const showCreateModal = () => {
   isCMOpen.value = true
 };
 
 const closeCreateModal = () => {
-
-  console.log('nnfnnfnf');
-
   isCMOpen.value = false
 };
 
-
+interface User {
+  [key: string]: any; // Allow other dynamic properties
+}
 // Push the newly added user to the data array
-const addNewUser = (newUser: object) => {
-  uData.value = newUser;
-  const sl = data.value.length + 1 // Generate new serial number for the user
-  data.value.push({
+const addNewUser = (newUser: User) => {
+  newData.value = {
     ...newUser,
-    sl
-  })
+    id: newUser.user_id, // Add the 'id' field
+  };
+  setTimeout(() => {
+    newData.value = {}; // Clear after updating
+  }, 0);
 }
 
+let updatedUserInfo: object;
+const updatedUser = (uUser: object) => {
+  updatedUserInfo = uUser;
+}
 const sendUserDataToCreateForm = {
   create_url: 'security-access/user-register',
   employee_get_url: 'hr/all-employees',
   role_get_url: 'security-access/roles',
-  }
+}
 
 const sendPropDataForCm = reactive({
   config: {
@@ -141,10 +145,11 @@ const sendEditSlotToTable = {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" :edit-data="sendEditSlotToTable" @isViewModalOpen="emitDataForView"
-    @userDataForView="userDataForViewModal" />
+  <DataTable :request-data="sendDataToTable" :new-user-data="newData" :updated-user-data="updatedUserInfo"
+    :edit-data="sendEditSlotToTable" @isViewModalOpen="emitDataForView" @userDataForView="userDataForViewModal" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCm">
-    <CreateModalSlotData @closeCM="closeCreateModal" @formData="addNewUser" :user-data="sendUserDataToCreateForm" />
+    <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addNewUser" @updatedUserData="updatedUser"
+      :user-data="sendUserDataToCreateForm" />
   </CreateModal>
   <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :user-view-modal-data="sendPropDataForVm">
     <ViewModalSlotData :selected-user-information="userInformation" />
