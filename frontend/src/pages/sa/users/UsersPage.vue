@@ -5,9 +5,7 @@ import CreateModalSlotData from '@src/pages/sa/users/CreateSlotData.vue'
 import EditModalSlotData from '@src/pages/sa/users/EditSlotData.vue'
 import ViewModal from '@src/modals/ViewModal.vue'
 import ViewModalSlotData from '@src/pages/sa/users/ViewSlotData.vue'
-
 import { ref, reactive } from 'vue'
-
 
 // for data table
 // ==============
@@ -15,7 +13,7 @@ const sendDataToTable = {
   urls: {
     'data_url': 'security-access/users',
     'view_url': 'security-access/users',
-    'edit_url': 'security-access/users',
+    'edit_url': 'security-access/user-update',
     'status_url': 'security-access/user-status',
     'delete_url': 'security-access/user-delete'
   },
@@ -41,7 +39,6 @@ const sendDataToTable = {
   td_align: 'left',
   last_td_align: 'center',
 };
-
 
 // for create table
 // ================
@@ -71,15 +68,19 @@ const addNewUser = (newUser: User) => {
 
 let updatedUserInfo: object;
 const updatedUser = (uUser: object) => {
-  updatedUserInfo = uUser;
+  updatedUserInfo = {
+    ...uUser,
+    id: uUser.user_id,
+  }
 }
+
 const sendUserDataToCreateForm = {
   create_url: 'security-access/user-register',
   employee_get_url: 'hr/all-employees',
   role_get_url: 'security-access/roles',
 }
 
-const sendPropDataForCm = reactive({
+const sendPropDataForCM = reactive({
   config: {
     title: 'Add New User', /* modal title */
     titleBgColor: '#82c953', /* modal title */
@@ -114,7 +115,7 @@ const userDataForViewModal = (userData: object) => {
   userInformation.value = userData;
 }
 
-const sendPropDataForVm = reactive({
+const sendPropDataForVM = reactive({
   config: {
     title: 'User Information', /* modal title */
     titleBgColor: '#82c953', /* modal title */
@@ -129,8 +130,21 @@ const sendPropDataForVm = reactive({
 // for edit
 const sendEditSlotToTable = {
   editComponent: EditModalSlotData, // Pass the Vue file as a prop
+  sendPropDataForEM: {
+    config: {
+      title: 'Update User Information', /* modal title */
+      titleBgColor: '#82c953', /* modal title */
+      titleTextColor: 'white', /* title text color*/
+      // height: 45, /* modal height */
+      width: 60, /* modal width*/
+      footer: true, /* modal footer*/
+      footerButtonBgColor: 'red', /* modal close button background color*/
+    }
+  },
+  othersData: {
+    role_get_url: 'security-access/roles',
+  }
 };
-
 
 </script>
 
@@ -145,13 +159,13 @@ const sendEditSlotToTable = {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" :new-user-data="newData" :updated-user-data="updatedUserInfo"
-    :edit-data="sendEditSlotToTable" @isViewModalOpen="emitDataForView" @userDataForView="userDataForViewModal" />
-  <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCm">
+  <DataTable :request-data="sendDataToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
+    :edit-data="sendEditSlotToTable" @isViewModalOpen="emitDataForView" @dataForViewModal="userDataForViewModal" />
+  <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCM">
     <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addNewUser" @updatedUserData="updatedUser"
       :user-data="sendUserDataToCreateForm" />
   </CreateModal>
-  <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :user-view-modal-data="sendPropDataForVm">
+  <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :user-view-modal-data="sendPropDataForVM">
     <ViewModalSlotData :selected-user-information="userInformation" />
   </ViewModal>
 </template>

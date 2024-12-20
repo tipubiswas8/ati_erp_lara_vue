@@ -13,7 +13,9 @@ use App\Http\Resources\Sa\User\UserResource;
 use App\Http\Resources\Sa\User\UserCollection;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Hr\HrEmployee;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 
 class SaUserRepository implements SaUserInterface
@@ -194,38 +196,176 @@ class SaUserRepository implements SaUserInterface
             return response()->json(['status' => false, 'message' => 'User not found'], 404); // 404 Not Found
         }
 
-        $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|digits_between:10,11', // Correct phone validation
-            'address' => 'nullable|string|max:255',
-            'password' => 'required|string|min:6',
-            'status' => 'required',
+        $requestAll = [
+            // fpr user tablle
+            'user_id' => $request->user_id,
+            'user_name' => $request->user_name,
+            'official_email' => $request->official_email,
+            'role_name' => $request->role_name,
+            'status' => $request->status,
+            'old_password' => $request->old_password,
+            'new_password' => $request->new_password,
+            'new_password_confirmation' => $request->confirm_password,
+            // for employee table
+            'emp_id' => $request->emp_id,
+            'emp_name' => $request->emp_name,
+            'official_email' => $request->official_email,
+            'personal_email' => $request->personal_email,
+            'official_mob' => $request->official_mob,
+            'personal_mob' => $request->personal_mob,
         ];
 
+        $rules = [
+            // for user tablle
+            'user_id' => 'required',
+            'user_name' => 'required|string|max:20',
+            'official_email' => 'required|email',
+            'role_name' => 'required|array',
+            'status' => 'required|boolean',
+            // for employee table
+            'emp_id' => 'required',
+            'emp_name' => 'required|string|max:20',
+            'official_email' => 'required|email',
+            'personal_email' => 'nullable|email',
+            'official_mob' => ['required', 'regex:/^\d{10,11}$/'],
+            // or 
+            'personal_mob' => 'nullable|digits_between:10,11',
+        ];
+
+        $addNewPasswordRule = false;
+
+        if (Hash::check($requestAll['old_password'], $user->password)) {
+            $addNewPasswordRule = true;
+        }
+
+        if ($requestAll['old_password']) {
+            $rules['old_password'] = [
+                'nullable',
+                'string',
+                function ($attribute, $value, $fail) use ($user) {
+                    if (!Hash::check($value, $user->password)) {
+                        $fail('The old password is incorrect.');
+                    }
+                },
+            ];
+            if ($addNewPasswordRule) {
+                $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
+            }
+        }
+
+        if ($requestAll['new_password']) {
+            if (!$requestAll['old_password']) {
+                $rules['old_password'] = [
+                    function ($attribute, $value, $fail) {
+                        $fail('Please input old password first.');
+                    }
+                ];
+            } elseif ($requestAll['old_password']) {
+                $rules['old_password'] = [
+                    'nullable',
+                    'string',
+                    function ($attribute, $value, $fail) use ($user) {
+                        if (!Hash::check($value, $user->password)) {
+                            $fail('The old password is incorrect.');
+                        }
+                    },
+                ];
+            } else {
+                $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
+            }
+        }
+
+        if ($requestAll['new_password_confirmation']) {
+            if (!$requestAll['old_password']) {
+                $rules['old_password'] = [
+                    function ($attribute, $value, $fail) {
+                        $fail('Please input old password first.');
+                    }
+                ];
+            } elseif ($requestAll['old_password']) {
+                $rules['old_password'] = [
+                    'nullable',
+                    'string',
+                    function ($attribute, $value, $fail) use ($user) {
+                        if (!Hash::check($value, $user->password)) {
+                            $fail('The old password is incorrect.');
+                        }
+                    },
+                ];
+            } else {
+                $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
+            }
+
+            if ($requestAll['new_password']) {
+                if (!$requestAll['old_password']) {
+                    $rules['old_password'] = [
+                        function ($attribute, $value, $fail) {
+                            $fail('Please input old password first.');
+                        }
+                    ];
+                } elseif ($requestAll['old_password']) {
+                    $rules['old_password'] = [
+                        'nullable',
+                        'string',
+                        function ($attribute, $value, $fail) use ($user) {
+                            if (!Hash::check($value, $user->password)) {
+                                $fail('The old password is incorrect.');
+                            }
+                        },
+                    ];
+                } else {
+                    $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
+                }
+            }
+        }
+
+        if (!$requestAll['new_password']) {
+            $rules['new_password'] = 'nullable';
+        }
         // Validate the request data against the dynamic rules
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($requestAll, $rules);
 
         if ($validator->fails()) {
             logWarning('Validation error during user update', $validator->errors(), $request->all());
             return handleValidationError($validator->errors(), 'Validation error during user update', 400);
         }
+
         $validated = $validator->validated();
+        $employee_id = $validated['emp_id'];
+        $updated_by = $validated['updated_by'] = 4;
+
         try {
-            $user->name = $validated['name'];
-            $user->email = $validated['email'];
-            $user->phone = $validated['phone'];
-            $user->address = $validated['address'] ?? $user->address; // Keep existing address if not provided
-            $user->password = $validated['password'];
-            $user->status = $validated['status'];
+            DB::beginTransaction(); // Begin a transaction
+            $user->user_name = $validated['user_name'];
+            $user->email = $validated['official_email'];
+            $user->role_id = $validated['role_name'][0];
+            $user->password = $validated['new_password'] ? $validated['new_password'] : '';
+            $user->status = $validated['status'] ? 1 : 0;
+            $user->updated_by = $updated_by;
+            $user->updated_at = Carbon::now();
             $user->save();
-            logInfo('User Update Successfully!', $user);
-            responseSuccess('User Update Successfully!', $user, 204);
+
+            $employee = HrEmployee::find($employee_id);
+            $employee->en_full_name = $validated['emp_name'];
+            $employee->ofie_email = $validated['official_email'];
+            $employee->omobile_no = $validated['official_mob'];
+            $employee->ppo_hemail = $validated['personal_email'];
+            $employee->pmobile_no = $validated['personal_mob'];
+            $employee->astatus_fg = $validated['status'] ? 1 : 0;
+            $employee->updated_by = $updated_by;
+            $employee->updated_at = Carbon::now();
+            $employee->save();
+
+            DB::commit();
+            logInfo('User Update Successfully!', $employee);
+            responseSuccess('User Update Successfully!', $user, 200);
         } catch (Exception $e) {
+            DB::rollBack();
             logError($e, 'User Update Failed!', $request->all());
             return handleException($e, 'User Update Failed!');
         }
     }
+
     public function status(Request $request)
     {
         $user = SaUser::find($request->id);

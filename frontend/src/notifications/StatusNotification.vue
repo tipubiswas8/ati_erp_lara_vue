@@ -19,13 +19,13 @@ const emitData = reactive({
 });
 
 const openNotificationWithIcon = (
-type: 'success' | 'info' | 'warning' | 'error', 
-response: { responseStatus: boolean; responseUserName: string },
+  type: 'success' | 'info' | 'warning' | 'error',
+  response: { responseStatus: boolean; responseMessage: string },
 ) => {
   const action = response.responseStatus === false ? 'deactivated' : 'activated';
   notification[type]({
     message: 'Response Notification',
-    description: `${response.responseUserName} was ${action} successfully!`,
+    description: `${response.responseMessage} was ${action} successfully!`,
     placement: 'topRight',
     duration: 1
   });
@@ -77,12 +77,12 @@ const openNotification = () => {
                   emitData.responseFeedback = true;
                   const responseData = {
                     responseStatus: response.data.data.status,
-                    responseUserName: response.data.data.user_name,
+                    responseMessage: response.data.data.user_name,
                   }
-                  openNotificationWithIcon('success', { responseStatus: responseData.responseStatus, responseUserName: responseData.responseUserName });
+                  openNotificationWithIcon('success', { responseStatus: responseData.responseStatus, responseMessage: responseData.responseMessage });
                   setTimeout(() => {
                     emitData.statusUpdate = false;
-                  }, 1000)
+                  }, 4000)
                 }
               } catch (error) {
                 console.log(error)

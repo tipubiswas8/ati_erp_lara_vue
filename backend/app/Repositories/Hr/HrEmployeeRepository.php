@@ -44,7 +44,60 @@ class HrEmployeeRepository implements HrEmployeeInterface
         // }
     }
     public function create() {}
-    public function store(Request $requestData) {}
+    public function store(Request $requestData)
+    {
+        // $user = SaUser::find($request->id);
+
+        // $requestAll = [
+        //     // fpr user tablle
+        //     'user_id' => $request->user_id,
+        //     'user_name' => $request->user_name,
+        //     'official_email' => $request->official_email,
+        //     'role_name' => $request->role_name,
+        //     'status' => $request->status,
+        //     'old_password' => $request->old_password,
+        //     'new_password' => $request->new_password,
+
+        //     // for employee table
+        //     'emp_id' => $request->emp_id,
+        //     'emp_name' => $request->emp_name,
+        //     'official_email' => $request->official_email,
+        //     'personal_email' => $request->personal_email,
+        //     'official_mob' => $request->official_mob,
+        //     'personal_mob' => $request->personal_mob,
+        // ];
+
+
+        // $rules = [
+        //     // fpr user tablle
+        //     'user_id' => 'required',
+        //     'user_name' => 'required|string|max:20|unique:sa_users,user_name',
+        //     'official_email' => 'required|email|unique:sa_users,email',
+        //     'role_name' => 'required|array',
+        //     'status' => 'required|boolean',
+        //     'old_password' => [
+        //         'nullable',
+        //         'string',
+        //         'min:6',
+        //         'max:20',
+        //         function ($attribute, $value, $fail) use ($user) {
+        //             if (!Hash::check($value, $user->password)) {
+        //                 $fail('The old password is incorrect.');
+        //             }
+        //         },
+        //     ],
+        //     'new_password' => 'nullable|string|min:6|max:20|confirmed',
+
+        //     // for employee table
+        //     'emp_id' => 'required',
+        //     'emp_name' => 'required|string|max:20',
+        //     'official_email' => 'required|email|unique:hr_employees,ofie_email',
+        //     'personal_email' => 'nullable|email|unique:hr_employees,ppo_hemail',
+        //     'official_mob' => 'required|integer|between:10,11|unique:hr_employees,omobile_no',
+        //     'personal_mob' => 'nullable|integer|between:10,11|unique:hr_employees,pmobile_no',
+        // ];
+
+    }
 
     public function show(HrEmployee $hrEmployee)
     {
@@ -56,7 +109,59 @@ class HrEmployeeRepository implements HrEmployeeInterface
         }
     }
     public function edit(HrEmployee $hrEmployee) {}
-    public function update(Request $requestData, HrEmployee $hrEmployee) {}
+    public function update(Request $requestData, HrEmployee $hrEmployee)
+    {
+        // $user = SaUser::find($request->id);
+
+        // $requestAll = [
+        //     // fpr user tablle
+        //     'user_id' => $request->user_id,
+        //     'user_name' => $request->user_name,
+        //     'official_email' => $request->official_email,
+        //     'role_name' => $request->role_name,
+        //     'status' => $request->status,
+        //     'old_password' => $request->old_password,
+        //     'new_password' => $request->new_password,
+
+        //     // for employee table
+        //     'emp_id' => $request->emp_id,
+        //     'emp_name' => $request->emp_name,
+        //     'official_email' => $request->official_email,
+        //     'personal_email' => $request->personal_email,
+        //     'official_mob' => $request->official_mob,
+        //     'personal_mob' => $request->personal_mob,
+        // ];
+
+
+        // $rules = [
+        //     // fpr user tablle
+        //     'user_id' => 'required',
+        //     'user_name' => 'required|string|max:20|unique:sa_users,user_name',
+        //     'official_email' => 'required|email|unique:sa_users,email',
+        //     'role_name' => 'required|array',
+        //     'status' => 'required|boolean',
+        //     'old_password' => [
+        //         'nullable',
+        //         'string',
+        //         'min:6',
+        //         'max:20',
+        //         function ($attribute, $value, $fail) use ($user) {
+        //             if (!Hash::check($value, $user->password)) {
+        //                 $fail('The old password is incorrect.');
+        //             }
+        //         },
+        //     ],
+        //     'new_password' => 'nullable|string|min:6|max:20|confirmed',
+
+        //     // for employee table
+        //     'emp_id' => 'required',
+        //     'emp_name' => 'required|string|max:20',
+        //     'official_email' => 'required|email|unique:hr_employees,ofie_email',
+        //     'personal_email' => 'nullable|email|unique:hr_employees,ppo_hemail',
+        //     'official_mob' => 'required|integer|between:10,11|unique:hr_employees,omobile_no',
+        //     'personal_mob' => 'nullable|integer|between:10,11|unique:hr_employees,pmobile_no',
+        // ];
+    }
 
     public function destroy(HrEmployee $hrEmployee)
     {

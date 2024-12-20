@@ -4,9 +4,9 @@ import axios from 'axios'
 import { Button, Popconfirm, message, Spin } from 'ant-design-vue'
 import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import EditModal from '@src/modals/EditModal.vue'
-import StatusUpdate from '@src/modals/StatusUpdate.vue'
+import StatusNotification from '@src/notifications/StatusNotification.vue'
 
-const setEmit = defineEmits(['isViewModalOpen', 'userDataForView']);
+const setEmit = defineEmits(['isViewModalOpen', 'dataForViewModal']);
 
 message.config({
   top: '50px',
@@ -25,12 +25,12 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  newUserData: Object, // New user data
-  updatedUserData: Object, // updated user data
+  dataForCreate: Object,
+  dataForUpdate: Object,
 })
 
 const tableData = ref([])
-const userData = ref({})
+const information = ref({})
 const openEditModal = ref(false)
 const isLoading = ref(false)
 const openStatusUpdate = ref(false)
@@ -38,19 +38,18 @@ const pagination = ref({
   current: 1,          // Current page
   pageSize: 10,        // Items per page
   total: 0,            // Total items (updated from API response)
-  showSizeChanger: true, // Allow user to change page size
-  showQuickJumper: true, // Allow user to jump to specific page
+  showSizeChanger: true, // Allow data to change page size
+  showQuickJumper: true, // Allow data to jump to specific page
 });
 
-const selectedUserId = ref<number | null>(null)
+const selectedInfoId = ref<number | null>(null);
 
-// Computed property to get the selected user based on the ID
-// eslint-disable-next-line prettier/prettier
-const selectedUserForStatusChange = computed(() => {
-  const user = tableData.value.find((user) => user.id === selectedUserId.value) || {};
+// Computed property to get the selected info based on the ID
+const selectedInfoForStatusChange = computed(() => {
+  const info = tableData.value.find((item) => item.id === selectedInfoId.value) || {};
   return {
-    ...user,
-    status_url: props.requestData?.urls.status_url // Adding the additional property to selectedUserForStatusChange
+    ...info,
+    status_url: props.requestData?.urls.status_url // Adding the additional property to selectedInfoForStatusChange
   };
 });
 
@@ -162,14 +161,14 @@ const transformData = (data: any[]) => {
   }));
 };
 
-// Watch for new user data
+// Watch for new information data
 watch(
-  () => props.newUserData,
-  (newUserInfo) => {
-    if (newUserInfo && Object.keys(newUserInfo).length > 0) {
+  () => props.dataForCreate,
+  (newInformation) => {
+    if (newInformation && Object.keys(newInformation).length > 0) {
       const sl = tableData.value.length + 1; // Generate serial number
       tableData.value.push({
-        ...newUserInfo,
+        ...newInformation,
         sl,
       });
     }
@@ -177,30 +176,27 @@ watch(
   { deep: true }
 );
 
-// Watch for updated user data
+// Watch for updated information data
 watch(
-  () => props.updatedUserData,
-  (updatedUserInformation) => {
-    if (updatedUserInformation && Object.keys(updatedUserInformation).length > 0) {
-      // Find the index of the user in tableData based on a unique ID
+  () => props.dataForUpdate,
+  (updatedInformation) => {
+    if (updatedInformation && Object.keys(updatedInformation).length > 0) {
+      // Find the index of the information in tableData based on a unique ID
       const index = tableData.value.findIndex(
-        (user) => user.id === updatedUserInformation.user_id
+        (t_data) => t_data.id === updatedInformation.id
       );
 
       if (index !== -1) {
-        // Update the specific user in the tableData array
+        // Update the specific information in the tableData array
         tableData.value[index] = {
           ...tableData.value[index], // Keep existing properties
-          ...updatedUserInformation, // Overwrite with updated properties
+          ...updatedInformation, // Overwrite with updated properties
         };
       }
     }
   },
   { deep: true }
 );
-
-
-
 
 async function fetchData() {
   isLoading.value = true; // Start loading
@@ -224,23 +220,26 @@ onMounted(() => {
 })
 
 const handleEdit = (id: number) => {
-  const selectedUser = tableData.value.find((item) => item.id === id)
-  if (selectedUser) {
-    userData.value = selectedUser
+  const selectedInfo = tableData.value.find((item) => item.id === id)
+  if (selectedInfo) {
+    information.value = {
+      ...selectedInfo, // Spread selectedInfo to include all its properties
+      edit_url: props.requestData?.urls.edit_url, // Add or overwrite edit_url
+    };
     openEditModal.value = true
   }
 }
 
 const closeEditModal = () => {
   openEditModal.value = false
-  userData.value = {}
+  information.value = {}
 }
 
 const handleView = (id: number) => {
   setEmit('isViewModalOpen', true);
-  const selectedUser = tableData.value.find((item) => item.id === id)
-  if (selectedUser) {
-    setEmit('userDataForView', selectedUser);
+  const selectedInfo = tableData.value.find((item) => item.id === id)
+  if (selectedInfo) {
+    setEmit('dataForViewModal', selectedInfo);
   }
 }
 
@@ -249,8 +248,8 @@ const handleDelete = async (id: number) => {
     const response = await axios.delete(props.requestData?.urls.delete_url + '/' + id);
     if (response.status === 200) {
       message.success(response.data.message)
-      tableData.value = tableData.value.filter((user) => user.id !== id)
-      // Recalculate the sl (serial numbers) for the remaining users
+      tableData.value = tableData.value.filter((singleItem) => singleItem.id !== id)
+      // Recalculate the sl (serial numbers) for the remaining informations
       tableData.value = tableData.value.map((item, index) => ({
         ...item,
         sl: index + 1,
@@ -266,7 +265,7 @@ const cancelDelete = () => {
 }
 
 const showStatusUpdater = (id: number) => {
-  selectedUserId.value = id
+  selectedInfoId.value = id
   openStatusUpdate.value = !openStatusUpdate.value
 }
 
@@ -280,6 +279,8 @@ function handleTableChange(paginationInfo: any) {
 }
 
 const editComponent = props.editData?.editComponent;
+const editModalConfigData = props.editData?.sendPropDataForEM;
+const othersDataForEdit = props.editData?.othersData;
 
 </script>
 
@@ -293,8 +294,9 @@ const editComponent = props.editData?.editComponent;
       showQuickJumper: pagination.showQuickJumper,
     }" @change="handleTableChange" />
   </Spin>
-  <EditModal v-if="openEditModal" :edit-data="userData" @close="closeEditModal">
-    <component :is="editComponent" />
+  <EditModal v-if="openEditModal" @close="closeEditModal" :config-data="editModalConfigData">
+    <component :is="editComponent" :edit-data="information" :odfe="othersDataForEdit" />
   </EditModal>
-  <StatusUpdate v-if="openStatusUpdate" :status-data="selectedUserForStatusChange" @sendToParent="handleStatusUpdate" />
+  <StatusNotification v-if="openStatusUpdate" :status-data="selectedInfoForStatusChange"
+    @sendToParent="handleStatusUpdate" />
 </template>
