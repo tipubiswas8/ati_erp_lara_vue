@@ -319,9 +319,6 @@ class SaUserRepository implements SaUserInterface
             }
         }
 
-        if (!$requestAll['new_password']) {
-            $rules['new_password'] = 'nullable';
-        }
         // Validate the request data against the dynamic rules
         $validator = Validator::make($requestAll, $rules);
 
@@ -331,6 +328,11 @@ class SaUserRepository implements SaUserInterface
         }
 
         $validated = $validator->validated();
+
+        if (!isset($validated['new_password'])) {
+            $validated['new_password'] = '';
+        }
+
         $employee_id = $validated['emp_id'];
         $updated_by = $validated['updated_by'] = 4;
 
@@ -339,7 +341,7 @@ class SaUserRepository implements SaUserInterface
             $user->user_name = $validated['user_name'];
             $user->email = $validated['official_email'];
             $user->role_id = $validated['role_name'][0];
-            $user->password = $validated['new_password'] ? $validated['new_password'] : '';
+            $user->password = $validated['new_password'];
             $user->status = $validated['status'] ? 1 : 0;
             $user->updated_by = $updated_by;
             $user->updated_at = Carbon::now();
@@ -355,10 +357,10 @@ class SaUserRepository implements SaUserInterface
             $employee->updated_by = $updated_by;
             $employee->updated_at = Carbon::now();
             $employee->save();
-
+            
             DB::commit();
             logInfo('User Update Successfully!', $employee);
-            responseSuccess('User Update Successfully!', $user, 200);
+            return responseSuccess('User Update Successfully!', new UserResource($user), 200);
         } catch (Exception $e) {
             DB::rollBack();
             logError($e, 'User Update Failed!', $request->all());

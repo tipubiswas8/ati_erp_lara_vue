@@ -1,9 +1,9 @@
 <template>
-  <!-- <SuccessNotification v-if="successUpdate.success" :message="successUpdate.message" /> -->
   <AForm :model="formData" ref="formRef" :validate-messages="validateMessages" @finish="onFinish">
     <ARow>
       <ACol :span="12">
-        <AFormItem :name="['user', 'emp_name']" label="Employee Name" :rules="disableValidation ? [] : [{ required: true }]">
+        <AFormItem :name="['user', 'emp_name']" label="Employee Name"
+          :rules="disableValidation ? [] : [{ required: true }]">
           <AInput v-model:value="formData.user.emp_name" />
           <a-label :style="{ color: '#780650' }">{{ fieldErrors.emp_name }}</a-label>
         </AFormItem>
@@ -20,7 +20,7 @@
         </AFormItem>
 
         <AFormItem :name="['user', 'official_email']" label="Official Email"
-        :rules="disableValidation ? [] : [{ required: true, type: 'email' }]">
+          :rules="disableValidation ? [] : [{ required: true, type: 'email' }]">
           <AInput v-model:value="formData.user.official_email" />
           <a-label :style="{ color: '#780650' }">{{ fieldErrors.official_email }}</a-label>
         </AFormItem>
@@ -44,7 +44,8 @@
       </ACol>
 
       <ACol :span="12">
-        <AFormItem :name="['user', 'user_name']" label="Username" :rules="disableValidation ? [] : [{ required: true }]">
+        <AFormItem :name="['user', 'user_name']" label="Username"
+          :rules="disableValidation ? [] : [{ required: true }]">
           <AInput v-model:value="formData.user.user_name" />
           <a-label :style="{ color: '#780650' }">{{ fieldErrors.user_name }}</a-label>
         </AFormItem>
@@ -55,17 +56,20 @@
           <a-label :style="{ color: '#780650' }">{{ fieldErrors.personal_mob }}</a-label>
         </AFormItem>
 
-        <AFormItem :name="['user', 'personal_email']" label="Personal Email" :rules="disableValidation ? [] : [{ type: 'email' }]">
+        <AFormItem :name="['user', 'personal_email']" label="Personal Email"
+          :rules="disableValidation ? [] : [{ type: 'email' }]">
           <AInput v-model:value="formData.user.personal_email" />
           <a-label :style="{ color: '#780650' }">{{ fieldErrors.personal_email }}</a-label>
         </AFormItem>
 
-        <a-form-item has-feedback label="New Password" name="new_password">
+        <a-form-item has-feedback label="New Password" name="new_password"
+          :rules="disableValidation ? [] : [{ validator: validatePass }]">
           <a-input v-model:value="formData.new_password" type="password" autocomplete="off" />
-          <a-label  :style="{ color: '#780650' }">{{ fieldErrors.new_password }}</a-label>
+          <a-label :style="{ color: '#780650' }">{{ fieldErrors.new_password }}</a-label>
         </a-form-item>
 
-        <a-form-item has-feedback label="Confirm Password" name="checkPass">
+        <a-form-item has-feedback label="Confirm Password" name="checkPass"
+          :rules="disableValidation ? [] : [{ validator: validatePass2 }]">
           <a-input v-model:value="formData.checkPass" type="password" autocomplete="off" />
         </a-form-item>
       </ACol>
@@ -91,17 +95,29 @@
   </AForm>
 </template>
 
-
-
 <script lang="ts" setup>
 import { reactive, ref, watch, onMounted, nextTick } from 'vue'
 import axios from 'axios'
-// import SuccessNotification from '../notifications/SuccessNotification.vue'
 
 const formRef = ref();
 const isLoadingRole = ref<boolean>(false);
 const roleOptions = ref([]);
-const disableValidation = ref(true); 
+const disableValidation = ref(false);
+
+const props = defineProps({
+  editData: {
+    type: Object,
+  },
+  odfe: Object,
+  myData: Object
+});
+
+console.log(props.myData);
+const emit = defineEmits(['closeEM', 'responseData', 'notificationInfo']);
+
+const handleCancel = () => {
+  emit('closeEM') // Emit event to close edit modal
+}
 
 const resetForm = () => {
   formRef.value.resetFields();
@@ -129,7 +145,6 @@ const validatePersonalPhone = (_rule: any, value: any) => {
   });
 };
 
-
 // Handle input to restrict the length to 11 digits
 const onInput = (e: Event) => {
   const input = e.target as HTMLInputElement;
@@ -147,13 +162,6 @@ const handleKeyPress = (e: KeyboardEvent) => {
     e.preventDefault(); // Block non-numeric keys
   }
 };
-
-const props = defineProps({
-  editData: {
-    type: Object,
-  },
-  odfe: Object
-});
 
 const formData = reactive({
   user: {
@@ -174,7 +182,6 @@ const formData = reactive({
   checkPass: null
 });
 
-
 // For field-specific errors
 const fieldErrors = reactive({
   emp_name: '',
@@ -188,6 +195,31 @@ const fieldErrors = reactive({
   official_mob: '',
   personal_mob: '',
 });
+
+const validatePass = async (_rule: any, value: any) => {
+  if (value !== null) {
+    if (value === '') {
+      return Promise.reject('Please input the password');
+    } else if (value.length < 6) {
+      return Promise.reject('Password must be at least 6 characters long');
+    } else {
+      if (formData.checkPass !== '') {
+        formRef.value.validateFields('checkPass');
+      }
+      return Promise.resolve();
+    }
+  }
+};
+
+const validatePass2 = async (_rule: any, value: any) => {
+  if (value === '') {
+    return Promise.reject('Please input the password again');
+  } else if (value !== formData.new_password) {
+    return Promise.reject("Two inputs don't match!");
+  } else {
+    return Promise.resolve();
+  }
+};
 
 // Watcher for the `personal_mob` field to validate length
 watch(() => formData.user.personal_mob, (newValue) => {
@@ -224,19 +256,6 @@ onMounted(() => {
   allRoles();
 });
 
-
-const successUpdate = reactive({
-  success: false,
-  message: ''
-})
-
-
-const emit = defineEmits(['close'])
-
-const handleCancel = () => {
-  emit('close') // Emit event to close modal
-}
-
 const rolesUrl = props.odfe?.role_get_url;
 const allRoles = async function fetchAllRoles() {
   try {
@@ -254,7 +273,6 @@ const allRoles = async function fetchAllRoles() {
   }
 }
 
-
 const edit_url = props.editData?.edit_url;
 const onFinish = async () => {
   try {
@@ -265,11 +283,23 @@ const onFinish = async () => {
     });
 
     const response = await axios.put(edit_url, formData.user);
-    console.log(response)
-    if (response.status === 204) {
-      successUpdate.success = true
-      successUpdate.message = 'User Update Successfully!'
-      handleCancel()
+    if (response.status === 204 || response.status === 200) {
+      const responseStatusAndMessage = {
+        success: response.data.status,
+        message: response.data.message
+      }
+      // send response data to data table
+      const successResponseData = [];
+      successResponseData.push({
+        ...response.data.data,
+        id: response.data.data.user_id,
+        name: response.data.data.en_full_name,
+      });
+      emit('responseData', successResponseData[0]);
+      emit('notificationInfo', responseStatusAndMessage);
+      setTimeout(() => {
+        handleCancel();
+      }, 0);
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {

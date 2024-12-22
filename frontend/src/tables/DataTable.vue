@@ -235,6 +235,17 @@ const closeEditModal = () => {
   information.value = {}
 }
 
+interface EditResponseData {
+  [key: string]: object; // Allow other dynamic properties
+}
+
+const responseEditData = (eRData: EditResponseData) => {
+  const selectedInfo = tableData.value.find((item) => item.id === eRData.id);
+  if (selectedInfo) {
+    Object.assign(selectedInfo, eRData); // Update the selected item with the new data
+  }
+}
+
 const handleView = (id: number) => {
   setEmit('isViewModalOpen', true);
   const selectedInfo = tableData.value.find((item) => item.id === id)
@@ -265,14 +276,23 @@ const cancelDelete = () => {
 }
 
 const showStatusUpdater = (id: number) => {
-  selectedInfoId.value = id
-  openStatusUpdate.value = !openStatusUpdate.value
+  selectedInfoId.value = id;
+  console.log(selectedInfoId.value)
+  openStatusUpdate.value = true;
 }
 
-const handleStatusUpdate = (receiveData: object) => {
-  // console.log(receiveData.responseFeedback);
+const handleStatusUpdate = (receiveData: { responseFeedback: boolean }) => {
+  if (receiveData.responseFeedback === true) {
+    const info = tableData.value.find((item) => item.id === selectedInfoId.value);
+    if (info) {
+      let statusAfterUpdated = info.status === 0 ? 1 : 0; // Toggle status
+      // Update the status of the found item
+      info.status = statusAfterUpdated;
+    }
+  };
   openStatusUpdate.value = receiveData.statusUpdate
 }
+
 function handleTableChange(paginationInfo: any) {
   pagination.value.current = paginationInfo.current;
   pagination.value.pageSize = paginationInfo.pageSize;
@@ -282,6 +302,13 @@ const editComponent = props.editData?.editComponent;
 const editModalConfigData = props.editData?.sendPropDataForEM;
 const othersDataForEdit = props.editData?.othersData;
 
+const nInfo = ref<object>({});
+const notify = (notic: object) => {
+  nInfo.value = notic;
+  setTimeout(() => {
+    nInfo.value = {};
+  }, 0);
+}
 </script>
 
 <template>
@@ -294,8 +321,9 @@ const othersDataForEdit = props.editData?.othersData;
       showQuickJumper: pagination.showQuickJumper,
     }" @change="handleTableChange" />
   </Spin>
-  <EditModal v-if="openEditModal" @close="closeEditModal" :config-data="editModalConfigData">
-    <component :is="editComponent" :edit-data="information" :odfe="othersDataForEdit" />
+  <EditModal v-if="openEditModal" @close="closeEditModal" :config-data="editModalConfigData" :notify-data="nInfo">
+    <component :is="editComponent" :edit-data="information" :odfe="othersDataForEdit" @closeEM="closeEditModal"
+      @responseData="responseEditData" @notificationInfo="notify" />
   </EditModal>
   <StatusNotification v-if="openStatusUpdate" :status-data="selectedInfoForStatusChange"
     @sendToParent="handleStatusUpdate" />

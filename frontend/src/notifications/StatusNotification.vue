@@ -27,7 +27,7 @@ const openNotificationWithIcon = (
     message: 'Response Notification',
     description: `${response.responseMessage} was ${action} successfully!`,
     placement: 'topRight',
-    duration: 1
+    duration: 5
   });
   emit('sendToParent', { ...emitData });
 };
@@ -36,8 +36,9 @@ const props = defineProps({
   statusData: Object,
 })
 
-const close = () => {
+const closeNoticication = () => {
   emitData.statusUpdate = false;
+  emit('sendToParent', { ...emitData });
 }
 
 const openNotification = () => {
@@ -80,9 +81,12 @@ const openNotification = () => {
                     responseMessage: response.data.data.user_name,
                   }
                   openNotificationWithIcon('success', { responseStatus: responseData.responseStatus, responseMessage: responseData.responseMessage });
-                  setTimeout(() => {
-                    emitData.statusUpdate = false;
-                  }, 4000)
+                  // setTimeout(() => {
+                  //   emitData.statusUpdate = false;
+                  // }, 4000);
+                } else {
+                  emitData.responseFeedback = false;
+                  emitData.statusUpdate = false;
                 }
               } catch (error) {
                 console.log(error)
@@ -99,14 +103,14 @@ const openNotification = () => {
             onClick: () => {
               notification.close(key)
               emitData.statusUpdate = false;
-
+              emit('sendToParent', { ...emitData });
             },
           },
           { default: () => 'No' },
         ),
       ]),
     key,
-    onClose: close,
+    onClose: closeNoticication,
   })
 }
 

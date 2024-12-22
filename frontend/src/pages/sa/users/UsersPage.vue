@@ -60,6 +60,7 @@ const addNewUser = (newUser: User) => {
   newData.value = {
     ...newUser,
     id: newUser.user_id, // Add the 'id' field
+    name: newUser.en_full_name
   };
   setTimeout(() => {
     newData.value = {}; // Clear after updating

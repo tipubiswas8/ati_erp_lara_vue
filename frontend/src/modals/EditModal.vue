@@ -42,42 +42,33 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import axios from 'axios'
+import { reactive, watch } from 'vue'
 import SuccessNotification from '../notifications/SuccessNotification.vue'
 
 const props = defineProps({
   configData: {
     type: Object,
   },
+  notifyData: Object,
 })
 
-
-const modalHeight = props.configData?.config.height;
-const modalWidth = props.configData?.config.width;
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close']);
 
 const handleCancel = () => {
   emit('close')
 }
 
+const modalHeight = props.configData?.config.height;
+const modalWidth = props.configData?.config.width;
 
 const successUpdate = reactive({
   success: false,
   message: ''
 })
 
-const onFinish = async () => {
-  try {
-    const response = await axios.put('http://localhost:8000/api/user-update', formData.user)
-    if (response.status === 204) {
-      successUpdate.success = true
-      successUpdate.message = 'User Update Successfully!'
-      handleCancel()
-    }
-  } catch (error) {
-    console.error(error)
-  }
-}
+watch(() => props.notifyData, (newValue) => {
+  successUpdate.success = newValue?.success
+  successUpdate.message = newValue?.message
+});
 
 </script>

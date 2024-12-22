@@ -194,7 +194,6 @@ const rules = {
   checkPass: [{ validator: validatePass2, trigger: 'change' }]
 };
 
-
 const resetForm = () => {
   formRef.value.resetFields();
   emp_full_name.value = undefined; // Reset employee selection
