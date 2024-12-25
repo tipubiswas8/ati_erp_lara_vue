@@ -27,6 +27,7 @@ const props = defineProps({
   },
   dataForCreate: Object,
   dataForUpdate: Object,
+  statusData: Object
 })
 
 const tableData = ref([])
@@ -47,8 +48,11 @@ const selectedInfoId = ref<number | null>(null);
 // Computed property to get the selected info based on the ID
 const selectedInfoForStatusChange = computed(() => {
   const info = tableData.value.find((item) => item.id === selectedInfoId.value) || {};
+  const column_name = props.statusData?.statusChangeFor;
+  const c_name = column_name ? info[column_name] : info.name; // Dynamically access the property
   return {
     ...info,
+    name_for_status_change: c_name,
     status_url: props.requestData?.urls.status_url // Adding the additional property to selectedInfoForStatusChange
   };
 });
@@ -109,7 +113,7 @@ if (tableHead) {
             onClick: () => handleView(record.id),
             style: { display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#1234', color: 'black', borderColor: '#ff5733' },
           }),
-          record.status === 1
+          record.status === 1 || record.status === "1" || record.status === "Y" || record.status === "Yes" || record.status === "A" || record.status === "Active" || record.status === "True" || record.status === "true"
             ? h(Button, {
               type: 'default',
               size: 'small',
@@ -158,6 +162,7 @@ const transformData = (data: any[]) => {
     ...item,
     id: props.requestData?.custom_id ? item[props.requestData?.custom_id] : item.id,
     name: props.requestData?.custom_name ? item[props.requestData?.custom_name] : item.name,
+    status: props.statusData?.statusColumnName ? item[props.statusData?.statusColumnName] : item.status,
   }));
 };
 
@@ -277,20 +282,18 @@ const cancelDelete = () => {
 
 const showStatusUpdater = (id: number) => {
   selectedInfoId.value = id;
-  console.log(selectedInfoId.value)
   openStatusUpdate.value = true;
 }
 
-const handleStatusUpdate = (receiveData: { responseFeedback: boolean }) => {
-  if (receiveData.responseFeedback === true) {
+const handleStatusUpdate = (receiveData: { statusUpdate: boolean, responseFeedback: any }) => {
+  if (receiveData.statusUpdate === true) {
     const info = tableData.value.find((item) => item.id === selectedInfoId.value);
     if (info) {
-      let statusAfterUpdated = info.status === 0 ? 1 : 0; // Toggle status
       // Update the status of the found item
-      info.status = statusAfterUpdated;
+      info.status = receiveData.responseFeedback;
     }
   };
-  openStatusUpdate.value = receiveData.statusUpdate
+  openStatusUpdate.value = false;
 }
 
 function handleTableChange(paginationInfo: any) {
@@ -326,5 +329,5 @@ const notify = (notic: object) => {
       @responseData="responseEditData" @notificationInfo="notify" />
   </EditModal>
   <StatusNotification v-if="openStatusUpdate" :status-data="selectedInfoForStatusChange"
-    @sendToParent="handleStatusUpdate" />
+    :columns-name="props.statusData" @sendToParent="handleStatusUpdate" />
 </template>

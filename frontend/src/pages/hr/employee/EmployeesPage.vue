@@ -45,6 +45,8 @@ const sendDataToTable = {
   last_td_align: 'center',
 };
 
+
+
 // Push the newly added user to the data array
 const addNewUser = (newUser: object) => {
   const sl = data.value.length + 1 // Generate new serial number for the user
@@ -53,6 +55,13 @@ const addNewUser = (newUser: object) => {
     sl
   })
 }
+
+// for status
+const dataForStatusChange = {
+  statusColumnName: 'ASTATUS_FG',
+  statusChangeFor: 'EN_FULL_NAME',
+}
+
 </script>
 
 <template>
@@ -66,6 +75,6 @@ const addNewUser = (newUser: object) => {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" />
+  <DataTable :request-data="sendDataToTable" :status-data="dataForStatusChange" />
   <CreateModal v-if="isOpen" @close="closeModal" @userAdded="addNewUser" />
 </template>

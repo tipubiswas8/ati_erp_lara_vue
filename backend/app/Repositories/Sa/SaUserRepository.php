@@ -375,7 +375,7 @@ class SaUserRepository implements SaUserInterface
             return response()->json(['status' => false, 'message' => 'User not found!'], 404);
         }
         try {
-            $user->status = !$request->status;
+            $user->status = $request->status;
             $update = $user->save();
             if ($update) {
                 logAlert('User Status Updated Successfully!', $user);

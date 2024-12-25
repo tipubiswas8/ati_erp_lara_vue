@@ -113,7 +113,10 @@ const emitDataForView = () => {
 const userInformation = ref({});
 
 const userDataForViewModal = (userData: object) => {
-  userInformation.value = userData;
+  userInformation.value = {
+    ...userData,
+    role_get_url: 'security-access/roles'
+  }
 }
 
 const sendPropDataForVM = reactive({
@@ -122,7 +125,7 @@ const sendPropDataForVM = reactive({
     titleBgColor: '#82c953', /* modal title */
     titleTextColor: 'white', /* title text color*/
     // height: 52, /* modal height */
-    // width: 40, /* modal width*/
+    width: 60, /* modal width*/
     footer: true, /* modal footer*/
     footerButtonBgColor: 'red', /* modal close button background color*/
   }
@@ -147,6 +150,12 @@ const sendEditSlotToTable = {
   }
 };
 
+// for status
+const dataForStatusChange = {
+  statusColumnName: 'status',
+  statusChangeFor: 'user_name',
+}
+
 </script>
 
 <template>
@@ -161,7 +170,8 @@ const sendEditSlotToTable = {
   </a-row>
 
   <DataTable :request-data="sendDataToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
-    :edit-data="sendEditSlotToTable" @isViewModalOpen="emitDataForView" @dataForViewModal="userDataForViewModal" />
+    :edit-data="sendEditSlotToTable" :status-data="dataForStatusChange" @isViewModalOpen="emitDataForView"
+    @dataForViewModal="userDataForViewModal" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCM">
     <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addNewUser" @updatedUserData="updatedUser"
       :user-data="sendUserDataToCreateForm" />
