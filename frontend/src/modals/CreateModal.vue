@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 const props = defineProps({
-  modalConfigData: Object,
-})
+  modalConfigData: {
+    type: Object || null || undefined
+  }
+});
 const modalHeight = props.modalConfigData?.config.height;
 const modalWidth = props.modalConfigData?.config.width;
 const emit = defineEmits(['close'])

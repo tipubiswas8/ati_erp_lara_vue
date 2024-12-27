@@ -2,7 +2,6 @@
 
 namespace App\Models\Hr;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 // use Illuminate\Database\Eloquent\Model;
@@ -16,7 +15,7 @@ if (env('USE_MONGODB', false)) {
 
 class HrDesignation extends DesigModel
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $primaryKey = 'desig_id';
     public $incrementing = false; // Since the primary key is not auto-incrementing

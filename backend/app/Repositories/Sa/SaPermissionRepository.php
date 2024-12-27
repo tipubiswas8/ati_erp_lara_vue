@@ -4,7 +4,6 @@ namespace App\Repositories\Sa;
 
 use App\Interface\Sa\SaPermissionInterface;
 use App\Models\Sa\SaPermission;
-use App\Models\Sa\SaUser;
 use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;

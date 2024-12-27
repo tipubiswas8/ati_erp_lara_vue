@@ -24,6 +24,7 @@ class RepositoryServiceProvider extends ServiceProvider
                 'App\Interface\Sa\SaRoleInterface' => 'App\Repositories\Sa\SaRoleRepository',
                 'App\Interface\Sa\SaPermissionInterface' => 'App\Repositories\Sa\SaPermissionRepository',
                 'App\Interface\Hr\HrEmployeeInterface' => 'App\Repositories\Hr\HrEmployeeRepository',
+                'App\Interface\Hr\HrOrganizationInterface' => 'App\Repositories\Hr\HrOrganizationRepository',
             ];
         }
 

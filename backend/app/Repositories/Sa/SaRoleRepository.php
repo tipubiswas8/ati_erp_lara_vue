@@ -11,13 +11,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Sa\Role\RoleCollection;
 use App\Http\Resources\Sa\Role\RoleResource;
+use App\Models\Hr\HrOrganization;
 
 class SaRoleRepository implements SaRoleInterface
 {
     public function index()
     {
         try {
-            return responseSuccess('All role fetch', RoleResource::collection(SaRole::all()), Response::HTTP_OK);
+            return responseSuccess('All role fetch', RoleResource::collection(SaRole::whereHas('organization', function ($query) {
+                $query->where('status', 1);
+            })->with('organization')->get()), Response::HTTP_OK);
         } catch (Exception $e) {
             logError($e, 'Unable to load role data');
             return handleException($e, 'Unable to load role data', Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -29,11 +32,15 @@ class SaRoleRepository implements SaRoleInterface
     {
         $validator = Validator::make(
             [
-                'name' => $request->name,
+                'name' => $request->role_name,
+                'org_for' => $request->org_for,
+                'status' => $request->status,
                 'created_by' => 1
             ],
             [
-                'name' => 'required|unique:roles|max:50',
+                'name' => 'required|max:20',
+                'org_for' => 'required',
+                'status' => 'nullable',
                 'created_by' => 'required',
             ]
         );
@@ -44,13 +51,59 @@ class SaRoleRepository implements SaRoleInterface
         }
 
         $validated = $validator->validated();
-        try {
-            $role = SaRole::create($validated);
-            logInfo('Role Created Successfully!', $role);
-            responseSuccess('Role Created Successfully!', new RoleResource($role), 201);
-        } catch (\Exception $e) {
-            logError($e, 'Role Create failed', $request->all());
-            return handleException($e, 'Role Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        if ($validated['org_for'] == 'all') {
+            try {
+                $organizations = HrOrganization::withTrashed()->pluck('org_id'); // Fetch only IDs
+
+                $existingRoles = SaRole::where('name', $validated['name'])
+                    ->whereIn('org_id', $organizations)
+                    ->pluck('org_id'); // Fetch IDs of already existing roles
+
+                $newOrganizations = $organizations->diff($existingRoles); // Find IDs not in existing roles
+                $data = $newOrganizations->map(function ($orgId) use ($validated) {
+                    return [
+                        'name' => $validated['name'],
+                        'org_id' => $orgId,
+                        'status' => $validated['status'] ? 1 : 0,
+                        'created_by' => $validated['created_by'],
+                        'created_at' => now(),
+                    ];
+                })->toArray();
+
+                if (!empty($data)) {
+                    SaRole::insert($data);
+                }
+
+                // Retrieve all the inserted roles
+                $lastInsertedRoles = SaRole::where('name', $validated['name'])
+                    ->whereIn('org_id', $newOrganizations)
+                    ->get();
+
+                logInfo('Role Created Successfully!', $lastInsertedRoles);
+                return responseSuccess('Role Created Successfully!', RoleResource::collection($lastInsertedRoles), 201);
+            } catch (\Exception $e) {
+                logError($e, 'Role Create failed', $request->all());
+                return handleException($e, 'Role Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } elseif ($validated['org_for'] == 'active') {
+            try {
+                $role = SaRole::create($validated);
+                logInfo('Role Created Successfully!', $role);
+                return responseSuccess('Role Created Successfully!', new RoleResource($role), 201);
+            } catch (\Exception $e) {
+                logError($e, 'Role Create failed', $request->all());
+                return handleException($e, 'Role Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } else if ($validated['org_for'] == 'specific') {
+            try {
+                $role = SaRole::create($validated);
+                logInfo('Role Created Successfully!', $role);
+                return responseSuccess('Role Created Successfully!', new RoleResource($role), 201);
+            } catch (\Exception $e) {
+                logError($e, 'Role Create failed', $request->all());
+                return handleException($e, 'Role Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 

@@ -1,22 +1,16 @@
 <script lang="ts" setup>
+// required
 import { ref, onMounted, h, computed, watch } from 'vue'
 import axios from 'axios'
 import { Button, Popconfirm, message, Spin } from 'ant-design-vue'
 import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import EditModal from '@src/modals/EditModal.vue'
 import StatusNotification from '@src/notifications/StatusNotification.vue'
-
-const setEmit = defineEmits(['isViewModalOpen', 'dataForViewModal']);
-
-message.config({
-  top: '50px',
-  duration: 5,
-  maxCount: 3,
-  rtl: true,
-  prefixCls: 'my-message',
-})
+// optional
+import CreateModal from '@src/modals/CreateModal.vue'
 
 const props = defineProps({
+  // required
   requestData: {
     type: Object,
     required: true
@@ -27,36 +21,23 @@ const props = defineProps({
   },
   dataForCreate: Object,
   dataForUpdate: Object,
-  statusData: Object
-})
-
-const tableData = ref([])
-const information = ref({})
-const openEditModal = ref(false)
-const isLoading = ref(false)
-const openStatusUpdate = ref(false)
-const pagination = ref({
-  current: 1,          // Current page
-  pageSize: 10,        // Items per page
-  total: 0,            // Total items (updated from API response)
-  showSizeChanger: true, // Allow data to change page size
-  showQuickJumper: true, // Allow data to jump to specific page
+  statusData: Object,
+  // optional
+  createData: {
+    type: Object || null || undefined
+  },
+  isCreateModalOpen: {
+    type: Boolean
+  }
 });
 
-const selectedInfoId = ref<number | null>(null);
-
-// Computed property to get the selected info based on the ID
-const selectedInfoForStatusChange = computed(() => {
-  const info = tableData.value.find((item) => item.id === selectedInfoId.value) || {};
-  const column_name = props.statusData?.statusChangeFor;
-  const c_name = column_name ? info[column_name] : info.name; // Dynamically access the property
-  return {
-    ...info,
-    name_for_status_change: c_name,
-    status_url: props.requestData?.urls.status_url // Adding the additional property to selectedInfoForStatusChange
-  };
-});
-
+const setEmit = defineEmits([
+  // required
+  'isViewModalOpen',
+  'dataForViewModal',
+  // optional
+  'isCreateModalClose'
+]);
 
 let columns = [];
 const tableHead = props.requestData?.th_name;
@@ -155,6 +136,18 @@ if (tableHead) {
   });
 }
 
+const pagination = ref({
+  current: 1,          // Current page
+  pageSize: 10,        // Items per page
+  total: 0,            // Total items (updated from API response)
+  showSizeChanger: true, // Allow data to change page size
+  showQuickJumper: true, // Allow data to jump to specific page
+});
+
+function handleTableChange(paginationInfo: any) {
+  pagination.value.current = paginationInfo.current;
+  pagination.value.pageSize = paginationInfo.pageSize;
+}
 
 // Transform the response data to ensure "id" is consistent
 const transformData = (data: any[]) => {
@@ -166,7 +159,33 @@ const transformData = (data: any[]) => {
   }));
 };
 
-// Watch for new information data
+const tableData = ref([]);
+const isLoading = ref(false);
+
+async function fetchData() {
+  isLoading.value = true; // Start loading
+  try {
+    const response = await axios.get(props.requestData?.urls.data_url);
+    if (response.status === 200) {
+      tableData.value = transformData(response.data.data.map((item: object, index: number) => ({
+        ...item,
+        sl: index + 1,
+      })));
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoading.value = false; // End loading
+  }
+}
+
+onMounted(() => {
+  fetchData();
+});
+
+// for create 
+// required
+// Watch for new create data
 watch(
   () => props.dataForCreate,
   (newInformation) => {
@@ -181,7 +200,66 @@ watch(
   { deep: true }
 );
 
-// Watch for updated information data
+// optional
+const openCreateModal = ref(false);
+const createComponent = props.createData?.createComponent;
+const createModalConfigaration = props.createData?.config ? props.createData : null;
+
+// Watch for new create data if create modal in datatable
+watch(
+  () => props.isCreateModalOpen,
+  (doOpen) => {
+    openCreateModal.value = doOpen;
+  },
+  { deep: true }
+);
+
+
+// Function to add new data
+const addedData = (new_data: object | object[]) => {
+  if (Array.isArray(new_data)) {
+    // If new_data is an array, add a unique serial number for each item
+    new_data.forEach((item) => {
+      tableData.value.push({
+        ...item,
+        sl: tableData.value.length + 1 // Calculate serial number dynamically
+      });
+    });
+  } else {
+    // If new_data is a single object, push it directly with a serial number
+    tableData.value.push({
+      ...new_data,
+      sl: tableData.value.length + 1 // Calculate serial number
+    });
+  }
+};
+
+
+const closeCreateModal = () => {
+  openCreateModal.value = false;
+  setEmit('isCreateModalClose', openCreateModal.value);
+}
+
+// for edit
+// required
+const information = ref({});
+const openEditModal = ref(false);
+const editComponent = props.editData?.editComponent;
+const editModalConfigData = props.editData?.sendPropDataForEM;
+const othersDataForEdit = props.editData?.othersData;
+
+const handleEdit = (id: number) => {
+  const selectedInfo = tableData.value.find((item) => item.id === id)
+  if (selectedInfo) {
+    information.value = {
+      ...selectedInfo, // Spread selectedInfo to include all its properties
+      edit_url: props.requestData?.urls.edit_url, // Add or overwrite edit_url
+    };
+    openEditModal.value = true
+  }
+}
+
+// Watch for updated information
 watch(
   () => props.dataForUpdate,
   (updatedInformation) => {
@@ -203,43 +281,6 @@ watch(
   { deep: true }
 );
 
-async function fetchData() {
-  isLoading.value = true; // Start loading
-  try {
-    const response = await axios.get(props.requestData?.urls.data_url);
-    if (response.status === 200) {
-      tableData.value = transformData(response.data.data.map((item: object, index: number) => ({
-        ...item,
-        sl: index + 1,
-      })));
-    }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    isLoading.value = false; // End loading
-  }
-}
-
-onMounted(() => {
-  fetchData()
-})
-
-const handleEdit = (id: number) => {
-  const selectedInfo = tableData.value.find((item) => item.id === id)
-  if (selectedInfo) {
-    information.value = {
-      ...selectedInfo, // Spread selectedInfo to include all its properties
-      edit_url: props.requestData?.urls.edit_url, // Add or overwrite edit_url
-    };
-    openEditModal.value = true
-  }
-}
-
-const closeEditModal = () => {
-  openEditModal.value = false
-  information.value = {}
-}
-
 interface EditResponseData {
   [key: string]: object; // Allow other dynamic properties
 }
@@ -251,6 +292,13 @@ const responseEditData = (eRData: EditResponseData) => {
   }
 }
 
+const closeEditModal = () => {
+  openEditModal.value = false;
+  information.value = {}
+}
+
+// for view 
+// required
 const handleView = (id: number) => {
   setEmit('isViewModalOpen', true);
   const selectedInfo = tableData.value.find((item) => item.id === id)
@@ -259,6 +307,41 @@ const handleView = (id: number) => {
   }
 }
 
+
+// for status 
+// required
+const openStatusUpdate = ref(false);
+const showStatusUpdater = (id: number) => {
+  selectedInfoId.value = id;
+  openStatusUpdate.value = true;
+}
+
+const handleStatusUpdate = (receiveData: { statusUpdate: boolean, responseFeedback: any }) => {
+  if (receiveData.statusUpdate === true) {
+    const info = tableData.value.find((item) => item.id === selectedInfoId.value);
+    if (info) {
+      // Update the status of the found item
+      info.status = receiveData.responseFeedback;
+    }
+  };
+  openStatusUpdate.value = false;
+}
+
+const selectedInfoId = ref<number | null>(null);
+// Computed property to get the selected info based on the ID
+const selectedInfoForStatusChange = computed(() => {
+  const info = tableData.value.find((item) => item.id === selectedInfoId.value) || {};
+  const column_name = props.statusData?.statusChangeFor;
+  const c_name = column_name ? info[column_name] : info.name; // Dynamically access the property
+  return {
+    ...info,
+    name_for_status_change: c_name,
+    status_url: props.requestData?.urls.status_url // Adding the additional property to selectedInfoForStatusChange
+  };
+});
+
+// for delete
+// required
 const handleDelete = async (id: number) => {
   try {
     const response = await axios.delete(props.requestData?.urls.delete_url + '/' + id);
@@ -280,30 +363,15 @@ const cancelDelete = () => {
   // message.error('Click on No')
 }
 
-const showStatusUpdater = (id: number) => {
-  selectedInfoId.value = id;
-  openStatusUpdate.value = true;
-}
-
-const handleStatusUpdate = (receiveData: { statusUpdate: boolean, responseFeedback: any }) => {
-  if (receiveData.statusUpdate === true) {
-    const info = tableData.value.find((item) => item.id === selectedInfoId.value);
-    if (info) {
-      // Update the status of the found item
-      info.status = receiveData.responseFeedback;
-    }
-  };
-  openStatusUpdate.value = false;
-}
-
-function handleTableChange(paginationInfo: any) {
-  pagination.value.current = paginationInfo.current;
-  pagination.value.pageSize = paginationInfo.pageSize;
-}
-
-const editComponent = props.editData?.editComponent;
-const editModalConfigData = props.editData?.sendPropDataForEM;
-const othersDataForEdit = props.editData?.othersData;
+// for notification
+// required
+message.config({
+  top: '50px',
+  duration: 5,
+  maxCount: 3,
+  rtl: true,
+  prefixCls: 'my-message',
+});
 
 const nInfo = ref<object>({});
 const notify = (notic: object) => {
@@ -312,9 +380,11 @@ const notify = (notic: object) => {
     nInfo.value = {};
   }, 0);
 }
+
 </script>
 
 <template>
+  <!-- required -->
   <Spin :spinning="isLoading" tip="Loading..." size="large">
     <ATable :columns="columns" :data-source="tableData" :pagination="{
       current: pagination.current,
@@ -324,10 +394,17 @@ const notify = (notic: object) => {
       showQuickJumper: pagination.showQuickJumper,
     }" @change="handleTableChange" />
   </Spin>
+
   <EditModal v-if="openEditModal" @close="closeEditModal" :config-data="editModalConfigData" :notify-data="nInfo">
     <component :is="editComponent" :edit-data="information" :odfe="othersDataForEdit" @closeEM="closeEditModal"
       @responseData="responseEditData" @notificationInfo="notify" />
   </EditModal>
   <StatusNotification v-if="openStatusUpdate" :status-data="selectedInfoForStatusChange"
     :columns-name="props.statusData" @sendToParent="handleStatusUpdate" />
+
+  <!-- optional -->
+  <CreateModal v-if="openCreateModal" :modal-config-data="createModalConfigaration" @close="closeCreateModal">
+    <component :is="createComponent" :data-for-create="props.requestData" @closeCreateModal="closeCreateModal"
+      @newAddedData="addedData" />
+  </CreateModal>
 </template>

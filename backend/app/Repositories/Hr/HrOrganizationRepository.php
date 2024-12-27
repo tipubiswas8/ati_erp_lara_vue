@@ -1,98 +1,35 @@
 <?php
 
-namespace App\Repositories\Sa;
+namespace App\Repositories\Hr;
 
-use App\Interface\Sa\SaUserInterface;
-use App\Models\Sa\SaUser;
-use Exception;
-use Illuminate\Http\Request;
+use App\Interface\Hr\HrOrganizationInterface;
+use App\Models\Hr\HrOrganization;
+use App\Http\Resources\Hr\Organization\OrganizationResource;
+use App\Http\Resources\Hr\Organization\OrganizationCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Sa\User\UserResource;
-use App\Http\Resources\Sa\User\UserCollection;
-use App\Models\Hr\HrEmployee;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Exception;
 
-
-class SaUserRepository implements SaUserInterface
+class HrOrganizationRepository implements HrOrganizationInterface
 {
-    public function login(Request $request)
+    public function index()
     {
         try {
-            // Validate the request data
-            $validatedData = $request->validate([
-                'email' => ['required', 'max:50'],
-                'password' => ['required', 'string', 'min:6'],
-            ]);
-
-            $user_email = $validatedData['email'];
-            $user_password = $validatedData['password'];
-
-            // Attempt to find the employee using the email
-            $employee = HrEmployee::where('ofie_email', $user_email)->first();
-
-            // Initialize the credential array
-            $credential = [];
-
-            if ($employee) {
-                // Use employee ID to create credentials
-                $credential = [
-                    'emp_id' => $employee->employee_id,
-                    'password' => $user_password,
-                ];
-            } else {
-                // If no employee found, check using mobile number
-                $employee = HrEmployee::where('omobile_no', $user_email)->first();
-                if ($employee) {
-                    $userId = SaUser::where('emp_id', $employee->employee_id)->select('id')->first()->id;
-                    if ($userId) {
-                        $credential = [
-                            'id' => $userId,
-                            'password' => $user_password,
-                        ];
-                    }
-                }
-            }
-
-            if (
-                Auth::attempt($credential) ||
-                Auth::attempt(['user_name' => $user_email, 'password' => $user_password])
-            ) {
-                try {
-                    if (Auth::check()) {
-                        $user = SaUser::find(Auth::id());
-                        $token = $user->createToken('Token Name')->accessToken;
-                        $userInfo = [
-                            'user' => Auth::user(),
-                            'token' => $token,
-                        ];
-
-                        $authUser = [
-                            'user' => Auth::user(),
-                            'token' => $token
-                        ];
-
-                        logNotice('Token generete successfully!', $userInfo);
-                        responseSuccess('Token generete successfully!', $authUser, 200);
-                    } else {
-                        return response()->json(['status' => false, 'message' => 'Unable to login, please try again'], 507);
-                    }
-                } catch (Exception $e) {
-                    logError($e, 'Unable to generete token', Auth::user());
-                    return handleException($e, 'Unable to generete token', Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
-            } else {
-                return response()->json(['status' => false, 'message' => 'Unable to login, please check your credentials'], 401); // 401 Unauthorized
-            }
+            return response()->json(new OrganizationCollection(HrOrganization::get()), 200);
         } catch (Exception $e) {
-            logError($e, 'Login failed');
-            return handleException($e, 'Login failed', 500);
+            logError($e, 'Unable to load organization data');
+            return handleException($e, 'Unable to load organization data');
         }
     }
-    public function registration(Request $request)
+    public function create() {}
+    public function restore() {}
+    public function show(HrOrganization $hrOrganization) {}
+    public function edit(HrOrganization $hrOrganization) {}
+
+    public function store(Request $request)
     {
         $rules = [
             'user_name' => 'required|string|max:20|unique:sa_users,user_name',
@@ -122,7 +59,7 @@ class SaUserRepository implements SaUserInterface
             DB::beginTransaction(); // Begin a transaction
 
             // Check if the user exists (based on emp_id)
-            $user = SaUser::where('emp_id', $validated['emp_id'])->first();
+            $user = HrOrganization::where('emp_id', $validated['emp_id'])->first();
             $operation = $user ? 'update' : 'create'; // Determine the operation
 
             // Dynamically set created_by or updated_by
@@ -133,7 +70,7 @@ class SaUserRepository implements SaUserInterface
             }
 
             // Update or Create the user
-            $user = SaUser::updateOrCreate(
+            $user = HrOrganization::updateOrCreate(
                 ['emp_id' => $validated['emp_id']], // Search condition
                 $validated // Data to update or create
             );
@@ -147,7 +84,7 @@ class SaUserRepository implements SaUserInterface
 
             // Log and respond
             logInfo($message, $user);
-            return responseSuccess($message, new UserResource($user), $operation === 'update' ? 200 : 201);
+            return responseSuccess($message, new OrganizationResource($user), $operation === 'update' ? 200 : 201);
         } catch (\Exception $e) {
             DB::rollBack(); // Rollback the transaction on error
             logError($e, 'User operation failed!', $request->all());
@@ -156,9 +93,9 @@ class SaUserRepository implements SaUserInterface
 
         // return response()->json($user);
     }
-    public function update(Request $request)
+    public function update(Request $request, HrOrganization $hrOrganization)
     {
-        $user = SaUser::find($request->id);
+        $user = HrOrganization::find($request->id);
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found'], 404); // 404 Not Found
         }
@@ -201,19 +138,12 @@ class SaUserRepository implements SaUserInterface
 
         $addNewPasswordRule = false;
 
-        if (Hash::check($requestAll['old_password'], $user->password)) {
-            $addNewPasswordRule = true;
-        }
 
         if ($requestAll['old_password']) {
             $rules['old_password'] = [
                 'nullable',
                 'string',
-                function ($attribute, $value, $fail) use ($user) {
-                    if (!Hash::check($value, $user->password)) {
-                        $fail('The old password is incorrect.');
-                    }
-                },
+                function ($attribute, $value, $fail) use ($user) {},
             ];
             if ($addNewPasswordRule) {
                 $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
@@ -231,11 +161,7 @@ class SaUserRepository implements SaUserInterface
                 $rules['old_password'] = [
                     'nullable',
                     'string',
-                    function ($attribute, $value, $fail) use ($user) {
-                        if (!Hash::check($value, $user->password)) {
-                            $fail('The old password is incorrect.');
-                        }
-                    },
+                    function ($attribute, $value, $fail) use ($user) {},
                 ];
             } else {
                 $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
@@ -253,11 +179,7 @@ class SaUserRepository implements SaUserInterface
                 $rules['old_password'] = [
                     'nullable',
                     'string',
-                    function ($attribute, $value, $fail) use ($user) {
-                        if (!Hash::check($value, $user->password)) {
-                            $fail('The old password is incorrect.');
-                        }
-                    },
+                    function ($attribute, $value, $fail) use ($user) {},
                 ];
             } else {
                 $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
@@ -274,11 +196,7 @@ class SaUserRepository implements SaUserInterface
                     $rules['old_password'] = [
                         'nullable',
                         'string',
-                        function ($attribute, $value, $fail) use ($user) {
-                            if (!Hash::check($value, $user->password)) {
-                                $fail('The old password is incorrect.');
-                            }
-                        },
+                        function ($attribute, $value, $fail) use ($user) {},
                     ];
                 } else {
                     $rules['new_password'] = 'required|string|min:6|max:20|confirmed';
@@ -314,7 +232,7 @@ class SaUserRepository implements SaUserInterface
             $user->updated_at = Carbon::now();
             $user->save();
 
-            $employee = HrEmployee::find($employee_id);
+            $employee = HrOrganization::find($employee_id);
             $employee->en_full_name = $validated['emp_name'];
             $employee->ofie_email = $validated['official_email'];
             $employee->omobile_no = $validated['official_mob'];
@@ -324,10 +242,10 @@ class SaUserRepository implements SaUserInterface
             $employee->updated_by = $updated_by;
             $employee->updated_at = Carbon::now();
             $employee->save();
-            
+
             DB::commit();
             logInfo('User Update Successfully!', $employee);
-            return responseSuccess('User Update Successfully!', new UserResource($user), 200);
+            return responseSuccess('User Update Successfully!', new OrganizationResource($user), 200);
         } catch (Exception $e) {
             DB::rollBack();
             logError($e, 'User Update Failed!', $request->all());
@@ -337,7 +255,7 @@ class SaUserRepository implements SaUserInterface
 
     public function status(Request $request)
     {
-        $user = SaUser::find($request->id);
+        $user = HrOrganization::find($request->id);
         if (!$user) {
             return response()->json(['status' => false, 'message' => 'User not found!'], 404);
         }
@@ -356,36 +274,5 @@ class SaUserRepository implements SaUserInterface
         }
     }
 
-    public function destroy(Request $request)
-    {
-        $user = SaUser::find($request->id);
-        if ($user) {
-            try {
-                $delete = SaUser::destroy($user->id);
-                // $delete = $user->delete(); 
-                if ($delete) {
-                    logInfo('User Deleted Successfully!', $user);
-                    return responseSuccess('User Deleted Successfully!');
-                } else {
-                    return responseFailed('Unable to delete user, please try again later');
-                }
-            } catch (\Exception $e) {
-                logError($e, 'Unable to delete user, please try again!', $user);
-                return handleException($e, 'Unable to delete user, please try again!');
-            }
-        } else {
-            return responseNotFound('User not found');
-        }
-    }
-
-    public function users()
-    {
-        try {
-            // return response()->json(new UserCollection(SaUser::with('employee')->get()), 200);
-            return response()->json(new UserCollection(SaUser::with('employee')->get()), Response::HTTP_OK);
-        } catch (Exception $e) {
-            logError($e, 'Unable to load user data');
-            return handleException($e, 'Unable to load user data');
-        }
-    }
+    public function destroy(HrOrganization $hrOrganization) {}
 }

@@ -1,69 +1,61 @@
 <script setup lang="ts">
 import DataTable from '@src/tables/DataTable.vue'
-import EditModalSlotData from '@src/pages/sa/role/EditSlotData.vue'
-import CreateModalSlotData from '@src/pages/sa/role/CreateSlotData.vue'
-import { ref, reactive, watch } from 'vue'
+import CreateModal from '@src/modals/CreateModal.vue'
+import CreateModalSlotData from '@src/pages/sa/users/CreateSlotData.vue'
+import EditModalSlotData from '@src/pages/sa/users/EditSlotData.vue'
+import ViewModal from '@src/modals/ViewModal.vue'
+import ViewModalSlotData from '@src/pages/sa/users/ViewSlotData.vue'
+import { ref, reactive } from 'vue'
 
-
+// for data table
+// ==============
 const sendDataToTable = {
-  // required
   urls: {
-    'data_url': 'security-access/roles',
-    'create_url': 'security-access/roles',
-    'view_url': 'security-access/roles',
-    'edit_url': 'security-access/roles',
-    'status_url': 'security-access/roles',
-    'delete_url': 'security-access/roles',
-    'org_get_url': 'hr/organizations',
+    'data_url': 'hr/organizations',
+    'view_url': 'hr/organizations',
+    'edit_url': 'hr/organizations',
+    'status_url': 'hr/organizations',
+    'delete_url': 'hr/organizations'
   },
+  custom_id: 'ORG_ID',
+  custom_name: 'en_full_name',
   th_name: {
     '1': 'Sl',
-    '2': 'Role Name',
-    '3': 'Organization Name',
+    '2': 'ORG ID',
+    '3': 'Name',
+    '4': 'ABBR',
+    '5': 'EMAIL',
+    '6': 'PHONE',
+    '7': 'WEBSITE',
   },
   last_th_name: 'Action',
-  // optional
   th_align: 'left',
   last_th_align: 'center',
-  // required
   td_data: {
     '1': 'sl', // not change
-    '2': 'role_name',
-    '3': 'org_name',
+    '2': 'ORG_ID',
+    '3': 'ORG_NAME',
+    '4': 'ORG_ABBR',
+    '5': 'ORG_EMAIL',
+    '6': 'ORG_PHONE',
+    '7': 'ORG_WEBSITE'
   },
-  // optional
   td_align: 'left',
   last_td_align: 'center',
 };
 
-
 // for create table
 // ================
-// required
 const isCMOpen = ref(false);
+const newData = ref({});
 const showCreateModal = () => {
-  isCMOpen.value = true;
+  isCMOpen.value = true
 };
 
-const sendCreateSlotToTable = reactive({
-  // required
-  createComponent: CreateModalSlotData, // Pass the Vue file as a prop
+const closeCreateModal = () => {
+  isCMOpen.value = false
+};
 
-
-  // optional
-  config: {
-    title: 'Add New Role', /* modal title */
-    titleBgColor: '#82c953', /* modal title */
-    titleTextColor: 'white', /* title text color*/
-    // height: 45, /* modal height */
-    // width: 60, /* modal width*/
-    footer: true, /* modal footer*/
-    footerButtonBgColor: 'red', /* modal close button background color*/
-  }
-});
-
-
-const newData = ref({});
 interface User {
   [key: string]: any; // Allow other dynamic properties
 }
@@ -93,7 +85,17 @@ const sendUserDataToCreateForm = {
   role_get_url: 'security-access/roles',
 }
 
-
+const sendPropDataForCM = reactive({
+  config: {
+    title: 'Add New User', /* modal title */
+    titleBgColor: '#82c953', /* modal title */
+    titleTextColor: 'white', /* title text color*/
+    // height: 45, /* modal height */
+    width: 60, /* modal width*/
+    footer: true, /* modal footer*/
+    footerButtonBgColor: 'red', /* modal close button background color*/
+  }
+});
 
 // for view modal 
 // ==============
@@ -154,15 +156,31 @@ const sendEditSlotToTable = {
 
 // for status
 const dataForStatusChange = {
-  statusColumnName: 'status',
-  statusChangeFor: 'name',
+  statusColumnName: 'ORG_STATUS',
+  statusChangeFor: 'ORG_NAME',
 }
+
 </script>
 
 <template>
-  <a-button type="primary" style="width: 10vw;" @click="showCreateModal">Add</a-button>
-  <DataTable :request-data="sendDataToTable" :edit-data="sendEditSlotToTable" :is-create-modal-open="isCMOpen"
-    :create-data="sendCreateSlotToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
-    :status-data="dataForStatusChange" @isCreateModalClose="isCMOpen = $event" @isViewModalOpen="emitDataForView"
+  <a-row>
+    <a-col :span="2">
+      <a-button type="primary" block @click="showCreateModal">Add</a-button>
+    </a-col>
+    <a-col :span="16"></a-col>
+    <a-col :span="6">
+      <!-- <a-input v-model:value="value" placeholder="Search here" /> -->
+    </a-col>
+  </a-row>
+
+  <DataTable :request-data="sendDataToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
+    :edit-data="sendEditSlotToTable" :status-data="dataForStatusChange" @isViewModalOpen="emitDataForView"
     @dataForViewModal="userDataForViewModal" />
+  <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCM">
+    <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addNewUser" @updatedUserData="updatedUser"
+      :user-data="sendUserDataToCreateForm" />
+  </CreateModal>
+  <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :user-view-modal-data="sendPropDataForVM">
+    <ViewModalSlotData :selected-user-information="userInformation" />
+  </ViewModal>
 </template>

@@ -61,6 +61,13 @@ export default {
           meta: {
             icon: 'laptop',
           },
+        },
+        {
+          name: 'organizations',
+          displayName: 'menu.organizations',
+          meta: {
+            icon: 'laptop',
+          },
         }
       ],
     },

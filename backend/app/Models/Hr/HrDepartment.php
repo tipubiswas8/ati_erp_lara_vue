@@ -2,10 +2,7 @@
 
 namespace App\Models\Hr;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Sa\SaUser;
 
 // use Illuminate\Database\Eloquent\Model;
 // use MongoDB\Laravel\Eloquent\Model;
@@ -18,7 +15,7 @@ if (env('USE_MONGODB', false)) {
 
 class HrDepartment extends DeptModel
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $primaryKey = 'dept_id';
     public $incrementing = false; // Since the primary key is not auto-incrementing

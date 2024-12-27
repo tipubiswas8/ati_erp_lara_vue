@@ -10,7 +10,7 @@ class CreateSaRolesTable extends Migration
     {
         Schema::create('sa_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('org_id')->nullable();
             $table->integer('status')->default(1);
             $table->timestamps();

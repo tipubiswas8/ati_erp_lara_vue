@@ -6,6 +6,7 @@ use App\Http\Controllers\Sa\SaRoleController;
 use App\Http\Controllers\Sa\SaUserController;
 use App\Http\Controllers\Sa\SaPermissionController;
 use App\Http\Controllers\Hr\HrEmployeeController;
+use App\Http\Controllers\Hr\HrOrganizationController;
 
 Route::post('/login', function (Request $request) {
     return app(SaUserController::class)->login($request);
@@ -33,6 +34,7 @@ Route::get('/all-employees', function () {
 });
 Route::resource('employees', HrEmployeeController::class);
 Route::get('employees/restore', [HrEmployeeController::class, 'restore']);
+Route::resource('organizations', HrOrganizationController::class);
 });
 // });
 

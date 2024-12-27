@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Sa\User\UserResource;
 use App\Http\Resources\Sa\User\UserCollection;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Hr\HrEmployee;
 
 class SaUserRepositoryMongo implements SaUserInterface
@@ -90,37 +89,6 @@ class SaUserRepositoryMongo implements SaUserInterface
     }
     public function registration(Request $request)
     {
-        // $image = $_FILES['image'];
-        $dbImagePath = null;
-        if ($request->hasFile('image')) {
-            $path = $request->image->path();
-            $extension = $request->image->extension();
-            $file = $request->file('image');
-            $fullFileName = $file->getClientOriginalName();
-            $extension = $file->getClientOriginalExtension();
-            $unixTimestamp = time();
-            $uniqueFileName = $unixTimestamp . '_' . $fullFileName;
-
-            // // save file to storage folder
-            // $store = $request->file('image')->storeAs('uploads/user/images', $uniqueFileName);
-            // $dbImagePath = $uniqueFileName;
-
-            // // save file to public folder with random unique name
-            // $dbImagePath = $file->store('uploads/user/images', ['disk' => 'public_folder']);
-
-            // // save file to public folder with random unique name
-            // if (!Storage::disk('public_folder')->putFile ('uploads/user/images', $file)) {
-            //     return false;
-            // } 
-            // $dbImagePath = Storage::disk('public_folder')->putFile ('uploads/user/images', $file);
-
-            // // save file to public folder with unique name using unix timestamp
-            if (!Storage::disk('public_folder')->putFileAs('uploads/user/images', $file, $uniqueFileName)) {
-                return false;
-            }
-            $dbImagePath = $uniqueFileName;
-        }
-
         $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',

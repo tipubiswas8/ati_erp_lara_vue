@@ -2,7 +2,6 @@
 
 namespace App\Models\Hr;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Sa\SaUser;
@@ -18,7 +17,7 @@ if (env('USE_MONGODB', false)) {
 
 class HrEmployee extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $primaryKey = 'employee_id'; // Set the primary key
 
