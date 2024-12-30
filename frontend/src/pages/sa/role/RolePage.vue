@@ -2,8 +2,7 @@
 import DataTable from '@src/tables/DataTable.vue'
 import EditModalSlotData from '@src/pages/sa/role/EditSlotData.vue'
 import CreateModalSlotData from '@src/pages/sa/role/CreateSlotData.vue'
-import { ref, reactive, watch } from 'vue'
-
+import { ref, reactive } from 'vue'
 
 const sendDataToTable = {
   // required
@@ -16,6 +15,7 @@ const sendDataToTable = {
     'delete_url': 'security-access/roles',
     'org_get_url': 'hr/organizations',
   },
+  custom_name: 'role_name',
   th_name: {
     '1': 'Sl',
     '2': 'Role Name',
@@ -36,8 +36,7 @@ const sendDataToTable = {
   last_td_align: 'center',
 };
 
-
-// for create table
+// for create
 // ================
 // required
 const isCMOpen = ref(false);
@@ -48,8 +47,6 @@ const showCreateModal = () => {
 const sendCreateSlotToTable = reactive({
   // required
   createComponent: CreateModalSlotData, // Pass the Vue file as a prop
-
-
   // optional
   config: {
     title: 'Add New Role', /* modal title */
@@ -63,36 +60,25 @@ const sendCreateSlotToTable = reactive({
 });
 
 
-const newData = ref({});
-interface User {
-  [key: string]: any; // Allow other dynamic properties
-}
-// Push the newly added user to the data array
-const addNewUser = (newUser: User) => {
-  newData.value = {
-    ...newUser,
-    id: newUser.user_id, // Add the 'id' field
-    name: newUser.en_full_name
-  };
-  setTimeout(() => {
-    newData.value = {}; // Clear after updating
-  }, 0);
-}
 
-let updatedUserInfo: object;
-const updatedUser = (uUser: object) => {
-  updatedUserInfo = {
-    ...uUser,
-    id: uUser.user_id,
+// for edit
+const sendEditSlotToTable = {
+  editComponent: EditModalSlotData, // Pass the Vue file as a prop
+  sendPropDataForEM: {
+    config: {
+      title: 'Update Role', /* modal title */
+      titleBgColor: '#82c953', /* modal title */
+      titleTextColor: 'white', /* title text color*/
+      // height: 45, /* modal height */
+      // width: 60, /* modal width*/
+      footer: true, /* modal footer*/
+      footerButtonBgColor: 'red', /* modal close button background color*/
+    }
+  },
+  othersData: {
+    org_get_url: 'hr/organizations',
   }
-}
-
-const sendUserDataToCreateForm = {
-  create_url: 'security-access/user-register',
-  employee_get_url: 'hr/all-employees',
-  role_get_url: 'security-access/roles',
-}
-
+};
 
 
 // for view modal 
@@ -133,25 +119,6 @@ const sendPropDataForVM = reactive({
   }
 });
 
-// for edit
-const sendEditSlotToTable = {
-  editComponent: EditModalSlotData, // Pass the Vue file as a prop
-  sendPropDataForEM: {
-    config: {
-      title: 'Update User Information', /* modal title */
-      titleBgColor: '#82c953', /* modal title */
-      titleTextColor: 'white', /* title text color*/
-      // height: 45, /* modal height */
-      width: 60, /* modal width*/
-      footer: true, /* modal footer*/
-      footerButtonBgColor: 'red', /* modal close button background color*/
-    }
-  },
-  othersData: {
-    role_get_url: 'security-access/roles',
-  }
-};
-
 // for status
 const dataForStatusChange = {
   statusColumnName: 'status',
@@ -162,7 +129,6 @@ const dataForStatusChange = {
 <template>
   <a-button type="primary" style="width: 10vw;" @click="showCreateModal">Add</a-button>
   <DataTable :request-data="sendDataToTable" :edit-data="sendEditSlotToTable" :is-create-modal-open="isCMOpen"
-    :create-data="sendCreateSlotToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
-    :status-data="dataForStatusChange" @isCreateModalClose="isCMOpen = $event" @isViewModalOpen="emitDataForView"
-    @dataForViewModal="userDataForViewModal" />
+    :create-data="sendCreateSlotToTable" :status-data="dataForStatusChange" @isCreateModalClose="isCMOpen = $event"
+    @isViewModalOpen="emitDataForView" @dataForViewModal="userDataForViewModal" />
 </template>

@@ -38,7 +38,14 @@ class SaRoleRepository implements SaRoleInterface
                 'created_by' => 1
             ],
             [
-                'name' => 'required|max:20',
+                'name' => [
+                    'max:20',
+                    function ($attribute, $value, $fail) {
+                        if (empty($value)) {
+                            $fail('The role name is required.');
+                        }
+                    },
+                ],
                 'org_for' => 'required',
                 'status' => 'nullable',
                 'created_by' => 'required',
@@ -54,7 +61,7 @@ class SaRoleRepository implements SaRoleInterface
 
         if ($validated['org_for'] == 'all') {
             try {
-                $organizations = HrOrganization::withTrashed()->pluck('org_id'); // Fetch only IDs
+                $organizations = HrOrganization::pluck('org_id'); // Fetch only IDs
 
                 $existingRoles = SaRole::where('name', $validated['name'])
                     ->whereIn('org_id', $organizations)
@@ -71,35 +78,101 @@ class SaRoleRepository implements SaRoleInterface
                     ];
                 })->toArray();
 
+                $insert = false;
                 if (!empty($data)) {
-                    SaRole::insert($data);
+                    $insert = SaRole::insert($data);
                 }
 
                 // Retrieve all the inserted roles
                 $lastInsertedRoles = SaRole::where('name', $validated['name'])
                     ->whereIn('org_id', $newOrganizations)
                     ->get();
-
-                logInfo('Role Created Successfully!', $lastInsertedRoles);
-                return responseSuccess('Role Created Successfully!', RoleResource::collection($lastInsertedRoles), 201);
+                if ($insert) {
+                    logInfo('Role Created Successfully!', $lastInsertedRoles);
+                    return responseSuccess('Role Created Successfully!', RoleResource::collection($lastInsertedRoles), 201);
+                } else {
+                    logInfo('Role Already Exist!, Please Try Another Role');
+                    return responseSuccess('Role Already Exist!, Please Try Another Role', [], 409);
+                }
             } catch (\Exception $e) {
-                logError($e, 'Role Create failed', $request->all());
-                return handleException($e, 'Role Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+                logError($e, 'Role Create Failed', $request->all());
+                return handleException($e, 'Role Create Failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } elseif ($validated['org_for'] == 'active') {
             try {
-                $role = SaRole::create($validated);
-                logInfo('Role Created Successfully!', $role);
-                return responseSuccess('Role Created Successfully!', new RoleResource($role), 201);
+                $organizations = HrOrganization::where('status', 1)->pluck('org_id'); // Fetch only IDs
+
+                $existingRoles = SaRole::where('name', $validated['name'])
+                    ->whereIn('org_id', $organizations)
+                    ->pluck('org_id'); // Fetch IDs of already existing roles
+
+                $newOrganizations = $organizations->diff($existingRoles); // Find IDs not in existing roles
+                $data = $newOrganizations->map(function ($orgId) use ($validated) {
+                    return [
+                        'name' => $validated['name'],
+                        'org_id' => $orgId,
+                        'status' => $validated['status'] ? 1 : 0,
+                        'created_by' => $validated['created_by'],
+                        'created_at' => now(),
+                    ];
+                })->toArray();
+
+                $insert = false;
+                if (!empty($data)) {
+                    $insert = SaRole::insert($data);
+                }
+
+                // Retrieve all the inserted roles
+                $lastInsertedRoles = SaRole::where('name', $validated['name'])
+                    ->whereIn('org_id', $newOrganizations)
+                    ->get();
+                if ($insert) {
+                    logInfo('Role Created Successfully!', $lastInsertedRoles);
+                    return responseSuccess('Role Created Successfully!', RoleResource::collection($lastInsertedRoles), 201);
+                } else {
+                    logInfo('Role Already Exist!, Please Try Another Role');
+                    return responseSuccess('Role Already Exist!, Please Try Another Role', [], 409);
+                }
             } catch (\Exception $e) {
                 logError($e, 'Role Create failed', $request->all());
                 return handleException($e, 'Role Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } else if ($validated['org_for'] == 'specific') {
+
             try {
-                $role = SaRole::create($validated);
-                logInfo('Role Created Successfully!', $role);
-                return responseSuccess('Role Created Successfully!', new RoleResource($role), 201);
+                $organizations = collect($request->org_id);
+
+                $existingRoles = SaRole::where('name', $validated['name'])
+                    ->whereIn('org_id', $organizations)
+                    ->pluck('org_id'); // Fetch IDs of already existing roles
+
+                $newOrganizations = $organizations->diff($existingRoles); // Find IDs not in existing roles
+                $data = $newOrganizations->map(function ($orgId) use ($validated) {
+                    return [
+                        'name' => $validated['name'],
+                        'org_id' => $orgId,
+                        'status' => $validated['status'] ? 1 : 0,
+                        'created_by' => $validated['created_by'],
+                        'created_at' => now(),
+                    ];
+                })->toArray();
+
+                $insert = false;
+                if (!empty($data)) {
+                    $insert = SaRole::insert($data);
+                }
+
+                // Retrieve all the inserted roles
+                $lastInsertedRoles = SaRole::where('name', $validated['name'])
+                    ->whereIn('org_id', $newOrganizations)
+                    ->get();
+                if ($insert) {
+                    logInfo('Role Created Successfully!', $lastInsertedRoles);
+                    return responseSuccess('Role Created Successfully!', RoleResource::collection($lastInsertedRoles), 201);
+                } else {
+                    logInfo('Role Already Exist!, Please Try Another Role');
+                    return responseSuccess('Role Already Exist!, Please Try Another Role', [], 409);
+                }
             } catch (\Exception $e) {
                 logError($e, 'Role Create failed', $request->all());
                 return handleException($e, 'Role Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);

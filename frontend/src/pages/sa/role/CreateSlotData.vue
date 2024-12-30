@@ -1,5 +1,6 @@
 <template>
-  <SuccessNotification v-if="success" :message="successMessage.message" />
+  <SuccessNotification v-if="successNotify" :message="successMessage.message" />
+  <ErrorNotification v-if="errorNotify" :message="errorMessage" />
   <AForm :model="formState" ref="formRef" @finish="onFinish">
     <a-row>
       <a-col :span="24">
@@ -13,11 +14,14 @@
           <a-radio value="active">For Active Organization Only</a-radio>
           <a-radio value="specific" checked style=" margin-top: 3vh;">For Specific Organization</a-radio>
         </a-radio-group>
-        <AFormItem v-if="formState.org_for === 'specific'" name="org_id" label="Organizations" :rules="[{ required: true, message: 'Please select one or more organization' }]">
+
+        <AFormItem v-if="formState.org_for === 'specific'" name="org_id" label="Organizations"
+          :rules="[{ required: true, message: 'Please select one or more organization' }]">
           <a-select v-model:value="formState.org_id" mode="multiple" placeholder="Please select organizations"
             :options="orgOptions" :loading="isLoadingOrg"></a-select>
           <a-label :style="{ color: '#780650' }">{{ fieldErrors.orgs }}</a-label>
         </AFormItem>
+
         <a-form-item name="status" label="Active Status">
           <a-switch v-model:checked="formState.status" />
         </a-form-item>
@@ -35,14 +39,27 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import SuccessNotification from '../../../notifications/SuccessNotification.vue'
+import ErrorNotification from '../../../notifications/ErrorNotification.vue'
 
-const success = ref(false);
+const props = defineProps({
+  dataForCreate: Object,
+});
+const sendToDatatable = defineEmits(['newAddedData', 'closeCreateModal']);
+
+const successNotify = ref(false);
+const errorNotify = ref(false);
 const formRef = ref();
 const orgOptions = ref([]);
 const isLoadingOrg = ref(true);
+
+const resetForm = () => {
+  formRef.value.resetFields();
+  formState.org_for = 'specific';
+  formState.org_id = [];
+};
 
 const formState = reactive({
   role_name: '' as string,
@@ -57,22 +74,11 @@ const fieldErrors = reactive({
   orgs: ''
 });
 
-const resetForm = () => {
-  formRef.value.resetFields();
-  formState.org_for = 'specific';
-  formState.org_id = [];
-};
-
-const sendToDatatable = defineEmits(['newAddedData', 'closeCreateModal']);
-
-const props = defineProps({
-  success_message: String,
-  dataForCreate: Object,
-})
-
 const successMessage = reactive({
-  message: props.success_message
-})
+  message: ''
+});
+
+const errorMessage = ref('');
 
 const handleCancel = () => {
   sendToDatatable('closeCreateModal');
@@ -103,7 +109,7 @@ const onFinish = async () => {
   try {
     const response = await axios.post(props.dataForCreate?.urls.create_url, formState);
     if (response.status === 201 || response.status === 200) {
-      success.value = true
+      successNotify.value = true
       successMessage.message = response.data.message
       sendToDatatable('newAddedData', response.data.data);
       setTimeout(function () {
@@ -116,22 +122,14 @@ const onFinish = async () => {
         // console.error('Error status:', error.response.status) // Get the status code
         // console.error('Error message:', error.response.message) // Get the error response message
         // console.error('Error data:', error.response.data) // Get the error response data
-        if (error.response.status === 400) {
+        if (error.response.status === 400 || error.response.status === 422) {
           // console.error('Validation error:', error.response.data.validation_errors)
           const errors = error.response.data.validation_errors || {}
-          // fieldErrors.employee_name = errors.emp_id ? errors.emp_id[0] : ''
-          // fieldErrors.roles = errors.role_id ? errors.role_id[0] : ''
-          // fieldErrors.user_name = errors.user_name ? errors.user_name[0] : ''
-          // fieldErrors.email = errors.email ? errors.email[0] : ''
-          // fieldErrors.password = errors.password ? errors.password[0] : ''
-          // fieldErrors.status = errors.status ? errors.status[0] : ''
-          // fieldErrors.organization_name = errors.org_id ? errors.org_id[0] : ''
-          // Trigger form validation after setting errors
-          Object.keys(fieldErrors).forEach((key) => {
-            fieldErrors[key] = errors[key] ? errors[key][0] : ''
-            fieldErrors.employee_name = errors.emp_id ? errors.emp_id[0] : ''
-            fieldErrors.organization_name = errors.org_id ? errors.org_id[0] : ''
-          })
+          fieldErrors.role_name = errors.name ? errors.name[0] : ''
+          fieldErrors.orgs = errors.org_for ? errors.org_for[0] : ''
+        } else if (error.response.status === 409) {
+          errorNotify.value = true
+          errorMessage.value = error.response.data.message
         }
       } else if (error.request) {
         console.error('No response received:', error.request)

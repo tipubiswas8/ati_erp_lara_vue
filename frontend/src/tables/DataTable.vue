@@ -214,7 +214,6 @@ watch(
   { deep: true }
 );
 
-
 // Function to add new data
 const addedData = (new_data: object | object[]) => {
   if (Array.isArray(new_data)) {
@@ -233,7 +232,6 @@ const addedData = (new_data: object | object[]) => {
     });
   }
 };
-
 
 const closeCreateModal = () => {
   openCreateModal.value = false;
