@@ -194,82 +194,58 @@ class SaRoleRepository implements SaRoleInterface
 
     public function update(Request $request, SaRole $role)
     {
-        $user = SaRole::find($request->id);
-        if (!$user) {
-            return response()->json(['status' => false, 'message' => 'User not found'], 404); // 404 Not Found
+        $requestData = $request->only(['role_name', 'org_name', 'role_id', 'status']);
+        $role = SaRole::find($requestData['role_id']);
+        if (!$role) {
+            return response()->json(['status' => false, 'message' => 'Role not found'], 404); // 404 Not Found
         }
 
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|digits_between:10,11', // Correct phone validation
-            'address' => 'nullable|string|max:255',
-            'password' => 'required|string|min:6',
-            'status' => 'required',
+            'role_name' => 'required|string|max:20',
+            'org_name' => 'required|string|max:16'
         ];
 
         // Validate the request data against the dynamic rules
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($requestData, $rules);
 
         if ($validator->fails()) {
-            Log::warning('Validation error during user registration', [
-                'errors' => $validator->errors(),
-                'request_data' => $request->all(),
-            ]);
-
-            // Return immediately if validation fails
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors(),
-            ], 400); // 400 Bad Request for validation errors
-            // Get the validated data
+            logWarning('Validation error during update role', $validator->errors(), $requestData);
+            return handleValidationError($validator->errors(), 'Role Update failed', 422);
+            // 422 server was unable to process the request because it contains invalid data.
         }
         $validated = $validator->validated();
         try {
-            $user->name = $validated['name'];
-            $user->email = $validated['email'];
-            $user->phone = $validated['phone'];
-            $user->address = $validated['address'] ?? $user->address; // Keep existing address if not provided
-            $user->password = $validated['password'];
-            $user->status = $validated['status'];
-            $user->save();
-            Log::info('User Update Successfully', [
-                'user' => $user
-            ]);
-            return response()->json(['status' => true, 'message' => 'User Update Successfully!', 'user' => $user], 204);
+            $role->name = $validated['role_name'];
+            $role->org_id = $validated['org_name'];
+            $role->status = $requestData['status'] ? 1 : 0;
+            $role->save();
+            logInfo('Role Update Successfully!', $role);
+            return responseSuccess('Role Update Successfully!', new RoleResource($role), 200);
         } catch (Exception $e) {
-            Log::error('User Update Failed', [
-                'user' => $user,
-                'error_message' => $e->getMessage(),
-            ]);
-            return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
+            logError($e, 'Role Update Failed!', $requestData);
+            return handleException($e, 'Role Update Failed!', 500);
         }
     }
 
-    public function status(Request $request)
+    public function status()
     {
-        $user = SaRole::find($request->id);
-        if (!$user) {
-            return response()->json(['status' => false, 'message' => 'User not found!'], 404);
+        $request = request();
+        $role = SaRole::find($request->id);
+        if (!$role) {
+            return response()->json(['status' => false, 'message' => 'Role not found!'], 404);
         }
         try {
-            $user->status = !$request->status;
-            $update = $user->save();
+            $role->status = $request->status;
+            $update = $role->save();
             if ($update) {
-                Log::alert('User Status Updated Successfully', [
-                    'user' => $user,
-                    'status' => $user->status
-                ]);
-                return response()->json(['status' => true, 'message' => 'User Status Updated Successfully!', 'data' => $user], 200);
+                logAlert('Role Status Updated Successfully!', $role);
+                return responseSuccess('Role Status Updated Successfully!', $role, 200);
             } else {
                 return response()->json(['status' => false, 'message' => 'Unable to update status, please try again later'], 507);
             }
         } catch (Exception $e) {
-            Log::error('Unable to update user status, please try again!', [
-                'user' => $user,
-                'error_message' => $e->getMessage(),
-            ]);
-            return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
+            logError($e, 'Unable to update role status, please try again!', $role);
+            return handleException($e, 'Unable to update role status, please try again!');
         }
     }
 

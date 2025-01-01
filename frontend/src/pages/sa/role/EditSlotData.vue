@@ -1,12 +1,13 @@
 <template>
-  <AForm :model="formData" ref="formRef" :validate-messages="validateMessages" @finish="onFinish">
+  <AForm :model="formData" ref="formRef" @finish="onFinish">
     <ARow :style="{ flexDirection: 'column' }">
       <AFormItem name="role_name" label="Role Name" :rules="[{ required: true, message: 'Role name is required' }]">
         <AInput v-model:value="formData.role_name" autocomplete="off" />
         <a-label :style="{ color: '#780650' }">{{ fieldErrors.role_name }}</a-label>
       </AFormItem>
 
-      <AFormItem name="org_name" label="Organization" :rules="disableValidation ? [] : [{ required: true }]">
+      <AFormItem name="org_name" label="Organization"
+        :rules="disableValidation ? [] : [{ required: true, message: 'Organization is required' }]">
         <a-select v-model:value="formData.org_name" placeholder="Please select organization" :options="orgOptions"
           :loading="isLoadingOrg"></a-select>
         <a-label :style="{ color: '#780650' }">{{ fieldErrors.org_name }}</a-label>
@@ -14,7 +15,6 @@
 
       <a-form-item name="status" label="Active Status">
         <a-switch v-model:checked="formData.status" />
-        <a-label :style="{ color: '#780650' }">{{ fieldErrors.status }}</a-label>
       </a-form-item>
     </ARow>
 
@@ -42,11 +42,8 @@ const props = defineProps({
   editData: {
     type: Object,
   },
-  odfe: Object,
-  myData: Object
+  odfe: Object
 });
-
-console.log(props.myData);
 const emit = defineEmits(['closeEM', 'responseData', 'notificationInfo']);
 
 const handleCancel = () => {
@@ -58,6 +55,7 @@ const resetForm = () => {
 };
 
 const formData = reactive({
+  role_id: props.editData?.id || 0,
   role_name: props.editData?.name || '',
   org_name: props.editData?.org_id || '',
   status: props.editData?.status === 1,
@@ -66,8 +64,7 @@ const formData = reactive({
 // For field-specific errors
 const fieldErrors = reactive({
   role_name: '',
-  org_name: '',
-  status: '',
+  org_name: ''
 });
 
 // Set the initial error message when the component is mounted
@@ -92,18 +89,10 @@ const allOrg = async function fetchAllOrganizations() {
   }
 }
 
-
-const validateMessages = {
-  required: '${label} is required!',
-  types: {
-    email: '${label} is not a valid email!',
-  },
-};
-
-const edit_url = props.editData?.edit_url;
+const edit_url = props.editData?.edit_url + '/' + formData.role_id;
 const onFinish = async () => {
   try {
-    const response = await axios.put(edit_url, formData);
+    const response = await axios.patch(edit_url, formData);
     if (response.status === 204 || response.status === 200) {
       const responseStatusAndMessage = {
         success: response.data.status,
@@ -113,8 +102,8 @@ const onFinish = async () => {
       const successResponseData = [];
       successResponseData.push({
         ...response.data.data,
-        id: response.data.data.user_id,
-        name: response.data.data.en_full_name,
+        id: response.data.data.id,
+        name: response.data.data.role_name,
       });
       emit('responseData', successResponseData[0]);
       emit('notificationInfo', responseStatusAndMessage);
@@ -128,7 +117,7 @@ const onFinish = async () => {
         // console.error('Error status:', error.response.status) // Get the status code
         // console.error('Error message:', error.response.message) // Get the error response message
         // console.error('Error data:', error.response.data) // Get the error response data
-        if (error.response.status === 400) {
+        if (error.response.status === 400 || error.response.status === 422) {
           // console.error('Validation error:', error.response.data.validation_errors)
           const errors = error.response.data.validation_errors || {}
           Object.keys(fieldErrors).forEach((key) => {

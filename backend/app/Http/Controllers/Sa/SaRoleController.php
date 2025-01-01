@@ -70,4 +70,9 @@ class SaRoleController extends Controller
     {
         return $this->saRoleInterface->destroy($role);
     }
+
+    public function status()
+    {
+        return $this->saRoleInterface->status();
+    }
 }

@@ -11,7 +11,7 @@ const sendDataToTable = {
     'create_url': 'security-access/roles',
     'view_url': 'security-access/roles',
     'edit_url': 'security-access/roles',
-    'status_url': 'security-access/roles',
+    'status_url': 'security-access/role-status',
     'delete_url': 'security-access/roles',
     'org_get_url': 'hr/organizations',
   },

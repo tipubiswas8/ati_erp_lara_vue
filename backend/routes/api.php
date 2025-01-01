@@ -25,6 +25,7 @@ Route::prefix('security-access')->group(function () {
     Route::delete('/user-delete/{id}', [SaUserController::class, 'destroy']);
     // role and permission
     Route::resource('roles', SaRoleController::class);
+    Route::patch('role-status', 'App\Http\Controllers\Sa\SaRoleController@status');
     Route::resource('permissions', SaPermissionController::class);
 });
 Route::prefix('hr')->group(function () {

@@ -13,4 +13,5 @@ interface SaRoleInterface
     public function edit(SaRole $role);
     public function update(Request $request, SaRole $role);
     public function destroy(SaRole $role);
+    public function status();
 }
