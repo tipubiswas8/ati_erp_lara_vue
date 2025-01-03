@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import DataTable from '@src/tables/DataTable.vue'
-import EditModalSlotData from '@src/pages/sa/role/EditSlotData.vue'
 import CreateModalSlotData from '@src/pages/sa/role/CreateSlotData.vue'
-import { ref, reactive } from 'vue'
+import EditModalSlotData from '@src/pages/sa/role/EditSlotData.vue'
+import ViewModalSlotData from '@src/pages/sa/role/ViewSlotData.vue'
+import { ref, reactive, watch } from 'vue'
 
 const sendDataToTable = {
   // required
@@ -59,8 +60,6 @@ const sendCreateSlotToTable = reactive({
   }
 });
 
-
-
 // for edit
 const sendEditSlotToTable = {
   editComponent: EditModalSlotData, // Pass the Vue file as a prop
@@ -80,44 +79,25 @@ const sendEditSlotToTable = {
   }
 };
 
-
 // for view modal 
 // ==============
-
-const isVMOpen = ref(false)
-
-const showViewModal = () => {
-  isVMOpen.value = true
-};
-
-const closeViewModal = () => {
-  isVMOpen.value = false
-};
-
-const emitDataForView = () => {
-  showViewModal();
+const isVMOpen = ref(false);
+const doViewModalOpen = () => {
+  isVMOpen.value = true;
 }
 
-const userInformation = ref({});
-
-const userDataForViewModal = (userData: object) => {
-  userInformation.value = {
-    ...userData,
-    role_get_url: 'security-access/roles'
-  }
-}
-
-const sendPropDataForVM = reactive({
+const sendViewSlotToTable = {
+  viewComponent: ViewModalSlotData, // Pass the Vue file as a prop
   config: {
-    title: 'User Information', /* modal title */
+    title: 'Show Role', /* modal title */
     titleBgColor: '#82c953', /* modal title */
     titleTextColor: 'white', /* title text color*/
-    // height: 52, /* modal height */
-    width: 60, /* modal width*/
+    // height: 45, /* modal height */
+    // width: 60, /* modal width*/
     footer: true, /* modal footer*/
     footerButtonBgColor: 'red', /* modal close button background color*/
   }
-});
+};
 
 // for status
 const dataForStatusChange = {
@@ -129,6 +109,7 @@ const dataForStatusChange = {
 <template>
   <a-button type="primary" style="width: 10vw;" @click="showCreateModal">Add</a-button>
   <DataTable :request-data="sendDataToTable" :edit-data="sendEditSlotToTable" :is-create-modal-open="isCMOpen"
-    :create-data="sendCreateSlotToTable" :status-data="dataForStatusChange" @isCreateModalClose="isCMOpen = $event"
-    @isViewModalOpen="emitDataForView" @dataForViewModal="userDataForViewModal" />
+    :create-data="sendCreateSlotToTable" @isCreateModalClose="isCMOpen = $event" :is-v-m-open="isVMOpen"
+    @isViewModalOpen="doViewModalOpen" :view-data="sendViewSlotToTable"
+    @isVMClose="(receivedEmit) => isVMOpen = receivedEmit" :status-data="dataForStatusChange" />
 </template>

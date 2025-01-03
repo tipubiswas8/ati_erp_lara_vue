@@ -112,7 +112,7 @@ const emitDataForView = () => {
 
 const userInformation = ref({});
 
-const userDataForViewModal = (userData: object) => {
+const userdataForView = (userData: object) => {
   userInformation.value = {
     ...userData,
     role_get_url: 'security-access/roles'
@@ -171,12 +171,12 @@ const dataForStatusChange = {
 
   <DataTable :request-data="sendDataToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
     :edit-data="sendEditSlotToTable" :status-data="dataForStatusChange" @isViewModalOpen="emitDataForView"
-    @dataForViewModal="userDataForViewModal" />
+    @dataForView="userdataForView" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCM">
     <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addNewUser" @updatedUserData="updatedUser"
       :user-data="sendUserDataToCreateForm" />
   </CreateModal>
-  <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :user-view-modal-data="sendPropDataForVM">
+  <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :view-modal-config-data="sendPropDataForVM">
     <ViewModalSlotData :selected-user-information="userInformation" />
   </ViewModal>
 </template>

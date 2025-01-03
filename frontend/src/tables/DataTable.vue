@@ -8,6 +8,7 @@ import EditModal from '@src/modals/EditModal.vue'
 import StatusNotification from '@src/notifications/StatusNotification.vue'
 // optional
 import CreateModal from '@src/modals/CreateModal.vue'
+import ViewModal from '@src/modals/ViewModal.vue'
 
 const props = defineProps({
   // required
@@ -28,15 +29,19 @@ const props = defineProps({
   },
   isCreateModalOpen: {
     type: Boolean
-  }
+  },
+  // optional
+  isVMOpen: Boolean || false,
+  viewData: Object || null || undefined,
 });
 
 const setEmit = defineEmits([
   // required
   'isViewModalOpen',
-  'dataForViewModal',
+  'dataForView',
   // optional
-  'isCreateModalClose'
+  'isCreateModalClose',
+  'isVMClose'
 ]);
 
 let columns = [];
@@ -203,7 +208,7 @@ watch(
 // optional
 const openCreateModal = ref(false);
 const createComponent = props.createData?.createComponent;
-const createModalConfigaration = props.createData?.config ? props.createData : null;
+const createModalConfigaration = props.createData?.config ? props.createData : undefined;
 
 // Watch for new create data if create modal in datatable
 watch(
@@ -297,14 +302,32 @@ const closeEditModal = () => {
 
 // for view 
 // required
+let selectedInfo = null;
 const handleView = (id: number) => {
   setEmit('isViewModalOpen', true);
-  const selectedInfo = tableData.value.find((item) => item.id === id)
+   selectedInfo = tableData.value.find((item) => item.id === id)
   if (selectedInfo) {
-    setEmit('dataForViewModal', selectedInfo);
+    setEmit('dataForView', selectedInfo);
   }
 }
+// optional
+const viewComponent = props.viewData?.viewComponent;
+const viewModalConfigData = props.viewData?.config ? props.viewData : undefined;
+const openViewModal = ref(false);
 
+// Watch for new view data if view modal in datatable
+watch(
+  () => props.isVMOpen,
+  (doVMOpen) => {
+    openViewModal.value = doVMOpen;
+  },
+  { deep: true }
+);
+
+const closeViewModal = () => {
+  openViewModal.value = false,
+  setEmit('isVMClose', openViewModal.value);
+};
 
 // for status 
 // required
@@ -393,16 +416,22 @@ const notify = (notic: object) => {
     }" @change="handleTableChange" />
   </Spin>
 
-  <EditModal v-if="openEditModal" @close="closeEditModal" :config-data="editModalConfigData" :notify-data="nInfo">
-    <component :is="editComponent" :edit-data="information" :odfe="othersDataForEdit" @closeEM="closeEditModal"
-      @responseData="responseEditData" @notificationInfo="notify" />
-  </EditModal>
-  <StatusNotification v-if="openStatusUpdate" :status-data="selectedInfoForStatusChange"
-    :columns-name="props.statusData" @sendToParent="handleStatusUpdate" />
-
   <!-- optional -->
   <CreateModal v-if="openCreateModal" :modal-config-data="createModalConfigaration" @close="closeCreateModal">
     <component :is="createComponent" :data-for-create="props.requestData" @closeCreateModal="closeCreateModal"
       @newAddedData="addedData" />
   </CreateModal>
+
+  <EditModal v-if="openEditModal" :config-data="editModalConfigData" @close="closeEditModal" :notify-data="nInfo">
+    <component :is="editComponent" :edit-data="information" :odfe="othersDataForEdit" @closeEM="closeEditModal"
+      @responseData="responseEditData" @notificationInfo="notify" />
+  </EditModal>
+
+  <!-- optional -->
+  <ViewModal v-if="openViewModal" :view-modal-config-data="viewModalConfigData" @closeVm="closeViewModal">
+    <component :is="viewComponent" :data-for-view="selectedInfo" @closeVModal="closeViewModal" />
+  </ViewModal>
+
+  <StatusNotification v-if="openStatusUpdate" :status-data="selectedInfoForStatusChange"
+    :columns-name="props.statusData" @sendToParent="handleStatusUpdate" />
 </template>
