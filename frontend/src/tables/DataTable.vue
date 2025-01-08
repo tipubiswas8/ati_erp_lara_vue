@@ -12,19 +12,18 @@ import ViewModal from '@src/modals/ViewModal.vue'
 
 const props = defineProps({
   // required
-  requestData: {
+  tableDataOne: {
     type: Object,
     required: true
   },
-  editData: {
-    type: Object,
-    required: true,
+  editDataOne: {
+    type: Object
   },
-  dataForCreate: Object,
-  dataForUpdate: Object,
-  statusData: Object,
+  createDataOne: Object,
+  updateDataOne: Object,
+  statusDataOne: Object,
   // optional
-  createData: {
+  createDataTwo: {
     type: Object || null || undefined
   },
   isCreateModalOpen: {
@@ -45,26 +44,26 @@ const setEmit = defineEmits([
 ]);
 
 let columns = [];
-const tableHead = props.requestData?.th_name;
-// Create dynamic columns based on requestData.th_name
+const tableHead = props.tableDataOne?.th_name;
+// Create dynamic columns based on tableDataOne.th_name
 if (tableHead) {
-  columns = Object.entries(props.requestData.th_name).map(([key, title]) => ({
+  columns = Object.entries(props.tableDataOne.th_name).map(([key, title]) => ({
     title: () => h(
       'div',
       {
         style: {
-          textAlign: props.requestData?.th_align || 'left',  // Header alignment
+          textAlign: props.tableDataOne?.th_align || 'left',  // Header alignment
         },
       },
       title
     ),
-    dataIndex: props.requestData?.td_data[key],
+    dataIndex: props.tableDataOne?.td_data[key],
     key,
     customRender: ({ text }) => h(
       'div',
       {
         style: {
-          textAlign: props.requestData?.td_align || 'left',  // Cell alignment
+          textAlign: props.tableDataOne?.td_align || 'left',  // Cell alignment
         },
       },
       text
@@ -72,15 +71,15 @@ if (tableHead) {
   }));
 
   columns.push({
-    title: props.requestData?.last_th_name,
-    align: props.requestData?.last_th_align || 'center',
+    title: props.tableDataOne?.last_th_name,
+    align: props.tableDataOne?.last_th_align || 'center',
     customRender: ({ record }) => {
       return h(
         'div',
         {
           style: {
             display: 'flex',
-            justifyContent: props.requestData?.last_td_align || 'center',
+            justifyContent: props.tableDataOne?.last_td_align || 'center',
             gap: '8px', // Adds space between buttons
           },
         },
@@ -104,7 +103,7 @@ if (tableHead) {
               type: 'default',
               size: 'small',
               icon: h(CheckCircleOutlined),
-              onClick: () => showStatusUpdater(record.id),
+              onClick: () => showStatusNotification(record.id),
               style: { display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'green' },
             })
             : h(Button, {
@@ -112,7 +111,7 @@ if (tableHead) {
               size: 'small',
               danger: true,
               icon: h(PauseCircleOutlined),
-              onClick: () => showStatusUpdater(record.id),
+              onClick: () => showStatusNotification(record.id),
               style: { display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'yellow' },
             }),
           h(
@@ -158,9 +157,9 @@ function handleTableChange(paginationInfo: any) {
 const transformData = (data: any[]) => {
   return data.map(item => ({
     ...item,
-    id: props.requestData?.custom_id ? item[props.requestData?.custom_id] : item.id,
-    name: props.requestData?.custom_name ? item[props.requestData?.custom_name] : item.name,
-    status: props.statusData?.statusColumnName ? item[props.statusData?.statusColumnName] : item.status,
+    id: props.tableDataOne?.custom_id ? item[props.tableDataOne?.custom_id] : item.id,
+    name: props.tableDataOne?.custom_name ? item[props.tableDataOne?.custom_name] : item.name,
+    status: props.statusDataOne?.statusColumnName ? item[props.statusDataOne?.statusColumnName] : item.status,
   }));
 };
 
@@ -170,7 +169,7 @@ const isLoading = ref(false);
 async function fetchData() {
   isLoading.value = true; // Start loading
   try {
-    const response = await axios.get(props.requestData?.urls.data_url);
+    const response = await axios.get(props.tableDataOne?.urls.data_url);
     if (response.status === 200) {
       tableData.value = transformData(response.data.data.map((item: object, index: number) => ({
         ...item,
@@ -192,7 +191,7 @@ onMounted(() => {
 // required
 // Watch for new create data
 watch(
-  () => props.dataForCreate,
+  () => props.createDataOne,
   (newInformation) => {
     if (newInformation && Object.keys(newInformation).length > 0) {
       const sl = tableData.value.length + 1; // Generate serial number
@@ -207,8 +206,8 @@ watch(
 
 // optional
 const openCreateModal = ref(false);
-const createComponent = props.createData?.createComponent;
-const createModalConfigaration = props.createData?.config ? props.createData : undefined;
+const createComponent = props.createDataTwo?.createComponent;
+const createModalConfigaration = props.createDataTwo?.config ? props.createDataTwo : undefined;
 
 // Watch for new create data if create modal in datatable
 watch(
@@ -236,6 +235,11 @@ const addedData = (new_data: object | object[]) => {
       sl: tableData.value.length + 1 // Calculate serial number
     });
   }
+  // update id and name after create
+  tableData.value = transformData(tableData.value.map((item: object, index: number) => ({
+    ...item,
+    sl: index + 1,
+  })));
 };
 
 const closeCreateModal = () => {
@@ -247,16 +251,16 @@ const closeCreateModal = () => {
 // required
 const information = ref({});
 const openEditModal = ref(false);
-const editComponent = props.editData?.editComponent;
-const editModalConfigData = props.editData?.sendPropDataForEM;
-const othersDataForEdit = props.editData?.othersData;
+const editComponent = props.editDataOne?.editComponent;
+const editModalConfigData = props.editDataOne?.sendPropDataForEM;
+const othersDataForEdit = props.editDataOne?.othersData;
 
 const handleEdit = (id: number) => {
-  const selectedInfo = tableData.value.find((item) => item.id === id)
-  if (selectedInfo) {
+  const selectedInfoForEdit = tableData.value.find((item) => item.id === id)
+  if (selectedInfoForEdit) {
     information.value = {
-      ...selectedInfo, // Spread selectedInfo to include all its properties
-      edit_url: props.requestData?.urls.edit_url, // Add or overwrite edit_url
+      ...selectedInfoForEdit, // Spread selectedInfoForEdit to include all its properties
+      edit_url: props.tableDataOne?.urls.edit_url, // Add or overwrite edit_url
     };
     openEditModal.value = true
   }
@@ -264,7 +268,7 @@ const handleEdit = (id: number) => {
 
 // Watch for updated information
 watch(
-  () => props.dataForUpdate,
+  () => props.updateDataOne,
   (updatedInformation) => {
     if (updatedInformation && Object.keys(updatedInformation).length > 0) {
       // Find the index of the information in tableData based on a unique ID
@@ -289,9 +293,9 @@ interface EditResponseData {
 }
 
 const responseEditData = (eRData: EditResponseData) => {
-  const selectedInfo = tableData.value.find((item) => item.id === eRData.id);
-  if (selectedInfo) {
-    Object.assign(selectedInfo, eRData); // Update the selected item with the new data
+  const selectedInfoForEditResponse = tableData.value.find((item) => item.id === eRData.id);
+  if (selectedInfoForEditResponse) {
+    Object.assign(selectedInfoForEditResponse, eRData); // Update the selected item with the new data
   }
 }
 
@@ -302,12 +306,12 @@ const closeEditModal = () => {
 
 // for view 
 // required
-let selectedInfo = null;
+let selectedInfoForView: any;
 const handleView = (id: number) => {
   setEmit('isViewModalOpen', true);
-   selectedInfo = tableData.value.find((item) => item.id === id)
-  if (selectedInfo) {
-    setEmit('dataForView', selectedInfo);
+  selectedInfoForView = tableData.value.find((item) => item.id === id)
+  if (selectedInfoForView) {
+    setEmit('dataForView', selectedInfoForView);
   }
 }
 // optional
@@ -326,38 +330,38 @@ watch(
 
 const closeViewModal = () => {
   openViewModal.value = false,
-  setEmit('isVMClose', openViewModal.value);
+    setEmit('isVMClose', openViewModal.value);
 };
 
 // for status 
 // required
-const openStatusUpdate = ref(false);
-const showStatusUpdater = (id: number) => {
-  selectedInfoId.value = id;
-  openStatusUpdate.value = true;
+const openStatusNotification = ref(false);
+const showStatusNotification = (id: number) => {
+  selectedInfoIdForStatus.value = id;
+  openStatusNotification.value = true;
 }
 
 const handleStatusUpdate = (receiveData: { statusUpdate: boolean, responseFeedback: any }) => {
   if (receiveData.statusUpdate === true) {
-    const info = tableData.value.find((item) => item.id === selectedInfoId.value);
+    const info = tableData.value.find((item) => item.id === selectedInfoIdForStatus.value);
     if (info) {
       // Update the status of the found item
       info.status = receiveData.responseFeedback;
     }
   };
-  openStatusUpdate.value = false;
+  openStatusNotification.value = false;
 }
 
-const selectedInfoId = ref<number | null>(null);
+const selectedInfoIdForStatus = ref<number | null>(null);
 // Computed property to get the selected info based on the ID
 const selectedInfoForStatusChange = computed(() => {
-  const info = tableData.value.find((item) => item.id === selectedInfoId.value) || {};
-  const column_name = props.statusData?.statusChangeFor;
+  const info = tableData.value.find((item) => item.id === selectedInfoIdForStatus.value) || {};
+  const column_name = props.statusDataOne?.statusChangeFor;
   const c_name = column_name ? info[column_name] : info.name; // Dynamically access the property
   return {
     ...info,
     name_for_status_change: c_name,
-    status_url: props.requestData?.urls.status_url // Adding the additional property to selectedInfoForStatusChange
+    status_url: props.tableDataOne?.urls.status_url // Adding the additional property to selectedInfoForStatusChange
   };
 });
 
@@ -365,7 +369,7 @@ const selectedInfoForStatusChange = computed(() => {
 // required
 const handleDelete = async (id: number) => {
   try {
-    const response = await axios.delete(props.requestData?.urls.delete_url + '/' + id);
+    const response = await axios.delete(props.tableDataOne?.urls.delete_url + '/' + id);
     if (response.status === 200) {
       message.success(response.data.message)
       tableData.value = tableData.value.filter((singleItem) => singleItem.id !== id)
@@ -418,20 +422,20 @@ const notify = (notic: object) => {
 
   <!-- optional -->
   <CreateModal v-if="openCreateModal" :modal-config-data="createModalConfigaration" @close="closeCreateModal">
-    <component :is="createComponent" :data-for-create="props.requestData" @closeCreateModal="closeCreateModal"
+    <component :is="createComponent" :create-data-one="props.tableDataOne" @closeCreateModal="closeCreateModal"
       @newAddedData="addedData" />
   </CreateModal>
 
   <EditModal v-if="openEditModal" :config-data="editModalConfigData" @close="closeEditModal" :notify-data="nInfo">
-    <component :is="editComponent" :edit-data="information" :odfe="othersDataForEdit" @closeEM="closeEditModal"
+    <component :is="editComponent" :edit-data-one="information" :edit-data-two="othersDataForEdit" @closeEM="closeEditModal"
       @responseData="responseEditData" @notificationInfo="notify" />
   </EditModal>
 
   <!-- optional -->
   <ViewModal v-if="openViewModal" :view-modal-config-data="viewModalConfigData" @closeVm="closeViewModal">
-    <component :is="viewComponent" :data-for-view="selectedInfo" @closeVModal="closeViewModal" />
+    <component :is="viewComponent" :view-data-one="selectedInfoForView" @closeVModal="closeViewModal" />
   </ViewModal>
 
-  <StatusNotification v-if="openStatusUpdate" :status-data="selectedInfoForStatusChange"
-    :columns-name="props.statusData" @sendToParent="handleStatusUpdate" />
+  <StatusNotification v-if="openStatusNotification" :status-data="selectedInfoForStatusChange"
+    :columns-name="props.statusDataOne" @sendToParent="handleStatusUpdate" />
 </template>

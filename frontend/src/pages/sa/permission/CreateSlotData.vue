@@ -4,9 +4,9 @@
   <AForm :model="formState" ref="formRef" @finish="onFinish">
     <a-row>
       <a-col :span="24">
-        <AFormItem name="role_name" label="Role Name" :rules="[{ required: true, message: 'Role name is required' }]">
-          <AInput v-model:value="formState.role_name" autocomplete="off" />
-          <a-label :style="{ color: '#780650' }">{{ fieldErrors.role_name }}</a-label>
+        <AFormItem name="permission_name" label="Permission Name" :rules="[{ required: true, message: 'Role name is required' }]">
+          <AInput v-model:value="formState.permission_name" autocomplete="off" />
+          <a-label :style="{ color: '#780650' }">{{ fieldErrors.p_name }}</a-label>
         </AFormItem>
 
         <a-radio-group v-model:value="formState.org_for" style=" margin-bottom: 1vh;">
@@ -45,9 +45,9 @@ import SuccessNotification from '../../../notifications/SuccessNotification.vue'
 import ErrorNotification from '../../../notifications/ErrorNotification.vue'
 
 const props = defineProps({
-  createDataOne: Object,
+  permissionData: Object,
 });
-const sendToDatatable = defineEmits(['newAddedData', 'closeCreateModal']);
+const sendToDatatable = defineEmits(['newAddedData', 'closeCModal']);
 
 const successNotify = ref(false);
 const errorNotify = ref(false);
@@ -62,7 +62,7 @@ const resetForm = () => {
 };
 
 const formState = reactive({
-  role_name: '' as string,
+  permission_name: '' as string,
   org_id: [],
   org_for: 'specific',
   status: true as boolean,
@@ -70,7 +70,7 @@ const formState = reactive({
 
 // For field-specific errors
 const fieldErrors = reactive({
-  role_name: '',
+  p_name: '',
   orgs: ''
 });
 
@@ -81,10 +81,10 @@ const successMessage = reactive({
 const errorMessage = ref('');
 
 const handleCancel = () => {
-  sendToDatatable('closeCreateModal');
+  sendToDatatable('closeCModal');
 }
 
-const org_url = props.createDataOne?.urls.org_get_url;
+const org_url = props.permissionData?.org_get_url;
 async function fetchAllOrganization() {
   try {
     const response = await axios.get(org_url);
@@ -107,10 +107,11 @@ onMounted(() => {
 
 const onFinish = async () => {
   try {
-    const response = await axios.post(props.createDataOne?.urls.create_url, formState);
+    const response = await axios.post(props.permissionData?.create_url, formState);
     if (response.status === 201 || response.status === 200) {
-      successNotify.value = true;
-      successMessage.message = response.data.message;
+      console.log(response.data)
+      successNotify.value = true
+      successMessage.message = response.data.message
       sendToDatatable('newAddedData', response.data.data);
       setTimeout(function () {
         handleCancel();
@@ -125,7 +126,7 @@ const onFinish = async () => {
         if (error.response.status === 400 || error.response.status === 422) {
           // console.error('Validation error:', error.response.data.validation_errors)
           const errors = error.response.data.validation_errors || {}
-          fieldErrors.role_name = errors.name ? errors.name[0] : ''
+          fieldErrors.p_name = errors.permission_name ? errors.permission_name[0] : ''
           fieldErrors.orgs = errors.org_for ? errors.org_for[0] : ''
         } else if (error.response.status === 409) {
           errorNotify.value = true

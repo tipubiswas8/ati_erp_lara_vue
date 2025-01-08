@@ -3,8 +3,10 @@ import DataTable from '@src/tables/DataTable.vue'
 import CreateModalSlotData from '@src/pages/sa/role/CreateSlotData.vue'
 import EditModalSlotData from '@src/pages/sa/role/EditSlotData.vue'
 import ViewModalSlotData from '@src/pages/sa/role/ViewSlotData.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive } from 'vue'
 
+// for data table
+// ==============
 const sendDataToTable = {
   // required
   urls: {
@@ -108,8 +110,8 @@ const dataForStatusChange = {
 
 <template>
   <a-button type="primary" style="width: 10vw;" @click="showCreateModal">Add</a-button>
-  <DataTable :request-data="sendDataToTable" :edit-data="sendEditSlotToTable" :is-create-modal-open="isCMOpen"
-    :create-data="sendCreateSlotToTable" @isCreateModalClose="isCMOpen = $event" :is-v-m-open="isVMOpen"
+  <DataTable :table-data-one="sendDataToTable" :edit-data-one="sendEditSlotToTable" :is-create-modal-open="isCMOpen"
+    :create-data-two="sendCreateSlotToTable" @isCreateModalClose="isCMOpen = $event" :is-v-m-open="isVMOpen"
     @isViewModalOpen="doViewModalOpen" :view-data="sendViewSlotToTable"
-    @isVMClose="(receivedEmit) => isVMOpen = receivedEmit" :status-data="dataForStatusChange" />
+    @isVMClose="(receivedEmit) => isVMOpen = receivedEmit" :status-data-one="dataForStatusChange" />
 </template>

@@ -75,6 +75,6 @@ const dataForStatusChange = {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" :status-data="dataForStatusChange" />
+  <DataTable :request-data="sendDataToTable" :status-data-one="dataForStatusChange" />
   <CreateModal v-if="isOpen" @close="closeModal" @userAdded="addNewUser" />
 </template>

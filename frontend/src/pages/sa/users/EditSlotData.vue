@@ -105,10 +105,10 @@ const roleOptions = ref([]);
 const disableValidation = ref(false);
 
 const props = defineProps({
-  editData: {
+  editDataOne: {
     type: Object,
   },
-  odfe: Object,
+  editDataTwo: Object,
   myData: Object
 });
 
@@ -165,17 +165,17 @@ const handleKeyPress = (e: KeyboardEvent) => {
 
 const formData = reactive({
   user: {
-    id: props.editData?.id || 0,
-    user_id: props.editData?.id || 0,
-    emp_id: props.editData?.employee_id || 0,
-    user_name: props.editData?.user_name || '',
-    emp_name: props.editData?.name || '',
-    role_name: props.editData?.role_id || [],
-    official_email: props.editData?.ofie_email || '',
-    personal_email: props.editData?.ppo_hemail || '',
-    official_mob: props.editData?.omobile_no || '',
-    personal_mob: props.editData?.pmobile_no || '',
-    status: props.editData?.status === 1,
+    id: props.editDataOne?.id || 0,
+    user_id: props.editDataOne?.id || 0,
+    emp_id: props.editDataOne?.employee_id || 0,
+    user_name: props.editDataOne?.user_name || '',
+    emp_name: props.editDataOne?.name || '',
+    role_name: props.editDataOne?.role_id || [],
+    official_email: props.editDataOne?.ofie_email || '',
+    personal_email: props.editDataOne?.ppo_hemail || '',
+    official_mob: props.editDataOne?.omobile_no || '',
+    personal_mob: props.editDataOne?.pmobile_no || '',
+    status: props.editDataOne?.status === 1,
   },
   new_password: null,
   old_password: null,
@@ -256,7 +256,7 @@ onMounted(() => {
   allRoles();
 });
 
-const rolesUrl = props.odfe?.role_get_url;
+const rolesUrl = props.editDataTwo?.role_get_url;
 const allRoles = async function fetchAllRoles() {
   try {
     const response = await axios.get(rolesUrl);
@@ -273,7 +273,7 @@ const allRoles = async function fetchAllRoles() {
   }
 }
 
-const edit_url = props.editData?.edit_url;
+const edit_url = props.editDataOne?.edit_url;
 const onFinish = async () => {
   try {
     Object.assign(formData.user, {

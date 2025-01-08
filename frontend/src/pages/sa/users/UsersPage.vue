@@ -56,7 +56,7 @@ interface User {
   [key: string]: any; // Allow other dynamic properties
 }
 // Push the newly added user to the data array
-const addNewUser = (newUser: User) => {
+const addedNewUser = (newUser: User) => {
   newData.value = {
     ...newUser,
     id: newUser.user_id, // Add the 'id' field
@@ -81,7 +81,7 @@ const sendUserDataToCreateForm = {
   role_get_url: 'security-access/roles',
 }
 
-const sendPropDataForCM = reactive({
+const sendConfigDataToCM = reactive({
   config: {
     title: 'Add New User', /* modal title */
     titleBgColor: '#82c953', /* modal title */
@@ -93,9 +93,27 @@ const sendPropDataForCM = reactive({
   }
 });
 
+// for edit
+const sendEditSlotToTable = {
+  editComponent: EditModalSlotData, // Pass the Vue file as a prop
+  sendPropDataForEM: {
+    config: {
+      title: 'Update User Information', /* modal title */
+      titleBgColor: '#82c953', /* modal title */
+      titleTextColor: 'white', /* title text color*/
+      // height: 45, /* modal height */
+      width: 60, /* modal width*/
+      footer: true, /* modal footer*/
+      footerButtonBgColor: 'red', /* modal close button background color*/
+    }
+  },
+  othersData: {
+    role_get_url: 'security-access/roles',
+  }
+};
+
 // for view modal 
 // ==============
-
 const isVMOpen = ref(false)
 
 const showViewModal = () => {
@@ -131,25 +149,6 @@ const sendPropDataForVM = reactive({
   }
 });
 
-// for edit
-const sendEditSlotToTable = {
-  editComponent: EditModalSlotData, // Pass the Vue file as a prop
-  sendPropDataForEM: {
-    config: {
-      title: 'Update User Information', /* modal title */
-      titleBgColor: '#82c953', /* modal title */
-      titleTextColor: 'white', /* title text color*/
-      // height: 45, /* modal height */
-      width: 60, /* modal width*/
-      footer: true, /* modal footer*/
-      footerButtonBgColor: 'red', /* modal close button background color*/
-    }
-  },
-  othersData: {
-    role_get_url: 'security-access/roles',
-  }
-};
-
 // for status
 const dataForStatusChange = {
   statusColumnName: 'status',
@@ -169,11 +168,11 @@ const dataForStatusChange = {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
-    :edit-data="sendEditSlotToTable" :status-data="dataForStatusChange" @isViewModalOpen="emitDataForView"
+  <DataTable :table-data-one="sendDataToTable" :create-data-one="newData" :edit-data-one="sendEditSlotToTable" :update-data-one="updatedUserInfo" 
+    :status-data-one="dataForStatusChange" @isViewModalOpen="emitDataForView"
     @dataForView="userdataForView" />
-  <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCM">
-    <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addNewUser" @updatedUserData="updatedUser"
+  <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendConfigDataToCM">
+    <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addedNewUser" @updatedUserData="updatedUser"
       :user-data="sendUserDataToCreateForm" />
   </CreateModal>
   <ViewModal v-if="isVMOpen" @closeVm="closeViewModal" :view-modal-config-data="sendPropDataForVM">

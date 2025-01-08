@@ -39,10 +39,10 @@ const orgOptions = ref([]);
 const disableValidation = ref(false);
 
 const props = defineProps({
-  editData: {
+  editDataOne: {
     type: Object,
   },
-  odfe: Object
+  editDataTwo: Object
 });
 const emit = defineEmits(['closeEM', 'responseData', 'notificationInfo']);
 
@@ -55,10 +55,10 @@ const resetForm = () => {
 };
 
 const formData = reactive({
-  role_id: props.editData?.id || 0,
-  role_name: props.editData?.name || '',
-  org_name: props.editData?.org_id || '',
-  status: props.editData?.status === 1,
+  role_id: props.editDataOne?.id || 0,
+  role_name: props.editDataOne?.name || '',
+  org_name: props.editDataOne?.org_id || '',
+  status: props.editDataOne?.status === 1,
 });
 
 // For field-specific errors
@@ -72,7 +72,7 @@ onMounted(() => {
   allOrg();
 });
 
-const orgsUrl = props.odfe?.org_get_url;
+const orgsUrl = props.editDataTwo?.org_get_url;
 const allOrg = async function fetchAllOrganizations() {
   try {
     const response = await axios.get(orgsUrl);
@@ -89,7 +89,7 @@ const allOrg = async function fetchAllOrganizations() {
   }
 }
 
-const edit_url = props.editData?.edit_url + '/' + formData.role_id;
+const edit_url = props.editDataOne?.edit_url + '/' + formData.role_id;
 const onFinish = async () => {
   try {
     const response = await axios.patch(edit_url, formData);

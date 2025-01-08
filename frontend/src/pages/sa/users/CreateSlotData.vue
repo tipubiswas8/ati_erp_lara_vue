@@ -93,6 +93,17 @@ const isLoadingEmp = ref(true);
 const isLoadingRole = ref(true);
 const formRef = ref();
 
+const sendToUserPage = defineEmits(['newAddedUserData', 'updatedUserData', 'closeCM']);
+
+const handleCancel = () => {
+  sendToUserPage('closeCM');
+}
+
+const props = defineProps({
+  userData: Object,
+  success_message: String,
+});
+
 interface EmployeeOption {
   value: string; // ID of the employee
   label: string; // Name of the employee
@@ -135,16 +146,6 @@ const fieldErrors = reactive({
   organization_name: '',
 })
 
-const sendToUserPage = defineEmits(['newAddedUserData', 'updatedUserData', 'closeCM']);
-
-const handleCancel = () => {
-  sendToUserPage('closeCM');
-}
-
-const props = defineProps({
-  success_message: String,
-  userData: Object,
-})
 
 const successMessage = reactive({
   message: props.success_message

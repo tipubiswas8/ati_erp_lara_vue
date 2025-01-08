@@ -12,16 +12,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Sa\Permission\PermissionCollection;
 use App\Http\Resources\Sa\Permission\PermissionResource;
+use App\Models\Hr\HrOrganization;
 
 class SaPermissionRepository implements SaPermissionInterface
 {
     public function index()
     {
         try {
-            return response()->json(new PermissionCollection(SaPermission::all()), Response::HTTP_OK);
+            return responseSuccess('All permission fetch', new PermissionCollection(SaPermission::with('organization')->where('status', 1)->get()), 200);
         } catch (Exception $e) {
-            logError($e, 'Unable to load role data');
-            return handleException($e, 'Unable to load role data', Response::HTTP_INTERNAL_SERVER_ERROR);
+            logError($e, 'Unable to load permission data');
+            return handleException($e, 'Unable to load permission data', 500);
         }
     }
 
@@ -31,17 +32,135 @@ class SaPermissionRepository implements SaPermissionInterface
     {
         try {
             $validatedData = $request->validate([
-                'name' => 'required|unique:permissions|max:50'
+                'permission_name' => 'required|max:50',
+                'org_for' => [
+                    'max:16',
+                    function ($attribute, $value, $fail) {
+                        if (empty($value)) {
+                            $fail('Please select organization first');
+                        }
+                    },
+                ],
+                'status' => 'nullable',
             ]);
-            // Validation passed
-            try {
-                $validatedData['created_by'] = 1;
-                $permission = SaPermission::create($validatedData);
-                logInfo('Permission Created Successfully!', $permission);
-                responseSuccess('Permission Created Successfully!', new PermissionResource($permission), 201);
-            } catch (\Exception $e) {
-                logError($e, 'Permission Create failed', $request->all());
-                return handleException($e, 'Permission Create failed', 500);
+            $createData['name'] = $validatedData['permission_name'];
+            $createData['status'] = $validatedData['status'] ? 1 : 0;
+            $createData['created_by'] = 1;
+            if ($validatedData['org_for'] == 'all') {
+                try {
+                    $organizations = HrOrganization::pluck('org_id'); // Fetch only IDs
+
+                    $existingPermission = SaPermission::where('name', $createData['name'])
+                        ->whereIn('org_id', $organizations)
+                        ->pluck('org_id'); // Fetch IDs of already existing permissions
+
+                    $newOrganizations = $organizations->diff($existingPermission); // Find IDs not in existing permissions
+                    $data = $newOrganizations->map(function ($orgId) use ($createData) {
+                        return [
+                            'name' => $createData['name'],
+                            'org_id' => $orgId,
+                            'status' => $createData['status'],
+                            'created_by' => $createData['created_by'],
+                            'created_at' => now(),
+                        ];
+                    })->toArray();
+                    $insert = false;
+                    if (!empty($data)) {
+                        $insert = SaPermission::insert($data);
+                    }
+                    // Retrieve all the inserted permissions
+                    $lastInsertedPermissions = SaPermission::where('name', $createData['name'])
+                        ->whereIn('org_id', $newOrganizations)
+                        ->get();
+                    if ($insert) {
+                        logInfo('Permission Created Successfully!', $lastInsertedPermissions);
+                        return responseSuccess('Permission Created Successfully!', new PermissionCollection($lastInsertedPermissions), 201);
+                    } else {
+                        logInfo('Permission Already Exist!, Please Try Another Permission');
+                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], 409);
+                    }
+                } catch (\Exception $e) {
+                    logError($e, 'Permission Create Failed', $request->all());
+                    return handleException($e, 'Permission Create Failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            } elseif ($validated['org_for'] == 'active') {
+                try {
+                    $organizations = HrOrganization::where('status', 1)->pluck('org_id'); // Fetch only IDs
+
+                    $existingPermission = SaPermission::where('name', $validated['name'])
+                        ->whereIn('org_id', $organizations)
+                        ->pluck('org_id'); // Fetch IDs of already existing permissions
+
+                    $newOrganizations = $organizations->diff($existingPermission); // Find IDs not in existing permissions
+                    $data = $newOrganizations->map(function ($orgId) use ($validated) {
+                        return [
+                            'name' => $validated['name'],
+                            'org_id' => $orgId,
+                            'status' => $validated['status'] ? 1 : 0,
+                            'created_by' => $validated['created_by'],
+                            'created_at' => now(),
+                        ];
+                    })->toArray();
+
+                    $insert = false;
+                    if (!empty($data)) {
+                        $insert = SaPermission::insert($data);
+                    }
+
+                    // Retrieve all the inserted permissions
+                    $lastInsertedPermissions = SaPermission::where('name', $validated['name'])
+                        ->whereIn('org_id', $newOrganizations)
+                        ->get();
+                    if ($insert) {
+                        logInfo('Permission Created Successfully!', $lastInsertedPermissions);
+                        return responseSuccess('Permission Created Successfully!', PermissionResource::collection($lastInsertedPermissions), 201);
+                    } else {
+                        logInfo('Permission Already Exist!, Please Try Another Permission');
+                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], 409);
+                    }
+                } catch (\Exception $e) {
+                    logError($e, 'Permission Create failed', $request->all());
+                    return handleException($e, 'Permission Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            } else if ($validated['org_for'] == 'specific') {
+                try {
+                    $organizations = collect($request->org_id);
+
+                    $existingPermission = SaPermission::where('name', $validated['name'])
+                        ->whereIn('org_id', $organizations)
+                        ->pluck('org_id'); // Fetch IDs of already existing permissions
+
+                    $newOrganizations = $organizations->diff($existingPermission); // Find IDs not in existing permissions
+                    $data = $newOrganizations->map(function ($orgId) use ($validated) {
+                        return [
+                            'name' => $validated['name'],
+                            'org_id' => $orgId,
+                            'status' => $validated['status'] ? 1 : 0,
+                            'created_by' => $validated['created_by'],
+                            'created_at' => now(),
+                        ];
+                    })->toArray();
+
+                    $insert = false;
+                    if (!empty($data)) {
+                        $insert = SaPermission::insert($data);
+                    }
+
+                    // Retrieve all the inserted permissions
+                    $lastInsertedPermissions = SaPermission::where('name', $validated['name'])
+                        ->whereIn('org_id', $newOrganizations)
+                        ->get();
+                    if ($insert) {
+                        logInfo('Permission Created Successfully!', $lastInsertedPermissions);
+                        return responseSuccess('Permission Created Successfully!', PermissionResource::collection($lastInsertedPermissions), 201);
+                    } else {
+                        logInfo('Permission Already Exist!, Please Try Another Permission');
+                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], 409);
+                    }
+                } catch (\Exception $e) {
+                    logError($e, 'Permission Create failed', $request->all());
+                    return handleException($e, 'Permission Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
             }
         } catch (ValidationException $e) {
             logWarning('Validation error during create permission', $e->errors(), $request->all());
@@ -146,8 +265,12 @@ class SaPermissionRepository implements SaPermissionInterface
         $permission = SaPermission::find($permission->id);
         if ($permission) {
             try {
-                // $delete = Permission::destroy($permission->id);
-                $delete = $permission->delete();
+                // Soft delete the record
+                // $delete = SaPermission::destroy($permission->id);
+                // $delete = $permission->delete();
+                $permission->deleted_by = '100';
+                // $delete = $permission->save() && $permission->delete(); 
+                $delete = $permission->save() && SaPermission::destroy($permission->id);
                 if ($delete) {
                     logInfo('Permission Deleted Successfully!', $permission);
                     return responseSuccess('Permission Deleted Successfully!');

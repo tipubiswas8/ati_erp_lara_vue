@@ -2,7 +2,9 @@
 
 namespace App\Models\Sa;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Hr\HrOrganization;
 
 // use Illuminate\Database\Eloquent\Model;
 // use MongoDB\Laravel\Eloquent\Model;
@@ -19,6 +21,11 @@ class SaPermission extends BaseModel
 
     protected $fillable = ['name', 'org_id', 'created_by'];
 
+    public function organization(): HasOne
+    {
+        return $this->hasOne(HrOrganization::class, 'org_id', 'org_id');
+    }
+    
     public function roles()
     {
         return $this->belongsToMany(SaRole::class)
@@ -26,4 +33,3 @@ class SaPermission extends BaseModel
             ->withTimestamps();
     }
 }
-

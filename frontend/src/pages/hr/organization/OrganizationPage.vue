@@ -173,8 +173,8 @@ const dataForStatusChange = {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" :data-for-create="newData" :data-for-update="updatedUserInfo"
-    :edit-data="sendEditSlotToTable" :status-data="dataForStatusChange" @isViewModalOpen="emitDataForView"
+  <DataTable :request-data="sendDataToTable" :data-for-create="newData" :update-data-one="updatedUserInfo"
+    :edit-data="sendEditSlotToTable" :status-data-one="dataForStatusChange" @isViewModalOpen="emitDataForView"
     @dataForViewModal="userDataForViewModal" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCM">
     <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addNewUser" @updatedUserData="updatedUser"

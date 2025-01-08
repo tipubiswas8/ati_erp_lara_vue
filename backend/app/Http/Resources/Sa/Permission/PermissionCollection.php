@@ -14,13 +14,6 @@ class PermissionCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return [
-            'data' => $this->collection,
-            'status' => true,
-            'message' => 'All permission fetch',
-            'meta' => [
-                'total' => $this->collection->count(),
-            ],
-        ];
+        return $this->collection;
     }
 }
