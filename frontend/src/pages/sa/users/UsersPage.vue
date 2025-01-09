@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DataTable from '@src/tables/DataTable.vue'
+import DataTable from '@src/tables/BasicDataTable.vue'
 import CreateModal from '@src/modals/CreateModal.vue'
 import CreateModalSlotData from '@src/pages/sa/users/CreateSlotData.vue'
 import EditModalSlotData from '@src/pages/sa/users/EditSlotData.vue'
@@ -12,7 +12,6 @@ import { ref, reactive } from 'vue'
 const sendDataToTable = {
   urls: {
     'data_url': 'security-access/users',
-    'view_url': 'security-access/users',
     'edit_url': 'security-access/user-update',
     'status_url': 'security-access/user-status',
     'delete_url': 'security-access/user-delete'
@@ -43,7 +42,6 @@ const sendDataToTable = {
 // for create table
 // ================
 const isCMOpen = ref(false);
-const newData = ref({});
 const showCreateModal = () => {
   isCMOpen.value = true
 };
@@ -56,15 +54,13 @@ interface User {
   [key: string]: any; // Allow other dynamic properties
 }
 // Push the newly added user to the data array
+let newData: User;
 const addedNewUser = (newUser: User) => {
-  newData.value = {
+  newData = {
     ...newUser,
     id: newUser.user_id, // Add the 'id' field
     name: newUser.en_full_name
   };
-  setTimeout(() => {
-    newData.value = {}; // Clear after updating
-  }, 0);
 }
 
 let updatedUserInfo: object;
@@ -94,6 +90,13 @@ const sendConfigDataToCM = reactive({
 });
 
 // for edit
+const openEditModal = ref(false);
+const doNowOpenEditModal = () => {
+  openEditModal.value = true;
+}
+const doNowCloseEditModal = () => {
+  openEditModal.value = false;
+}
 const sendEditSlotToTable = {
   editComponent: EditModalSlotData, // Pass the Vue file as a prop
   sendPropDataForEM: {
@@ -168,8 +171,9 @@ const dataForStatusChange = {
     </a-col>
   </a-row>
 
-  <DataTable :table-data-one="sendDataToTable" :create-data-one="newData" :edit-data-one="sendEditSlotToTable" :update-data-one="updatedUserInfo" 
-    :status-data-one="dataForStatusChange" @isViewModalOpen="emitDataForView"
+  <DataTable :table-data-one="sendDataToTable" :status-data-one="dataForStatusChange" :create-data-one="newData"
+    @isEditModalOpen="doNowOpenEditModal" :is-em-open="openEditModal" @isEditModalClose="doNowCloseEditModal"
+    :edit-data-one="sendEditSlotToTable" :update-data-one="updatedUserInfo" @isViewModalOpen="emitDataForView"
     @dataForView="userdataForView" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendConfigDataToCM">
     <CreateModalSlotData @closeCM="closeCreateModal" @newAddedUserData="addedNewUser" @updatedUserData="updatedUser"

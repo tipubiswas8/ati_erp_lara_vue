@@ -19,6 +19,7 @@ class PermissionResource extends JsonResource
             'id' => $this->id,
             'permission_name' => $this->name,
             'org_name' => $this->organization->org_name,
+            'org_id' => $this->organization->org_id,
             'status' => $this->status,
         ];
     }

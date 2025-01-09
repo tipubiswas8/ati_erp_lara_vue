@@ -70,7 +70,9 @@ class SaRoleController extends Controller
     {
         return $this->saRoleInterface->destroy($role);
     }
-
+    /**
+     * Status change the specified resource from storage.
+     */
     public function status()
     {
         return $this->saRoleInterface->status();

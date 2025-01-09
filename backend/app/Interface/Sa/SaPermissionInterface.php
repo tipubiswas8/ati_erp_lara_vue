@@ -14,4 +14,5 @@ interface SaPermissionInterface
     public function edit(SaPermission $permission);
     public function update(Request $request, SaPermission $permission);
     public function destroy(SaPermission $permission);
+    public function status();
 }

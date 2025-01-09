@@ -11,35 +11,42 @@ import CreateModal from '@src/modals/CreateModal.vue'
 import ViewModal from '@src/modals/ViewModal.vue'
 
 const props = defineProps({
-  // required
+  // datatable props
   tableDataOne: {
     type: Object,
     required: true
   },
-  editDataOne: {
-    type: Object
-  },
-  createDataOne: Object,
-  updateDataOne: Object,
-  statusDataOne: Object,
-  // optional
-  createDataTwo: {
-    type: Object || null || undefined
-  },
+  // create props
   isCreateModalOpen: {
     type: Boolean
   },
-  // optional
+  createDataOne: Object,
+  createDataTwo: {
+    type: Object || null || undefined
+  },
+  // edit props
+  isEmOpen: Boolean || false,
+  editDataOne: {
+    type: Object
+  },
+  updateDataOne: Object,
+  // view props
   isVMOpen: Boolean || false,
-  viewData: Object || null || undefined,
+  viewDataOne: Object || null || undefined,
+  // status props
+  statusDataOne: {
+    type: Object,
+    required: true
+  },
 });
 
 const setEmit = defineEmits([
-  // required
+  'isCreateModalClose',
+  'isEditModalOpen',
+  'isEditModalClose',
+  'dataForUpdate',
   'isViewModalOpen',
   'dataForView',
-  // optional
-  'isCreateModalClose',
   'isVMClose'
 ]);
 
@@ -193,12 +200,11 @@ onMounted(() => {
 watch(
   () => props.createDataOne,
   (newInformation) => {
-    if (newInformation && Object.keys(newInformation).length > 0) {
-      const sl = tableData.value.length + 1; // Generate serial number
-      tableData.value.push({
-        ...newInformation,
-        sl,
-      });
+    if (newInformation) {
+      addedData(newInformation);
+    } else {
+      console.warn('No data provided for adding.');
+      return;
     }
   },
   { deep: true }
@@ -221,6 +227,10 @@ watch(
 // Function to add new data
 const addedData = (new_data: object | object[]) => {
   if (Array.isArray(new_data)) {
+    if (!new_data) {
+      console.warn('No data provided for adding.');
+      return;
+    }
     // If new_data is an array, add a unique serial number for each item
     new_data.forEach((item) => {
       tableData.value.push({
@@ -256,15 +266,24 @@ const editModalConfigData = props.editDataOne?.sendPropDataForEM;
 const othersDataForEdit = props.editDataOne?.othersData;
 
 const handleEdit = (id: number) => {
-  const selectedInfoForEdit = tableData.value.find((item) => item.id === id)
+  setEmit('isEditModalOpen', true);
+  const selectedInfoForEdit = tableData.value.find((item) => item.id === id);
   if (selectedInfoForEdit) {
     information.value = {
       ...selectedInfoForEdit, // Spread selectedInfoForEdit to include all its properties
       edit_url: props.tableDataOne?.urls.edit_url, // Add or overwrite edit_url
     };
-    openEditModal.value = true
+    setEmit('dataForUpdate', selectedInfoForEdit);
   }
 }
+
+watch(
+  () => props.isEmOpen,
+  (doEditModalOpen) => {
+    openEditModal.value = doEditModalOpen;
+  },
+  { deep: true }
+);
 
 // Watch for updated information
 watch(
@@ -283,6 +302,7 @@ watch(
           ...updatedInformation, // Overwrite with updated properties
         };
       }
+      responseEditData(updatedInformation);
     }
   },
   { deep: true }
@@ -301,6 +321,7 @@ const responseEditData = (eRData: EditResponseData) => {
 
 const closeEditModal = () => {
   openEditModal.value = false;
+  setEmit('isEditModalClose', openEditModal.value);
   information.value = {}
 }
 
@@ -315,8 +336,8 @@ const handleView = (id: number) => {
   }
 }
 // optional
-const viewComponent = props.viewData?.viewComponent;
-const viewModalConfigData = props.viewData?.config ? props.viewData : undefined;
+const viewComponent = props.viewDataOne?.viewComponent;
+const viewModalConfigData = props.viewDataOne?.config ? props.viewDataOne : undefined;
 const openViewModal = ref(false);
 
 // Watch for new view data if view modal in datatable
@@ -427,13 +448,13 @@ const notify = (notic: object) => {
   </CreateModal>
 
   <EditModal v-if="openEditModal" :config-data="editModalConfigData" @close="closeEditModal" :notify-data="nInfo">
-    <component :is="editComponent" :edit-data-one="information" :edit-data-two="othersDataForEdit" @closeEM="closeEditModal"
-      @responseData="responseEditData" @notificationInfo="notify" />
+    <component :is="editComponent" :edit-data-one="information" :edit-data-two="othersDataForEdit"
+      @closeEM="closeEditModal" @responseData="responseEditData" @notificationInfo="notify" />
   </EditModal>
 
   <!-- optional -->
   <ViewModal v-if="openViewModal" :view-modal-config-data="viewModalConfigData" @closeVm="closeViewModal">
-    <component :is="viewComponent" :view-data-one="selectedInfoForView" @closeVModal="closeViewModal" />
+    <component :is="viewComponent" :view-data-two="selectedInfoForView" @closeVModal="closeViewModal" />
   </ViewModal>
 
   <StatusNotification v-if="openStatusNotification" :status-data="selectedInfoForStatusChange"

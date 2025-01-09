@@ -27,6 +27,7 @@ Route::prefix('security-access')->group(function () {
     Route::resource('roles', SaRoleController::class);
     Route::patch('role-status', 'App\Http\Controllers\Sa\SaRoleController@status');
     Route::resource('permissions', SaPermissionController::class);
+    Route::patch('permission-status', 'App\Http\Controllers\Sa\SaPermissionController@status');
 });
 Route::prefix('hr')->group(function () {
 // employees

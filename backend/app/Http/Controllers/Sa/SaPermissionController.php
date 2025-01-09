@@ -70,4 +70,12 @@ class SaPermissionController extends Controller
     {
         return $this->saPermissionInterface->destroy($permission);
     }
+
+    /**
+     * Status change the specified resource from storage.
+     */
+    public function status()
+    {
+        return $this->saPermissionInterface->status();
+    }
 }

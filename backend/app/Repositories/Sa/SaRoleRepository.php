@@ -180,15 +180,7 @@ class SaRoleRepository implements SaRoleInterface
         }
     }
 
-    public function show(SaRole $role)
-    {
-        try {
-            return response()->json(new RoleResource($role), Response::HTTP_OK);
-        } catch (Exception $e) {
-            logError($e, 'Unable to load role data');
-            return handleException($e, 'Unable to load role data', Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
+    public function show(SaRole $role) {}
 
     public function edit(SaRole $role) {}
 

@@ -74,30 +74,30 @@ class SaPermissionRepository implements SaPermissionInterface
                         ->get();
                     if ($insert) {
                         logInfo('Permission Created Successfully!', $lastInsertedPermissions);
-                        return responseSuccess('Permission Created Successfully!', new PermissionCollection($lastInsertedPermissions), 201);
+                        return responseSuccess('Permission Created Successfully!', new PermissionCollection($lastInsertedPermissions), Response::HTTP_CREATED);
                     } else {
                         logInfo('Permission Already Exist!, Please Try Another Permission');
-                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], 409);
+                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], Response::HTTP_CONFLICT);
                     }
                 } catch (\Exception $e) {
                     logError($e, 'Permission Create Failed', $request->all());
                     return handleException($e, 'Permission Create Failed', Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
-            } elseif ($validated['org_for'] == 'active') {
+            } elseif ($validatedData['org_for'] == 'active') {
                 try {
                     $organizations = HrOrganization::where('status', 1)->pluck('org_id'); // Fetch only IDs
 
-                    $existingPermission = SaPermission::where('name', $validated['name'])
+                    $existingPermission = SaPermission::where('name', $createData['name'])
                         ->whereIn('org_id', $organizations)
                         ->pluck('org_id'); // Fetch IDs of already existing permissions
 
                     $newOrganizations = $organizations->diff($existingPermission); // Find IDs not in existing permissions
-                    $data = $newOrganizations->map(function ($orgId) use ($validated) {
+                    $data = $newOrganizations->map(function ($orgId) use ($createData) {
                         return [
-                            'name' => $validated['name'],
+                            'name' => $createData['name'],
                             'org_id' => $orgId,
-                            'status' => $validated['status'] ? 1 : 0,
-                            'created_by' => $validated['created_by'],
+                            'status' => $createData['status'],
+                            'created_by' => $createData['created_by'],
                             'created_at' => now(),
                         ];
                     })->toArray();
@@ -108,35 +108,35 @@ class SaPermissionRepository implements SaPermissionInterface
                     }
 
                     // Retrieve all the inserted permissions
-                    $lastInsertedPermissions = SaPermission::where('name', $validated['name'])
+                    $lastInsertedPermissions = SaPermission::where('name', $createData['name'])
                         ->whereIn('org_id', $newOrganizations)
                         ->get();
                     if ($insert) {
                         logInfo('Permission Created Successfully!', $lastInsertedPermissions);
-                        return responseSuccess('Permission Created Successfully!', PermissionResource::collection($lastInsertedPermissions), 201);
+                        return responseSuccess('Permission Created Successfully!', PermissionResource::collection($lastInsertedPermissions), Response::HTTP_CREATED);
                     } else {
                         logInfo('Permission Already Exist!, Please Try Another Permission');
-                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], 409);
+                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], Response::HTTP_CONFLICT);
                     }
                 } catch (\Exception $e) {
                     logError($e, 'Permission Create failed', $request->all());
                     return handleException($e, 'Permission Create failed', Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
-            } else if ($validated['org_for'] == 'specific') {
+            } else if ($validatedData['org_for'] == 'specific') {
                 try {
                     $organizations = collect($request->org_id);
 
-                    $existingPermission = SaPermission::where('name', $validated['name'])
+                    $existingPermission = SaPermission::where('name', $createData['name'])
                         ->whereIn('org_id', $organizations)
                         ->pluck('org_id'); // Fetch IDs of already existing permissions
 
                     $newOrganizations = $organizations->diff($existingPermission); // Find IDs not in existing permissions
-                    $data = $newOrganizations->map(function ($orgId) use ($validated) {
+                    $data = $newOrganizations->map(function ($orgId) use ($createData) {
                         return [
-                            'name' => $validated['name'],
+                            'name' => $createData['name'],
                             'org_id' => $orgId,
-                            'status' => $validated['status'] ? 1 : 0,
-                            'created_by' => $validated['created_by'],
+                            'status' => $createData['status'],
+                            'created_by' => $createData['created_by'],
                             'created_at' => now(),
                         ];
                     })->toArray();
@@ -147,15 +147,15 @@ class SaPermissionRepository implements SaPermissionInterface
                     }
 
                     // Retrieve all the inserted permissions
-                    $lastInsertedPermissions = SaPermission::where('name', $validated['name'])
+                    $lastInsertedPermissions = SaPermission::where('name', $createData['name'])
                         ->whereIn('org_id', $newOrganizations)
                         ->get();
                     if ($insert) {
                         logInfo('Permission Created Successfully!', $lastInsertedPermissions);
-                        return responseSuccess('Permission Created Successfully!', PermissionResource::collection($lastInsertedPermissions), 201);
+                        return responseSuccess('Permission Created Successfully!', new PermissionCollection($lastInsertedPermissions), Response::HTTP_CREATED);
                     } else {
                         logInfo('Permission Already Exist!, Please Try Another Permission');
-                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], 409);
+                        return responseSuccess('Permission Already Exist!, Please Try Another Permission', [], Response::HTTP_CONFLICT);
                     }
                 } catch (\Exception $e) {
                     logError($e, 'Permission Create failed', $request->all());
@@ -164,99 +164,68 @@ class SaPermissionRepository implements SaPermissionInterface
             }
         } catch (ValidationException $e) {
             logWarning('Validation error during create permission', $e->errors(), $request->all());
-            return handleValidationError($e->errors(), 'Permission Create failed', 422);
+            return handleValidationError($e->errors(), 'Permission Create failed', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
-    public function show(SaPermission $permission)
-    {
-        try {
-            return response()->json(new PermissionResource($permission), Response::HTTP_OK);
-        } catch (Exception $e) {
-            logError($e, 'Unable to load permission data');
-            return handleException($e, 'Unable to permission role data', Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
+    public function show(SaPermission $permission) {}
 
     public function edit(SaPermission $permission) {}
 
     public function update(Request $request, SaPermission $permission)
     {
-        $user = SaPermission::find($request->id);
-        if (!$user) {
-            return response()->json(['status' => false, 'message' => 'User not found'], 404); // 404 Not Found
+        $requestData = $request->only(['permission_name', 'org_name', 'permission_id', 'status']);
+        $permission = SaPermission::find($requestData['permission_id']);
+        if (!$permission) {
+            return response()->json(['status' => false, 'message' => 'Permission not found'], Response::HTTP_NOT_FOUND); // 404 Not Found
         }
 
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|digits_between:10,11', // Correct phone validation
-            'address' => 'nullable|string|max:255',
-            'password' => 'required|string|min:6',
-            'status' => 'required',
+            'permission_name' => 'required|string|max:20',
+            'org_name' => 'required|string|max:16'
         ];
 
         // Validate the request data against the dynamic rules
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($requestData, $rules);
 
         if ($validator->fails()) {
-            Log::warning('Validation error during user registration', [
-                'errors' => $validator->errors(),
-                'request_data' => $request->all(),
-            ]);
-
-            // Return immediately if validation fails
-            return response()->json([
-                'status' => false,
-                'message' => $validator->errors(),
-            ], 400); // 400 Bad Request for validation errors
-            // Get the validated data
+            logWarning('Validation error during update permission', $validator->errors(), $requestData);
+            return handleValidationError($validator->errors(), 'Permission Update failed', Response::HTTP_UNPROCESSABLE_ENTITY);
+            // 422 server was unable to process the request because it contains invalid data.
         }
         $validated = $validator->validated();
         try {
-            $user->name = $validated['name'];
-            $user->email = $validated['email'];
-            $user->phone = $validated['phone'];
-            $user->address = $validated['address'] ?? $user->address; // Keep existing address if not provided
-            $user->password = $validated['password'];
-            $user->status = $validated['status'];
-            $user->save();
-            Log::info('User Update Successfully', [
-                'user' => $user
-            ]);
-            return response()->json(['status' => true, 'message' => 'User Update Successfully!', 'user' => $user], 204);
+            $permission->name = $validated['permission_name'];
+            $permission->org_id = $validated['org_name'];
+            $permission->status = $requestData['status'] ? 1 : 0;
+            $permission->save();
+            logInfo('Permission Update Successfully!', $permission);
+            return responseSuccess('Permission Update Successfully!', new PermissionResource($permission), Response::HTTP_OK);
         } catch (Exception $e) {
-            Log::error('User Update Failed', [
-                'user' => $user,
-                'error_message' => $e->getMessage(),
-            ]);
-            return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
+            logError($e, 'Permission Update Failed!', $requestData);
+            return handleException($e, 'Permission Update Failed!', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function status(Request $request)
+
+    public function status()
     {
-        $user = SaPermission::find($request->id);
-        if (!$user) {
-            return response()->json(['status' => false, 'message' => 'User not found!'], 404);
+        $request = request();
+        $permission = SaPermission::find($request->id);
+        if (!$permission) {
+            return response()->json(['status' => false, 'message' => 'Permission not found!'], 404);
         }
         try {
-            $user->status = !$request->status;
-            $update = $user->save();
+            $permission->status = $request->status;
+            $update = $permission->save();
             if ($update) {
-                Log::alert('User Status Updated Successfully', [
-                    'user' => $user,
-                    'status' => $user->status
-                ]);
-                return response()->json(['status' => true, 'message' => 'User Status Updated Successfully!', 'data' => $user], 200);
+                logAlert('Permission Status Updated Successfully!', $permission);
+                return responseSuccess('Permission Status Updated Successfully!', $permission, 200);
             } else {
                 return response()->json(['status' => false, 'message' => 'Unable to update status, please try again later'], 507);
             }
         } catch (Exception $e) {
-            Log::error('Unable to update user status, please try again!', [
-                'user' => $user,
-                'error_message' => $e->getMessage(),
-            ]);
-            return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
+            logError($e, 'Unable to update permission status, please try again!', $permission);
+            return handleException($e, 'Unable to update permission status, please try again!');
         }
     }
 

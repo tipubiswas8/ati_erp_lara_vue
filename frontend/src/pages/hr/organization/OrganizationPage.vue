@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DataTable from '@src/tables/DataTable.vue'
+import DataTable from '@src/tables/BasicDataTable.vue'
 import CreateModal from '@src/modals/CreateModal.vue'
 import CreateModalSlotData from '@src/pages/sa/users/CreateSlotData.vue'
 import EditModalSlotData from '@src/pages/sa/users/EditSlotData.vue'

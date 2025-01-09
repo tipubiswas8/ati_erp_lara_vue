@@ -109,7 +109,6 @@ const onFinish = async () => {
   try {
     const response = await axios.post(props.permissionData?.create_url, formState);
     if (response.status === 201 || response.status === 200) {
-      console.log(response.data)
       successNotify.value = true
       successMessage.message = response.data.message
       sendToDatatable('newAddedData', response.data.data);

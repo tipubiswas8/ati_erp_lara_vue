@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import DataTable from '@src/tables/DataTable.vue'
+import DataTable from '@src/tables/BasicDataTable.vue'
 import CreateModal from '@src/modals/CreateModal.vue'
 import CreateModalSlotData from '@src/pages/sa/permission/CreateSlotData.vue'
+import EditModal from '@src/modals/EditModal.vue'
+import EditSlot from '@src/pages/sa/permission/EditSlotData.vue'
+import ViewModal from '@src/modals/ViewModal.vue'
+import ViewModalSlot from '@src/pages/sa/permission/ViewSlotData.vue'
 import { ref, reactive } from 'vue'
 
 // for data table
@@ -10,11 +14,11 @@ const sendDataToTable = {
   // required
   urls: {
     'data_url': 'security-access/permissions',
-    'view_url': 'security-access/permissions',
     'edit_url': 'security-access/permissions',
-    'status_url': 'security-access/permissions',
+    'status_url': 'security-access/permission-status',
     'delete_url': 'security-access/permissions'
   },
+  custom_name: 'permission_name',
   th_name: {
     '1': 'Sl',
     '2': 'Permission Name',
@@ -35,12 +39,10 @@ const sendDataToTable = {
   last_td_align: 'center',
 };
 
-
 // for create table
 // ================
 // required
 const isCMOpen = ref(false);
-const newData = ref({});
 const showCreateModal = () => {
   isCMOpen.value = true
 };
@@ -49,26 +51,12 @@ const closeCreateModal = () => {
   isCMOpen.value = false
 };
 
-interface Permission {
-  [key: string]: any; // Allow other dynamic properties
-}
 // Push the newly added permission to the data array
-const addedNewPermission = (newPermission: Permission) => {
-  newData.value = {
-    ...newPermission
-  };
-  setTimeout(() => {
-    newData.value = {}; // Clear after updating
-  }, 0);
-}
-
-let updatedUserInfo: object;
-const updatedUser = (uUser: object) => {
-  updatedUserInfo = {
-    ...uUser,
-    id: uUser.user_id,
-  }
-}
+let newCreatedData: object;
+// Push the newly added permission to the data array
+const addedNewPermission = (newPermission: object) => {
+  newCreatedData = newPermission;
+};
 
 const sendPermissionDataToCreateForm = {
   create_url: 'security-access/permissions',
@@ -89,6 +77,90 @@ const sendConfigDataToCM = reactive({
   }
 });
 
+// for edit
+const openEditModal = ref(false);
+const doNowOpenEditModal = () => {
+  openEditModal.value = true
+}
+
+const editModalConfigData = {
+  config: {
+    title: 'Update Permission', /* modal title */
+    titleBgColor: '#82c953', /* modal title */
+    titleTextColor: 'white', /* title text color*/
+    // height: 45, /* modal height */
+    // width: 60, /* modal width*/
+    footer: true, /* modal footer*/
+    footerButtonBgColor: 'red', /* modal close button background color*/
+  }
+};
+
+let selectedPermissionForUpdate = {};
+const permissionDataForUpdate = (permissionData: object) => {
+  selectedPermissionForUpdate = {
+    ...permissionData,
+    edit_url: 'security-access/permissions',
+    org_get_url: 'hr/organizations'
+  }
+}
+
+let updatedResponseData = {};
+const responseEditData = (eRData: object) => {
+  updatedResponseData = eRData;
+}
+
+const nInfo = ref<object>({});
+const notify = (notic: object) => {
+  nInfo.value = notic;
+  setTimeout(() => {
+    nInfo.value = {};
+  }, 0);
+}
+
+const closeEditModal = () => {
+  openEditModal.value = false;
+}
+
+// for view modal 
+// ==============
+const isVMOpen = ref(false)
+
+const doViewModalOpen = () => {
+  isVMOpen.value = true
+};
+
+const doViewModalClose = () => {
+  isVMOpen.value = false
+};
+
+const emitDataForView = () => {
+  doViewModalOpen();
+}
+
+const viewModalConfigData = {
+  config: {
+    title: 'Show Permission', /* modal title */
+    titleBgColor: '#82c953', /* modal title */
+    titleTextColor: 'white', /* title text color*/
+    // height: 45, /* modal height */
+    // width: 60, /* modal width*/
+    footer: true, /* modal footer*/
+    footerButtonBgColor: 'red', /* modal close button background color*/
+  }
+};
+
+const selectedPermissionForView = ref({});
+const permissionDataForView = (permissionData: object) => {
+  selectedPermissionForView.value = {
+    ...permissionData,
+  }
+}
+
+// for status
+const statusChangeData = {
+  statusColumnName: 'status',
+  statusChangeFor: 'name',
+}
 </script>
 
 <template>
@@ -102,9 +174,18 @@ const sendConfigDataToCM = reactive({
     </a-col>
   </a-row>
 
-  <DataTable :table-data-one="sendDataToTable" :create-data-one="updatedUserInfo" />
+  <DataTable :table-data-one="sendDataToTable" :status-data-one="statusChangeData" :create-data-one="newCreatedData"
+    @isEditModalOpen="doNowOpenEditModal" :update-data-one="updatedResponseData" @isViewModalOpen="emitDataForView"
+    @dataForUpdate="permissionDataForUpdate" @dataForView="permissionDataForView" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendConfigDataToCM">
-    <CreateModalSlotData @closeCModal="closeCreateModal" @newAddedData="addedNewPermission" @updatedUserData="updatedUser"
+    <CreateModalSlotData @closeCModal="closeCreateModal" @newAddedData="addedNewPermission"
       :permission-data="sendPermissionDataToCreateForm" />
   </CreateModal>
+  <EditModal v-if="openEditModal" :config-data="editModalConfigData" @close="closeEditModal" :notify-data="nInfo">
+    <EditSlot :permission-data="selectedPermissionForUpdate" @responseData="responseEditData" @notificationInfo="notify"
+      @closeEM="closeEditModal" />
+  </EditModal>
+  <ViewModal v-if="isVMOpen" @closeVm="doViewModalClose" :view-modal-config-data="viewModalConfigData">
+    <ViewModalSlot :show-permission="selectedPermissionForView" />
+  </ViewModal>
 </template>
