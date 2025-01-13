@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import DataTable from '@src/tables/BasicDataTable.vue'
-import CreateModal from '@src/modals/CreateModal.vue'
-import CreateModalSlotData from '@src/pages/sa/users/CreateSlotData.vue'
-import EditModalSlotData from '@src/pages/sa/users/EditSlotData.vue'
-import ViewModal from '@src/modals/ViewModal.vue'
-import ViewModalSlotData from '@src/pages/sa/users/ViewSlotData.vue'
+import DataTable from '@/tables/BasicDataTable.vue'
+import CreateModal from '@/modals/CreateModal.vue'
+import CreateModalSlotData from '@/pages/sa/users/CreateSlotData.vue'
+import EditModalSlotData from '@/pages/sa/users/EditSlotData.vue'
+import ViewModal from '@/modals/ViewModal.vue'
+import ViewModalSlotData from '@/pages/sa/users/ViewSlotData.vue'
 import { ref, reactive } from 'vue'
 
 // for data table
@@ -115,7 +115,7 @@ const sendEditSlotToTable = {
   }
 };
 
-// for view modal 
+// for view modal
 // ==============
 const isVMOpen = ref(false)
 

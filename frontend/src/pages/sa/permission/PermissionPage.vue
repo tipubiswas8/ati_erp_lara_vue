@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import DataTable from '@src/tables/BasicDataTable.vue'
-import CreateModal from '@src/modals/CreateModal.vue'
-import CreateModalSlotData from '@src/pages/sa/permission/CreateSlotData.vue'
-import EditModal from '@src/modals/EditModal.vue'
-import EditSlot from '@src/pages/sa/permission/EditSlotData.vue'
-import ViewModal from '@src/modals/ViewModal.vue'
-import ViewModalSlot from '@src/pages/sa/permission/ViewSlotData.vue'
+import DataTable from '@/tables/BasicDataTable.vue'
+import CreateModal from '@/modals/CreateModal.vue'
+import CreateModalSlotData from '@/pages/sa/permission/CreateSlotData.vue'
+import EditModal from '@/modals/EditModal.vue'
+import EditSlot from '@/pages/sa/permission/EditSlotData.vue'
+import ViewModal from '@/modals/ViewModal.vue'
+import ViewModalSlot from '@/pages/sa/permission/ViewSlotData.vue'
 import { ref, reactive } from 'vue'
 
 // for data table
@@ -121,7 +121,7 @@ const closeEditModal = () => {
   openEditModal.value = false;
 }
 
-// for view modal 
+// for view modal
 // ==============
 const isVMOpen = ref(false)
 

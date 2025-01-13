@@ -3,32 +3,48 @@
     <VaAccordion v-model="value" multiple>
       <VaCollapse v-for="(route, index) in navigationRoutes.routes" :key="index">
         <template #header="{ value: isCollapsed }">
-          <VaSidebarItem :to="route.children ? undefined : { name: route.name }" :active="routeHasActiveChild(route)"
-            :active-color="activeColor" :text-color="textColor(route)"
-            :aria-label="`${route.children ? 'Open category ' : 'Visit'} ${t(route.displayName)}`" role="button"
-            hover-opacity="0.10">
+          <VaSidebarItem
+            :to="route.children ? undefined : { name: route.name }"
+            :active="routeHasActiveChild(route)"
+            :active-color="activeColor"
+            :text-color="textColor(route)"
+            :aria-label="`${route.children ? 'Open category ' : 'Visit'} ${t(route.displayName)}`"
+            role="button"
+            hover-opacity="0.10"
+          >
             <VaSidebarItemContent class="py-3 pr-2 pl-4">
-              <!-- Render Ant Design Icon -->
-              <component v-if="route.meta.icon" :is="getAntdIcon(route.meta.icon)"
-                style="font-size: 20px; color: var(--va-primary);" />
+              <VaIcon
+                v-if="route.meta.icon"
+                aria-hidden="true"
+                :name="route.meta.icon"
+                size="20px"
+                :color="iconColor(route)"
+              />
               <VaSidebarItemTitle class="flex justify-between items-center leading-5 font-semibold">
                 {{ t(route.displayName) }}
-                <!-- Use dynamic Up/Down arrow -->
-                <component v-if="route.children" :is="arrowDirection(isCollapsed)"
-                  style="font-size: 20px; color: var(--va-primary);" />
+                <VaIcon v-if="route.children" :name="arrowDirection(isCollapsed)" size="20px" />
               </VaSidebarItemTitle>
             </VaSidebarItemContent>
           </VaSidebarItem>
         </template>
         <template #body>
           <div v-for="(childRoute, index2) in route.children" :key="index2">
-            <VaSidebarItem :to="{ name: childRoute.name }" :active="isActiveChildRoute(childRoute)"
-              :active-color="activeColor" :text-color="textColor(childRoute)"
-              :aria-label="`Visit ${t(route.displayName)}`" hover-opacity="0.10">
+            <VaSidebarItem
+              :to="{ name: childRoute.name }"
+              :active="isActiveChildRoute(childRoute)"
+              :active-color="activeColor"
+              :text-color="textColor(childRoute)"
+              :aria-label="`Visit ${t(route.displayName)}`"
+              hover-opacity="0.10"
+            >
               <VaSidebarItemContent class="py-3 pr-2 pl-11">
-                <!-- Render Ant Design Icon for child routes -->
-                <component v-if="childRoute.meta.icon" :is="getAntdIcon(childRoute.meta.icon)"
-                  style="font-size: 20px; color: var(--va-primary);" />
+                <VaIcon
+                v-if="childRoute.meta.icon"
+                aria-hidden="true"
+                :name="childRoute.meta.icon"
+                size="20px"
+                :color="iconColor(childRoute)"
+              />
                 <VaSidebarItemTitle class="leading-5 font-semibold">
                   {{ t(childRoute.displayName) }}
                 </VaSidebarItemTitle>
@@ -40,7 +56,6 @@
     </VaAccordion>
   </VaSidebar>
 </template>
-
 <script lang="ts">
 import { defineComponent, watch, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -49,10 +64,9 @@ import { useI18n } from 'vue-i18n'
 import { useColors } from 'vuestic-ui'
 
 import navigationRoutes, { type INavigationRoute } from './NavigationRoutes'
-import * as AntdIcons from '@ant-design/icons-vue' // Import Ant Design icons
 
 export default defineComponent({
-  name: 'Side-bar',
+  name: 'Sidebar',
   props: {
     visible: { type: Boolean, default: true },
     mobile: { type: Boolean, default: false },
@@ -90,14 +104,7 @@ export default defineComponent({
 
     const iconColor = (route: INavigationRoute) => (routeHasActiveChild(route) ? 'primary' : 'secondary')
     const textColor = (route: INavigationRoute) => (routeHasActiveChild(route) ? 'primary' : 'textPrimary')
-
-    // Return the correct Ant Design Vue arrow icon
-    const arrowDirection = (state: boolean) => (state ? AntdIcons.UpOutlined : AntdIcons.DownOutlined)
-
-    // Helper to dynamically retrieve Ant Design icon
-    const getAntdIcon = (iconName: string) => {
-      return AntdIcons[iconName as keyof typeof AntdIcons] || null
-    }
+    const arrowDirection = (state: boolean) => (state ? 'va-arrow-up' : 'va-arrow-down')
 
     watch(() => route.fullPath, setActiveExpand, { immediate: true })
 
@@ -114,7 +121,6 @@ export default defineComponent({
       iconColor,
       textColor,
       arrowDirection,
-      getAntdIcon, // Expose function
     }
   },
 })

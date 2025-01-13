@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import DataTable from '@src/tables/BasicDataTable.vue'
-import CreateModal from '@src/modals/CreateModal.vue'
-import CreateModalSlotData from '@src/pages/sa/users/CreateSlotData.vue'
-import EditModalSlotData from '@src/pages/sa/users/EditSlotData.vue'
-import ViewModal from '@src/modals/ViewModal.vue'
-import ViewModalSlotData from '@src/pages/sa/users/ViewSlotData.vue'
+import DataTable from '@/tables/BasicDataTable.vue'
+import CreateModal from '@/modals/CreateModal.vue'
+import CreateModalSlotData from '@/pages/sa/users/CreateSlotData.vue'
+import EditModalSlotData from '@/pages/sa/users/EditSlotData.vue'
+import ViewModal from '@/modals/ViewModal.vue'
+import ViewModalSlotData from '@/pages/sa/users/ViewSlotData.vue'
 import { ref, reactive } from 'vue'
 
 // for data table
@@ -97,7 +97,7 @@ const sendPropDataForCM = reactive({
   }
 });
 
-// for view modal 
+// for view modal
 // ==============
 
 const isVMOpen = ref(false)
@@ -173,7 +173,7 @@ const dataForStatusChange = {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" :data-for-create="newData" :update-data-one="updatedUserInfo"
+  <DataTable :table-data-one="sendDataToTable" :data-for-create="newData" :update-data-one="updatedUserInfo"
     :edit-data="sendEditSlotToTable" :status-data-one="dataForStatusChange" @isViewModalOpen="emitDataForView"
     @dataForViewModal="userDataForViewModal" />
   <CreateModal v-if="isCMOpen" @close="closeCreateModal" :modal-config-data="sendPropDataForCM">

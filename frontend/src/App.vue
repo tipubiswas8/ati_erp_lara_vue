@@ -3,7 +3,7 @@
 </template>
 
 <style lang="scss">
-@import 'scss/main.scss';
+@import '@/assets/styles/scss/main.scss';
 
 #app {
   font-family: 'Inter', Avenir, Helvetica, Arial, sans-serif;

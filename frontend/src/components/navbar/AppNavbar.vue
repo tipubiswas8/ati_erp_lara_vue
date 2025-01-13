@@ -3,13 +3,8 @@
     <template #left>
       <div class="left">
         <Transition v-if="isMobile" name="icon-fade" mode="out-in">
-          <VaIcon
-            color="primary"
-            :name="isSidebarMinimized ? 'menu' : 'close'"
-            size="24px"
-            style="margin-top: 3px"
-            @click="isSidebarMinimized = !isSidebarMinimized"
-          />
+          <component color="primary" :is="isSidebarMinimized ? MenuOutlined : CloseOutlined" size="24px"
+            style="margin-top: 3px" @click="isSidebarMinimized = !isSidebarMinimized" />
         </Transition>
         <RouterLink to="/" aria-label="Visit home page">
           <img src="/images/drug-logo.png" style="height: 35px; width: 200px;" alt="ATI Logo" />
@@ -17,7 +12,7 @@
       </div>
     </template>
     <template #right>
-      <AppNavbarActions class="app-navbar__actions" :is-mobile="isMobile" />
+      <AppNavbarActions class="app-navbar__actions" :is-mobile="isMobile" :style="{ marginRight: '2vw' }" />
     </template>
   </VaNavbar>
 </template>
@@ -25,7 +20,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useGlobalStore } from '../../stores/global-store'
-import AppNavbarActions from './components/AppNavbarActions.vue'
+import AppNavbarActions from './AppNavbarActions.vue'
+import { MenuOutlined, CloseOutlined } from '@ant-design/icons-vue' // Import Ant Design icons
 
 defineProps({
   isMobile: { type: Boolean, default: false },
@@ -57,11 +53,11 @@ const { isSidebarMinimized } = storeToRefs(GlobalStore)
   align-items: center;
   margin-left: 1rem;
 
-  & > * {
+  &>* {
     margin-right: 1rem;
   }
 
-  & > *:last-child {
+  &>*:last-child {
     margin-right: 0;
   }
 }

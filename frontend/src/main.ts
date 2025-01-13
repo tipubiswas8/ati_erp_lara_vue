@@ -12,10 +12,11 @@ import AntDesign from 'ant-design-vue'
 import ElementPlus from 'element-plus'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-sugar.css'
-import '@src/assets/styles/css/global.css'
 import { useAuthStore } from './stores/auth'
-// import { onlyNumber } from '@src/assets/script/js/validation/for-basic/common'
-import { onlyNumber } from '@src/assets/script/js/validation/for-and-design/common'
+import '@/assets/styles/css/global.css'
+import '@/assets/script/js/global'
+// import { onlyNumber } from '@/assets/script/js/validation/for-basic/common'
+import { onlyNumber } from '@/assets/script/js/validation/for-and-design/common'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -109,5 +110,3 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
 app.mount('#app')
 
-
-import '@src/assets/script/js/global'

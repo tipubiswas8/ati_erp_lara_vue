@@ -1,7 +1,7 @@
 export interface INavigationRoute {
   name: string
   displayName: string
-  meta: { icon: string }
+  meta: { icon: string } // Use string to store icon names
   children?: INavigationRoute[]
 }
 
@@ -14,128 +14,69 @@ export default {
     {
       name: 'dashboard',
       displayName: 'menu.dashboard',
-      meta: {
-        icon: 'vuestic-iconset-dashboard',
-      },
+      meta: { icon: 'DashboardOutlined' }, // Icon name as string
     },
     {
       name: 'security-access',
       displayName: 'menu.security-access',
-      meta: {
-        icon: 'security',
-      },
+      meta: { icon: 'SafetyOutlined' },
       children: [
         {
           name: 'users',
           displayName: 'menu.users',
-          meta: {
-            icon: 'group',
-          },
+          meta: { icon: 'TeamOutlined' },
         },
         {
           name: 'role',
           displayName: 'menu.role',
-          meta: {
-            icon: 'android',
-          },
+          meta: { icon: 'SolutionOutlined' },
         },
         {
           name: 'permission',
           displayName: 'menu.permission',
-          meta: {
-            icon: 'android',
-          },
+          meta: { icon: 'KeyOutlined' },
         },
       ],
     },
     {
       name: 'hr',
       displayName: 'menu.hr',
-      meta: {
-        icon: 'group',
-      },
+      meta: { icon: 'UsergroupAddOutlined' },
       children: [
         {
           name: 'employees',
           displayName: 'menu.employees',
-          meta: {
-            icon: 'laptop',
-          },
+          meta: { icon: 'IdcardOutlined' },
         },
         {
           name: 'organizations',
           displayName: 'menu.organizations',
-          meta: {
-            icon: 'laptop',
-          },
-        }
-      ],
-    },
-    {
-      name: 'test',
-      displayName: 'menu.test',
-      meta: {
-        icon: 'android',
-      },
-    },
-    {
-      name: 'projects',
-      displayName: 'menu.projects',
-      meta: {
-        icon: 'credit_card',
-      },
-      children: [
-        {
-          name: 'payment-methods',
-          displayName: 'menu.payment-methods',
-          meta: {
-            icon: 'android',
-          },
-        },
-        {
-          name: 'pricing-plans',
-          displayName: 'menu.pricing-plans',
-          meta: {
-            icon: 'android',
-          },
-        },
-        {
-          name: 'billing',
-          displayName: 'menu.billing',
-          meta: {
-            icon: 'android',
-          },
+          meta: { icon: 'ClusterOutlined' },
         },
       ],
     },
     {
       name: 'auth',
       displayName: 'menu.auth',
-      meta: {
-        icon: 'login',
-      },
+      meta: { icon: 'LockOutlined' },
       children: [
         {
           name: 'login',
           displayName: 'menu.login',
-          meta: {
-            icon: 'android',
-          },
+          meta: { icon: 'LoginOutlined' },
         },
         {
           name: 'signup',
           displayName: 'menu.signup',
-          meta: {
-            icon: 'android',
-          },
+          meta: { icon: 'UserAddOutlined' },
         },
       ],
     },
     {
-      name: 'prescription',
-      displayName: 'menu.prescription',
+      name: 'settings',
+      displayName: 'menu.settings',
       meta: {
-        icon: 'android',
+        icon: 'SettingOutlined',
       },
     },
   ] as INavigationRoute[],

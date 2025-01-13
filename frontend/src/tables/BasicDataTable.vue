@@ -4,11 +4,11 @@ import { ref, onMounted, h, computed, watch } from 'vue'
 import axios from 'axios'
 import { Button, Popconfirm, message, Spin } from 'ant-design-vue'
 import { EditOutlined, DeleteOutlined, PauseCircleOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons-vue'
-import EditModal from '@src/modals/EditModal.vue'
-import StatusNotification from '@src/notifications/StatusNotification.vue'
+import EditModal from '@/modals/EditModal.vue'
+import StatusNotification from '@/notifications/StatusNotification.vue'
 // optional
-import CreateModal from '@src/modals/CreateModal.vue'
-import ViewModal from '@src/modals/ViewModal.vue'
+import CreateModal from '@/modals/CreateModal.vue'
+import ViewModal from '@/modals/ViewModal.vue'
 
 const props = defineProps({
   // datatable props
@@ -194,7 +194,7 @@ onMounted(() => {
   fetchData();
 });
 
-// for create 
+// for create
 // required
 // Watch for new create data
 watch(
@@ -325,7 +325,7 @@ const closeEditModal = () => {
   information.value = {}
 }
 
-// for view 
+// for view
 // required
 let selectedInfoForView: any;
 const handleView = (id: number) => {
@@ -354,7 +354,7 @@ const closeViewModal = () => {
     setEmit('isVMClose', openViewModal.value);
 };
 
-// for status 
+// for status
 // required
 const openStatusNotification = ref(false);
 const showStatusNotification = (id: number) => {

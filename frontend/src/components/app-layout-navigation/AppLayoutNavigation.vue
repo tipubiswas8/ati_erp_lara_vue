@@ -1,28 +1,21 @@
 <template>
   <div class="flex gap-2">
-    <VaIconMenuCollapsed
-      class="cursor-pointer"
-      :class="{ 'x-flip': !isSidebarMinimized }"
-      :color="collapseIconColor"
-      @click="isSidebarMinimized = !isSidebarMinimized"
-    />
-
+    <VaIconMenuCollapsed class="cursor-pointer" :class="{ 'x-flip': !isSidebarMinimized }" :color="collapseIconColor"
+      @click="isSidebarMinimized = !isSidebarMinimized" />
+    <a-icon :component="isCollapsed ? MenuFoldOutlined : MenuUnfoldOutlined" class="cursor-pointer"
+      style="font-size: 24px;" @click="toggleCollapse" />
     <nav class="flex items-center">
       <VaBreadcrumbs>
-        <VaBreadcrumbsItem label="Home" :to="{ name: 'dashboard' }" />
-        <VaBreadcrumbsItem
-          v-for="item in items"
-          :key="item.label"
-          :label="item.label"
-          @click="handleBreadcrumbClick(item)"
-        />
+        <VaBreadcrumbsItem :label="t('dashboard.home')" :to="{ name: 'dashboard' }" />
+        <VaBreadcrumbsItem v-for="item in items" :key="item.label" :label="item.label"
+          @click="handleBreadcrumbClick(item)" />
       </VaBreadcrumbs>
     </nav>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useColors } from 'vuestic-ui'
@@ -30,6 +23,15 @@ import VaIconMenuCollapsed from '../icons/VaIconMenuCollapsed.vue'
 import { storeToRefs } from 'pinia'
 import { useGlobalStore } from '../../stores/global-store'
 import NavigationRoutes from '../sidebar/NavigationRoutes'
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
+
+// State to control the collapse/expand
+const isCollapsed = ref(true);
+
+// Function to toggle collapse state
+const toggleCollapse = () => {
+  isCollapsed.value = !isCollapsed.value;
+};
 
 const { isSidebarMinimized } = storeToRefs(useGlobalStore())
 

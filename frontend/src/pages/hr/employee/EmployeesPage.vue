@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import DataTable from '@src/tables/BasicDataTable.vue'
-import CreateModal from '@src/modals/CreateModal.vue'
+import DataTable from '@/tables/BasicDataTable.vue'
+import CreateModal from '@/modals/CreateModal.vue'
 import { ref } from 'vue'
 
 const isOpen = ref(false)
@@ -75,6 +75,6 @@ const dataForStatusChange = {
     </a-col>
   </a-row>
 
-  <DataTable :request-data="sendDataToTable" :status-data-one="dataForStatusChange" />
+  <DataTable :table-data-one="sendDataToTable" :status-data-one="dataForStatusChange" />
   <CreateModal v-if="isOpen" @close="closeModal" @userAdded="addNewUser" />
 </template>
