@@ -22,45 +22,64 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
       },
       {
-        name: 'settings',
-        path: 'settings',
-        component: () => import('../pages/settings/Settings.vue'),
-      },
-      {
         name: 'security-access',
         path: '/security-access',
         component: RouteViewComponent,
         children: [
           {
             name: 'users',
-            path: '/users',
-            component: () => import('../pages/sa/users/UsersPage.vue'),
+            path: 'users',
+            component: RouteViewComponent,
+            children: [
+              {
+                name: 'temporary-user',
+                path: 'temporary-user',
+                component: () => import('../pages/hr/organization/OrganizationPage.vue'),
+              },
+              {
+                name: 'permanent-user',
+                path: 'permanent-user',
+                component: () => import('../pages/sa/permission/PermissionPage.vue'),
+              }
+            ]
           },
           {
             name: 'role',
-            path: '/role',
-            component: () => import('../pages/sa/role/RolePage.vue'),
+            path: 'role',
+            component: () =>  import('../pages/sa/role/RolePage.vue'),
           },
           {
             name: 'permission',
             path: 'permission',
-            component: () => import('../pages/sa/permission/PermissionPage.vue'),
+            component: RouteViewComponent,
+            children: [
+              {
+                name: 'temporary-permission',
+                path: 'temporary-permission',
+                component: () => import('../pages/sa/permission/PermissionPage.vue'),
+              },
+              {
+                name: 'permanent-permission',
+                path: 'permanent-permission',
+                component: () => import('../pages/sa/permission/PermissionPage.vue'),
+              },
+            ]
           },
         ],
       },
       {
         name: 'hr',
-        path: '/hr',
+        path: 'hr',
         component: RouteViewComponent,
         children: [
           {
             name: 'employees',
-            path: '/employees',
+            path: 'employees',
             component: () => import('../pages/hr/employee/EmployeesPage.vue'),
           },
           {
             name: 'organizations',
-            path: '/organizations',
+            path: 'organizations',
             component: () => import('../pages/hr/organization/OrganizationPage.vue'),
           }
         ]
@@ -70,11 +89,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),
       },
-      {
-        name: 'preferences',
-        path: 'preferences',
-        component: () => import('../pages/preferences/Preferences.vue'),
-      }
     ],
   },
   {
@@ -111,6 +125,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'logout',
     path: '/logout',
     redirect: 'login',
+  },
+  {
+    name: 'preferences',
+    path: '/preferences',
+    component: () => import('../pages/preferences/Preferences.vue')
   },
   {
     name: '404',

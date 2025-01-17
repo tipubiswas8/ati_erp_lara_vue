@@ -1,18 +1,40 @@
 <template>
-  <RouterView />
+    <router-view />
+    <p
+  style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; font-size: 14px; padding: 5px; margin: 0;"
+  :style="{ backgroundColor: getThemeColor('background') || '#000', color: getThemeColor('accent') || '#fff' }"
+>
+  © 2025 ATI Limited. All rights reserved.
+</p>
+
 </template>
 
-<style lang="scss">
-@import '@/assets/styles/scss/main.scss';
+<script lang="ts" setup>
+import { inject } from 'vue'
 
-#app {
-  font-family: 'Inter', Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+// Define the type for the theme
+type Theme = {
+  setTheme: (theme: 'light' | 'dark') => void;
+  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary' | 'secondary' | 'accent') => string;
+  currentTheme: import('vue').ComputedRef<string>;
+};
+
+// Inject the global theme
+const theme = inject<Theme>('theme')
+if (!theme) {
+  throw new Error('Theme provider is not available!')
 }
 
+// Destructure functions and properties from the theme
+const { getThemeColor } = theme
+</script>
+
+<style>
+/* Optional global styles */
 body {
+  height: 100%;
   margin: 0;
-  min-width: 20rem;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 </style>

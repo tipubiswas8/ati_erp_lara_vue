@@ -60,7 +60,13 @@
     "security-access": "নিরাপত্তা অ্যাক্সেস",
     "hr": "এইচআর",
     "role": "ভূমিকা",
-    "permission": "অনুমতি"
+    "permission": "অনুমতি",
+    "sub-menu": {
+      "grand-submenu-one": "নাতি সন্তান ১",
+      "grand-submenu-two": "নাতি সন্তান ২",
+      "grand-submenu-three": "নাতি সন্তান ৩",
+      "grand-submenu-four": "নাতি সন্তান ৪"
+    }
   },
   "messages": {
     "all": "সমস্ত বার্তা দেখুন",
@@ -183,6 +189,8 @@
   },
   "buttonSelect": {
     "dark": "অন্ধকার",
-    "light": "আলো"
+    "light": "আলো",
+    "blue": "নীল",
+    "solarized": "সূর্যালোকিত"
   }
 }

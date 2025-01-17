@@ -17,8 +17,11 @@ import '@/assets/styles/css/global.css'
 import '@/assets/script/js/global'
 // import { onlyNumber } from '@/assets/script/js/validation/for-basic/common'
 import { onlyNumber } from '@/assets/script/js/validation/for-and-design/common'
+import useTheme from '../src/theme/ThemeProvider'
 
+// Provide the theme globally
 const app = createApp(App)
+const theme = useTheme()
 const pinia = createPinia()
 app.use(pinia)
 app.use(axios)
@@ -28,6 +31,7 @@ app.use(ElementPlus)
 app.use(i18n)
 app.use(createVuestic({ config: vuesticGlobalConfig }))
 app.directive("only-number", onlyNumber);
+app.provide('theme', theme)
 // Define the validatePhone function globally
 
 app.config.globalProperties.$validatePhone = async (value: any) => {

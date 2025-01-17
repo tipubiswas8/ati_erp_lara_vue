@@ -6,14 +6,8 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <div class="flex flex-col space-y-6 md:space-y-4">
-    <div class="flex flex-col p-4 space-y-4 bg-backgroundSecondary rounded-lg">
-      <h3 class="h3">{{ t('appSetting.theme') }}</h3>
-      <ThemeSwitcher />
-    </div>
-    <div class="flex flex-col p-4 space-y-4 bg-backgroundSecondary rounded-lg">
-      <h3 class="h3">{{ t('appSetting.generalPreferences') }}</h3>
-      <LanguageSwitcher />
-    </div>
-  </div>
+  <h3>{{ t('appSetting.theme') }}</h3>
+  <ThemeSwitcher />
+  <h3>{{ t('appSetting.generalPreferences') }}</h3>
+  <LanguageSwitcher />
 </template>

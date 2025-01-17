@@ -1,59 +1,65 @@
 <template>
   <div class="profile-dropdown-wrapper">
-    <VaDropdown v-model="isShown" :offset="[9, 0]" class="profile-dropdown" stick-to-edges>
-      <template #anchor>
-        <VaButton preset="secondary" color="textPrimary">
-          <span class="profile-dropdown__anchor min-w-max">
-            <slot />
-            <img src="/images/user-1.png" style="height: 35px; width: 35px;" alt="User Logo" />
-          </span>
-        </VaButton>
-      </template>
-      <VaDropdownContent class="profile-dropdown__content md:w-60 px-0 py-4 w-full"
-        :style="{ '--hover-color': hoverColor }">
-        <VaList v-for="group in options" :key="group.name">
-          <header v-if="group.name" class="uppercase text-[var(--va-secondary)] opacity-80 font-bold text-xs px-4">
+    <!-- Dropdown Wrapper -->
+    <div class="profile-dropdown" @mouseenter="isShown = true" @mouseleave="isShown = false">
+      <!-- Anchor Button -->
+      <button class="dropdown-anchor">
+        <slot />
+        <img src="/images/user-1.png" style="height: 35px; width: 35px;" alt="User Logo" />
+      </button>
+
+      <!-- Dropdown Content -->
+      <div v-if="isShown" class="dropdown-content">
+        <div v-for="group in options" :key="group.name" class="dropdown-group">
+          <!-- Group Header -->
+          <header v-if="group.name" class="dropdown-header">
             {{ t(`user.${group.name}`) }}
           </header>
-          <VaListItem v-for="item in group.list" :key="item.name" class="menu-item px-4 text-base cursor-pointer h-8"
-            v-bind="resolveLinkAttribute(item)">
-            <component :is="getAntdIcon(item.icon)" class="pr-2" style="font-size: 18px; color: var(--va-primary);" />
-            {{ t(`user.${item.name}`) }}
-          </VaListItem>
-          <VaListSeparator v-if="group.separator" class="mx-3 my-2" />
-        </VaList>
-      </VaDropdownContent>
-    </VaDropdown>
+          <!-- Group Items -->
+          <div
+            v-for="item in group.list"
+            :key="item.name"
+            class="dropdown-item"
+            @click="handleNavigation(item)"
+          >
+            <span class="dropdown-item-icon">
+              <component :is="getAntdIcon(item.icon)" />
+            </span>
+            <span>{{ t(`user.${item.name}`) }}</span>
+          </div>
+          <!-- Separator -->
+          <div v-if="group.separator" class="dropdown-separator"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useColors } from 'vuestic-ui'
-import * as AntdIcons from '@ant-design/icons-vue'
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import * as AntdIcons from '@ant-design/icons-vue';
+import { useRouter } from 'vue-router';
 
-const { colors, setHSLAColor } = useColors()
-const hoverColor = computed(() => setHSLAColor(colors.focus, { a: 0.1 }))
-
-const { t } = useI18n()
+const { t } = useI18n();
+const router = useRouter();
 
 type ProfileListItem = {
-  name: string
-  to?: string
-  href?: string
-  icon: string
-}
+  name: string;
+  to?: string;
+  href?: string;
+  icon: string;
+};
 
 type ProfileOptions = {
-  name: string
-  separator: boolean
-  list: ProfileListItem[]
-}
+  name: string;
+  separator: boolean;
+  list: ProfileListItem[];
+};
 
 withDefaults(
   defineProps<{
-    options?: ProfileOptions[]
+    options?: ProfileOptions[];
   }>(),
   {
     options: () => [
@@ -81,32 +87,97 @@ withDefaults(
       },
     ],
   },
-)
+);
 
-const isShown = ref(false)
+const isShown = ref(false);
 
 // Dynamically resolve Ant Design Vue icons
 const getAntdIcon = (iconName: string) => {
-  return AntdIcons[iconName as keyof typeof AntdIcons] || null
-}
+  return AntdIcons[iconName as keyof typeof AntdIcons] || null;
+};
 
-const resolveLinkAttribute = (item: ProfileListItem) => {
-  return item.to ? { to: { name: item.to } } : item.href ? { href: item.href, target: '_blank' } : {}
-}
+// Handle navigation on item click
+const handleNavigation = (item: ProfileListItem) => {
+  if (item.to) {
+    router.push({ name: item.to }); // Navigate to named route
+  } else if (item.href) {
+    window.open(item.href, '_blank'); // Open external link in a new tab
+  }
+};
 </script>
 
-<style lang="scss">
+<style>
+.profile-dropdown-wrapper {
+  position: relative;
+}
+
 .profile-dropdown {
+  display: inline-block;
+  position: relative;
   cursor: pointer;
+}
 
-  &__content {
-    .menu-item:hover {
-      background: var(--hover-color);
-    }
-  }
+.dropdown-anchor {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #111827; /* Tailwind gray-900 */
+}
 
-  &__anchor {
-    display: inline-block;
-  }
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 240px;
+  z-index: 1000;
+  padding: 8px 0;
+}
+
+.dropdown-group {
+  padding: 0;
+}
+
+.dropdown-header {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  color: #6b7280; /* Tailwind gray-500 */
+  padding: 8px 16px;
+  opacity: 0.8;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #111827; /* Tailwind gray-900 */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f4f6; /* Tailwind gray-100 */
+}
+
+.dropdown-item-icon {
+  margin-right: 8px;
+  font-size: 18px;
+  color: #4f46e5; /* Tailwind indigo-600 */
+}
+
+.dropdown-separator {
+  height: 1px;
+  background: #e5e7eb; /* Tailwind gray-200 */
+  margin: 8px 16px;
 }
 </style>
+

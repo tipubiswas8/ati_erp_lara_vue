@@ -1,7 +1,21 @@
 <template>
-  <div class="flex items-center justify-between">
-    <p>{{ t('language.language') }}</p>
-    <a-select v-model:value="model" style="width: 20vw" :options="options" :size="size"></a-select>
+  <div>
+    <p class="language-label">{{ t('language.language') }}</p>
+    <div class="custom-select-wrapper">
+      <select 
+        v-model="model" 
+        class="custom-select" 
+        @change="updateLanguage"
+      >
+        <option 
+          v-for="option in options" 
+          :key="option.value" 
+          :value="option.value"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+    </div>
   </div>
 </template>
 
@@ -9,11 +23,11 @@
 import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n();
-type LanguageMap = Record<string, string>
+// Use vue-i18n for translations
+const { t, locale } = useI18n()
 
-const { locale } = useI18n()
-const size = 'large'
+// Define the language map
+type LanguageMap = Record<string, string>
 const languages: LanguageMap = {
   en: 'English',
   bn: 'বাংলা',
@@ -23,19 +37,18 @@ const languages: LanguageMap = {
   ir: 'Persian',
 }
 
-// Convert language codes into options for the select component
+// Convert the language map into options for the <select>
 const options = Object.entries(languages).map(([code, label]) => ({
-  value: code,  // Use the language code as the value
-  label,        // Display the language label
+  value: code,
+  label,
 }))
 
-// Set up a computed property for model, based on the current locale
+// Use a computed property to bind the selected language
 const model = computed({
   get() {
-    return locale.value // Return the language code
+    return locale.value
   },
   set(value: string) {
-    // Update locale and save the selected language to localStorage
     if (languages[value]) {
       localStorage.setItem('selectedLanguage', value)
       locale.value = value
@@ -43,14 +56,64 @@ const model = computed({
   },
 })
 
-// Persist the language selection on page load
+// Ensure the language persists on page reload
 onMounted(() => {
-  const savedLanguageCode = localStorage.getItem('selectedLanguage')
-  if (savedLanguageCode && languages[savedLanguageCode]) {
-    locale.value = savedLanguageCode
+  const savedLanguage = localStorage.getItem('selectedLanguage')
+  if (savedLanguage && languages[savedLanguage]) {
+    locale.value = savedLanguage
   } else {
     const defaultLocale = locale.value
     localStorage.setItem('selectedLanguage', defaultLocale)
   }
 })
+
+// Update the language when the selection changes
+const updateLanguage = (event: Event) => {
+  const selectedValue = (event.target as HTMLSelectElement).value
+  model.value = selectedValue
+}
 </script>
+
+<style scoped>
+.language-label {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 20vw;
+}
+
+.custom-select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  color: var(--text-color, #333);
+  background-color: var(--background-color, #fff);
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 5px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.custom-select:hover {
+  border-color: var(--hover-border-color, #1a73e8);
+}
+
+.custom-select:focus {
+  border-color: var(--focus-border-color, #1a73e8);
+  box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
+}
+
+.custom-select option {
+  color: var(--text-color, #333);
+  background-color: var(--background-color, #fff);
+}
+</style>
