@@ -46,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
           {
             name: 'role',
             path: 'role',
-            component: () =>  import('../pages/sa/role/RolePage.vue'),
+            component: () => import('../pages/sa/role/RolePage.vue'),
           },
           {
             name: 'permission',
@@ -89,6 +89,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),
       },
+      {
+        name: 'preferences',
+        path: '/preferences',
+        component: () => import('../pages/preferences/Preferences.vue')
+      },
     ],
   },
   {
@@ -126,11 +131,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/logout',
     redirect: 'login',
   },
-  {
-    name: 'preferences',
-    path: '/preferences',
-    component: () => import('../pages/preferences/Preferences.vue')
-  },
+
   {
     name: '404',
     path: '/404',

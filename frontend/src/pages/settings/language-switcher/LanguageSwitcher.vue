@@ -2,16 +2,8 @@
   <div>
     <p class="language-label">{{ t('language.language') }}</p>
     <div class="custom-select-wrapper">
-      <select 
-        v-model="model" 
-        class="custom-select" 
-        @change="updateLanguage"
-      >
-        <option 
-          v-for="option in options" 
-          :key="option.value" 
-          :value="option.value"
-        >
+      <select v-model="model" class="custom-select" @change="updateLanguage">
+        <option v-for="option in options" :key="option.value" :value="option.value">
           {{ option.label }}
         </option>
       </select>

@@ -1,43 +1,124 @@
 <template>
-  <!-- <VaLayout v-if="breakpoint.lgUp" class="h-screen bg-[var(--va-background-secondary)]"> -->
-  <VaLayout v-if="breakpoint.lgUp" class="h-screen">
-    <template #left>
-      <!-- class="bg-primary h-full flex items-center justify-center" -->
-      <RouterLink
-        class="bg-secondary h-full flex items-center justify-center"
-        style="width: 35vw"
-        to="/"
-        aria-label="Visit homepage"
-      >
+  <div v-if="isLgUp" class="layout lg-layout">
+    <!-- Left Section -->
+    <div class="left-section">
+      <RouterLink to="/" aria-label="Visit homepage">
         <VuesticLogo :height="28" start="#FFF" />
       </RouterLink>
-    </template>
-    <template #content>
-      <main class="h-full flex items-center justify-center mx-auto max-w-[420px]">
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-section">
+      <main>
         <RouterView />
       </main>
-    </template>
-  </VaLayout>
+    </div>
+  </div>
 
-  <VaLayout v-else class="h-screen bg-[var(--va-background-secondary)]">
-    <template #content>
-      <div class="p-4">
-        <main class="h-full flex flex-row items-center justify-start mx-auto max-w-[420px]">
-          <div class="flex flex-col items-start">
-            <RouterLink class="py-4" to="/" aria-label="Visit homepage">
-              <img src="/images/drug-logo.png" style="height: 35px; width: 200px;" alt="ATI Logo" />
-            </RouterLink>
+  <div v-else class="layout sm-layout">
+    <!-- Main Content -->
+    <div class="content-wrapper">
+      <div class="main-content">
+        <div class="logo-and-content">
+          <RouterLink class="logo-link" to="/" aria-label="Visit homepage">
+            <img class="logo" src="/images/drug-logo.png" alt="ATI Logo" />
+          </RouterLink>
+          <main>
             <RouterView />
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </template>
-  </VaLayout>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { useBreakpoint } from 'vuestic-ui'
+import { ref, onMounted, onUnmounted } from 'vue'
 
+// Define custom breakpoints
+const BREAKPOINTS = {
+  lg: 1024, // Equivalent to 'lg' in Vuestic's breakpoints
+}
 
-const breakpoint = useBreakpoint()
+// Reactive state for current screen size
+const isLgUp = ref(false)
+
+// Function to update the screen size state
+const updateBreakpoint = () => {
+  isLgUp.value = window.innerWidth >= BREAKPOINTS.lg
+}
+
+// Add event listeners on mount, and remove them on unmount
+onMounted(() => {
+  updateBreakpoint()
+  window.addEventListener('resize', updateBreakpoint)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateBreakpoint)
+})
 </script>
+
+<style scoped>
+/* Layout styles */
+.layout {
+  height: 100vh;
+  display: flex;
+}
+
+/* Large screen layout */
+.lg-layout {
+  flex-direction: row;
+}
+
+.left-section {
+  width: 35vw;
+  background-color: var(--va-background-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Small screen layout */
+.sm-layout {
+  background-color: var(--va-background-secondary);
+}
+
+.content-wrapper {
+  padding: 1rem;
+}
+
+.main-content {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.logo-and-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo-link {
+  padding: 1rem 0;
+}
+
+.logo {
+  height: 35px;
+  width: 200px;
+}
+</style>
