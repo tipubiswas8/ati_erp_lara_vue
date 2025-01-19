@@ -28,11 +28,7 @@
       <div class="value">
         <div class="max-width">{{ twoFA.content }}</div>
       </div>
-      <button
-        class="twofa-button"
-        :class="twoFA.color"
-        @click="toggle2FA"
-      >
+      <button class="twofa-button" :class="twoFA.color" @click="toggle2FA">
         {{ twoFA.button }}
       </button>
     </div>
@@ -87,11 +83,9 @@ const showToast = (message: string, type: string) => {
   toastContainer.appendChild(toastElement);
 
   setTimeout(() => {
-    toastElement.classList.add('fade-out');
-    setTimeout(() => {
-      toastElement.remove();
-    }, 1000);
+    toastElement.remove();
   }, 3000);
+
 };
 </script>
 
@@ -112,7 +106,6 @@ const showToast = (message: string, type: string) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: #4caf50;
   color: wheat;
 }
 

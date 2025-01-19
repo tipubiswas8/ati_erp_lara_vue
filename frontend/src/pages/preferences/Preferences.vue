@@ -12,8 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-
+import { ref } from 'vue'
 import PreferencesHeader from './preferences-header/PreferencesHeader.vue'
 import Settings from './settings/Settings.vue'
 import EditNameModal from './modals/EditNameModal.vue'
@@ -33,11 +32,6 @@ const showToast = (message: string, color: string) => {
   setTimeout(() => {
     document.body.removeChild(toastElement)
   }, 3000)
-}
-
-const toggle2FA = () => {
-  store.toggle2FA()
-  showToast(toastMessage.value, 'success')
 }
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar" :style="{
+  <div v-if="isShowSidebar" class="sidebar" :style="{
     width: isSidebarMinimized ? '100px' : sidebarWidth,
     backgroundColor: getThemeColor('background'),
     color: getThemeColor('text')
@@ -158,7 +158,10 @@ import navigationRoutes from './NavigationRoutes';
 import { inject } from 'vue'
 import { storeToRefs } from 'pinia';
 import { useGlobalStore } from '../../stores/global-store';
-
+import { useControlPanelSecond } from '../../stores/control-panel'
+// Access the store
+// Destructure the state and actions using storeToRefs
+const { isShowSidebar } = storeToRefs(useControlPanelSecond());
 // Sidebar State
 const { isSidebarMinimized } = storeToRefs(useGlobalStore());
 

@@ -1,6 +1,8 @@
 <template>
-  <div class="custom-modal" v-if="isModalOpen">
+  <div class="custom-modal">
     <div class="modal-inner">
+      <!-- Close Button -->
+      <button class="close-button" @click="emits('cancel')">&times;</button>
       <h1 class="modal-title">Reset password</h1>
       <form ref="form" class="form space-y-6" @submit.prevent="submit">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -42,21 +44,21 @@
 
         <div class="flex flex-col space-y-2">
           <div class="flex space-x-2 items-center">
-            <div>
+            <div style="display: inline;">
               <span :class="newPassword?.length >= 8 ? 'check-icon' : 'close-icon'" />
             </div>
-            <p>Must be at least 8 characters long</p>
+            <p style="display: inline;">Must be at least 8 characters long</p>
           </div>
           <div class="flex space-x-2 items-center">
-            <div>
+            <div style="display: inline;">
               <span :class="new Set(newPassword).size >= 6 ? 'check-icon' : 'close-icon'" />
             </div>
-            <p>Must contain at least 6 unique characters</p>
+            <p style="display: inline;">Must contain at least 6 unique characters</p>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="button button-secondary" @click="cancel">Cancel</button>
+          <button type="button" class="button button-secondary" @click="emits('cancel')">Cancel</button>
           <button type="submit" class="button button-primary">Update Password</button>
         </div>
       </form>
@@ -67,20 +69,16 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-const isModalOpen = ref(false)
 const oldPassword = ref<string>()
 const newPassword = ref<string>()
 const repeatNewPassword = ref<string>()
+const emits = defineEmits(['cancel'])
 
 const submit = () => {
   if (validate()) {
     showToast("You've successfully changed your password", 'success')
-    cancel()
+    emits('cancel')
   }
-}
-
-const cancel = () => {
-  isModalOpen.value = false
 }
 
 const validate = () => {
@@ -119,11 +117,28 @@ const showToast = (message: string, color: string) => {
 }
 
 .modal-inner {
+  position: relative; /* To position the close button relative to the modal */
   background-color: white;
   padding: 20px;
   max-width: 530px;
   width: 100%;
   border-radius: 8px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+.close-button:hover {
+  color: #007bff;
 }
 
 .modal-title {
@@ -156,8 +171,9 @@ const showToast = (message: string, color: string) => {
 
 .check-icon,
 .close-icon {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
   border-radius: 50%;
   display: inline-block;
   background-color: #ccc;

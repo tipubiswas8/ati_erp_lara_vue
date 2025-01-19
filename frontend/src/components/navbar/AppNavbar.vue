@@ -1,6 +1,6 @@
 <!-- AppLayout.vue -->
 <template>
-  <header class="app-layout-navbar py-2 px-0">
+  <header v-if="isShowHeader" class="app-layout-navbar py-2 px-0">
     <div class="navbar-container">
       <!-- Left section -->
       <div class="left">
@@ -33,7 +33,11 @@ import { useGlobalStore } from '../../stores/global-store';
 import AppNavbarActions from './AppNavbarActions.vue';
 import { MenuOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import CustomTransition from './CustomTransition.vue';
-
+import {  useControlPanelSecond } from '../../stores/control-panel'
+// Access the store
+const controlPanelSecond = useControlPanelSecond();
+// Destructure the state and actions using storeToRefs
+const { isShowHeader } = storeToRefs(controlPanelSecond);
 // Inject the theme from the parent component
 type Theme = {
   setTheme: (theme: 'light' | 'dark') => void;

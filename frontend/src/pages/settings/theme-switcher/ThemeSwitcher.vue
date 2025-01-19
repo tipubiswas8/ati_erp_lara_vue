@@ -84,8 +84,6 @@ const changeTheme = (event: Event | string) => {
     const selectElement = event.target as HTMLSelectElement;
     themeValue = selectElement.value;
   }
-
-  console.log(themeValue);
   setTheme(themeValue);
 };
 </script>

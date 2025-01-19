@@ -19,5 +19,8 @@ export const useUserStore = defineStore('user', {
     changeUserName(userName: string) {
       this.userName = userName
     },
+    changeUserEmail(email: string) {
+      this.email = email
+    },
   },
 })

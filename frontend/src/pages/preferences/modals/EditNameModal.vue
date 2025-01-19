@@ -1,14 +1,20 @@
 <template>
-  <div class="custom-modal" v-if="isModalOpen">
+  <div class="custom-modal">
     <div class="modal-inner">
-      <h1 class="modal-title">Reset password</h1>
+      <!-- Close Button -->
+      <button class="close-button" @click="emits('cancel')">&times;</button>
+      <h1 class="modal-title">Update User Information</h1>
       <form ref="form" @submit.prevent="submit">
         <div class="form-group">
           <label for="name" class="form-label">Name</label>
           <input v-model="Name" type="text" id="name" class="input" placeholder="Name" />
         </div>
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input v-model="Email" type="text" id="email" class="input" placeholder="Email" />
+        </div>
         <div class="form-actions">
-          <button type="button" class="button button-secondary" @click="cancel">Cancel</button>
+          <button type="button" class="button button-secondary" @click="emits('cancel')">Cancel</button>
           <button type="submit" class="button button-primary">Save</button>
         </div>
       </form>
@@ -33,27 +39,25 @@ const showToast = (message: string, color: string) => {
 
 const store = useUserStore()
 
-const isModalOpen = ref(false)
-
 const Name = ref<string>(store.userName)
+const Email = ref<string>(store.email)
 
-const cancel = () => {
-  isModalOpen.value = false
-}
+const emits = defineEmits(['cancel'])
 
 const submit = () => {
-  if (!Name.value || Name.value === store.userName) {
-    cancel()
+  if ((!Name.value || Name.value === store.userName) && (!Email.value || Email.value === store.email)) {
+    emits('cancel')
     return
   }
 
   store.changeUserName(Name.value)
-  showToast("You've successfully changed your name", 'success')
-  cancel()
+  store.changeUserEmail(Email.value)
+  showToast("You've successfully changed your personal information", 'success')
+  emits('cancel')
 }
 </script>
 
-<style scoped>
+<style>
 .custom-modal {
   position: fixed;
   top: 0;
@@ -67,11 +71,28 @@ const submit = () => {
 }
 
 .modal-inner {
+  position: relative; /* To position the close button relative to the modal */
   background-color: white;
   padding: 20px;
   max-width: 380px;
   width: 100%;
   border-radius: 8px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+.close-button:hover {
+  color: #007bff;
 }
 
 .modal-title {
@@ -91,7 +112,7 @@ const submit = () => {
 }
 
 .input {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -126,7 +147,8 @@ const submit = () => {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #4caf50; /* Success color by default */
+  background-color: #4caf50;
+  /* Success color by default */
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
