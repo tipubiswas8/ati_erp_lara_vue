@@ -86,8 +86,10 @@
   },
   "user": {
     "language": "Change language",
-    "logout": "Logout",
     "profile": "Profile",
+    "logout": "Logout",
+    "changePassword": "Change Password",
+    "signOut": "Sign Out",
     "settings": "Settings",
     "billing": "Billing",
     "faq": "FAQ",

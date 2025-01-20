@@ -65,7 +65,7 @@ withDefaults(
     options: () => [
       {
         name: 'account',
-        separator: true,
+        separator: false,
         list: [
           {
             name: 'profile',
@@ -76,6 +76,17 @@ withDefaults(
       },
       {
         name: '',
+        separator: true,
+        list: [
+          {
+            name: 'changePassword',
+            to: 'preferences',
+            icon: 'KeyOutlined',
+          },
+        ],
+      },
+      {
+        name: 'signOut',
         separator: false,
         list: [
           {

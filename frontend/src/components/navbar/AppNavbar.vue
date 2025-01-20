@@ -1,6 +1,6 @@
 <!-- AppLayout.vue -->
 <template>
-  <header v-if="isShowHeader" class="app-layout-navbar py-2 px-0">
+  <header v-if="isShowHeader" class="app-layout-navbar">
     <div class="navbar-container">
       <!-- Left section -->
       <div class="left">
@@ -20,7 +20,7 @@
 
       <!-- Right section -->
       <div class="right">
-        <AppNavbarActions class="app-navbar__actions" :is-mobile="isMobile" :style="{ marginRight: '1vw' }" />
+        <AppNavbarActions :is-mobile="isMobile" :style="{ marginRight: '1vw' }" />
       </div>
     </div>
   </header>
@@ -113,10 +113,6 @@ const collapseIconColor = computed(() => getThemeColor('primary'));
 @media screen and (max-width: 950px) {
   .left {
     width: 100%;
-  }
-
-  .right {
-    display: none;
   }
 }
 </style>

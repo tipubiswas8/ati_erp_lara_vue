@@ -79,6 +79,11 @@ const navigationRoutes: INavigationRoute[] = [
         displayName: 'menu.signup',
         meta: { icon: 'UserAddOutlined' },
       },
+      {
+        name: 'recover-password',
+        displayName: 'recover-password',
+        meta: { icon: 'UnlockOutlined' },
+      },
     ],
   },
   {

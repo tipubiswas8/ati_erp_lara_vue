@@ -1,74 +1,88 @@
 <template>
-  <form ref="form" @submit.prevent="submit" class="login-form">
-    <!-- Heading -->
-    <h1 class="login-form-heading">Log in</h1>
+  <div :style="{
+    backgroundColor: getThemeColor('background') || '#000',
+    color: getThemeColor('accent') || '#fff',
+    fontFamily: currentThemeFontFamily
+  }">
+    <form ref="form" @submit.prevent="submit" class="login-form">
+      <!-- Heading -->
+      <h1 class="login-form-heading">Log in</h1>
 
-    <!-- Sign-up Link -->
-    <p class="login-form-signup-link">
-      Don't have an account? 
-      <RouterLink :to="{ name: 'signup' }" class="login-form-signup-link-text">Sign up</RouterLink>
-    </p>
+      <!-- Sign-up Link -->
+      <p class="login-form-signup-link">
+        Don't have an account?
+        <RouterLink :to="{ name: 'signup' }" class="login-form-signup-link-text">Sign up</RouterLink>
+      </p>
 
-    <!-- Email Input -->
-    <div class="login-form-input">
-      <label for="email" class="login-form-label">Email</label>
-      <input
-        v-model="formData.email"
-        id="email"
-        type="email"
-        class="login-form-input-field"
-        placeholder="Enter your email"
-        :required="true"
-      />
-      <span v-if="!formData.email" class="login-form-error">Email field is required</span>
-      <span v-if="formData.email && !/.+@.+\..+/.test(formData.email)" class="login-form-error">Email should be valid</span>
-    </div>
-
-    <!-- Password Input -->
-    <div class="login-form-input">
-      <label for="password" class="login-form-label">Password</label>
-      <div class="login-form-password-container">
-        <input
-          v-model="formData.password"
-          id="password"
-          type="password"
-          class="login-form-input-field"
-          placeholder="Enter your password"
-          :required="true"
-        />
-        <span v-if="!formData.password" class="login-form-error">Password field is required</span>
+      <!-- Email Input -->
+      <div class="login-form-input">
+        <label for="email" class="login-form-label">Email</label>
+        <input v-model="formData.email" id="email" type="email" class="login-form-input-field"
+          placeholder="Enter your email" :required="true" />
+        <span v-if="!formData.email" class="login-form-error">Email field is required</span>
+        <span v-if="formData.email && !/.+@.+\..+/.test(formData.email)" class="login-form-error">Email should be
+          valid</span>
       </div>
-    </div>
 
-    <!-- Keep Me Signed In Option -->
-    <div class="login-form-options">
-      <label class="login-form-checkbox">
-        <input v-model="formData.keepLoggedIn" type="checkbox" />
-        Keep me signed in on this device
-      </label>
-      <RouterLink :to="{ name: 'recover-password' }" class="login-form-forgot-password">
-        Forgot password?
-      </RouterLink>
-    </div>
+      <!-- Password Input -->
+      <div class="login-form-input">
+        <label for="password" class="login-form-label">Password</label>
+        <div class="login-form-password-container">
+          <input v-model="formData.password" id="password" type="password" class="login-form-input-field"
+            placeholder="Enter your password" :required="true" />
+          <span v-if="!formData.password" class="login-form-error">Password field is required</span>
+        </div>
+      </div>
 
-    <!-- Submit Button -->
-    <div class="login-form-button-container">
-      <button type="submit" class="login-form-button">Login</button>
-    </div>
-  </form>
+      <!-- Keep Me Signed In Option -->
+      <div class="login-form-options">
+        <label class="login-form-checkbox">
+          <input v-model="formData.keepLoggedIn" type="checkbox" />
+          Keep me signed in on this device
+        </label>
+        <RouterLink :to="{ name: 'recover-password' }" class="login-form-forgot-password">
+          Forgot password?
+        </RouterLink>
+      </div>
 
-  <!-- Toast Notifications -->
-  <div v-if="toast.visible" :class="['toast', toast.type]">
-    <span>{{ toast.message }}</span>
+      <!-- Submit Button -->
+      <div class="login-form-button-container">
+        <button type="submit" class="login-form-button" :style="{
+          backgroundColor: getThemeColor('primary') || '#000',
+          color: getThemeColor('text') || '#fff',
+          fontFamily: currentThemeFontFamily
+        }">Login</button>
+      </div>
+    </form>
+
+    <!-- Toast Notifications -->
+    <div v-if="toast.visible" :class="['toast', toast.type]">
+      <span>{{ toast.message }}</span>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { useAuthStore } from '../../stores/auth'
 
+// Define the type for the theme
+type Theme = {
+  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary' | 'secondary' | 'accent') => string;
+  getThemeFontFamily: () => string;
+};
+
+// Inject the global theme
+const theme = inject<Theme>('theme');
+if (!theme) {
+  throw new Error('Theme provider is not available!');
+}
+
+const { getThemeColor, getThemeFontFamily } = theme;
+// Computed property for the current font-family
+const currentThemeFontFamily = computed(() => getThemeFontFamily());
 // Reactive form data
 const formData = reactive({
   email: '',
@@ -145,18 +159,24 @@ const showToast = (message: string, type: string) => {
   max-width: 420px;
   margin: 0 auto;
   text-align: center;
+  padding: 10px;
+  border: 2px solid;
+  border-radius: 2%;
 }
 
 /* Heading Styles */
 .login-form-heading {
   font-weight: 600;
-  font-size: 2.5rem; /* Equivalent to text-4xl */
-  margin-bottom: 1rem; /* Equivalent to mb-4 */
+  font-size: 2.5rem;
+  /* Equivalent to text-4xl */
+  margin-bottom: 1rem;
+  /* Equivalent to mb-4 */
 }
 
 /* Sign-Up Link Styles */
 .login-form-signup-link {
-  font-size: 1rem; /* Equivalent to text-base */
+  font-size: 1rem;
+  /* Equivalent to text-base */
   margin-bottom: 1rem;
 }
 
@@ -172,8 +192,10 @@ const showToast = (message: string, type: string) => {
 
 /* Input Styles */
 .login-form-input {
-  margin-bottom: 1rem; /* Equivalent to mb-4 */
+  margin-bottom: 1rem;
+  /* Equivalent to mb-4 */
   text-align: left;
+  width: 94%;
 }
 
 .login-form-label {
@@ -199,7 +221,8 @@ const showToast = (message: string, type: string) => {
 
 /* Checkbox and Forgot Password Styles */
 .login-form-options {
-  margin-top: 1rem; /* Equivalent to mt-4 */
+  margin-top: 1rem;
+  /* Equivalent to mt-4 */
 }
 
 .login-form-checkbox {
@@ -225,14 +248,12 @@ const showToast = (message: string, type: string) => {
 .login-form-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--primary-color);
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .login-form-button:hover {

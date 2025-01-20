@@ -1,5 +1,8 @@
 <template>
-  <div class="email-check-container">
+  <div :style="{
+    backgroundColor: getThemeColor('background') || '#000',
+    color: getThemeColor('accent') || '#fff'
+  }" class="email-check-container">
     <!-- Heading -->
     <h1 class="email-check-heading">Check the email</h1>
 
@@ -11,18 +14,37 @@
 
     <!-- Button -->
     <div class="email-check-button-container">
-      <RouterLink to="/login" class="email-check-button">Back to login</RouterLink>
+      <RouterLink to="/login" class="email-check-button" :style="{
+    backgroundColor: getThemeColor('secondary') || '#000',
+    color: getThemeColor('text') || '#fff'
+  }" >Back to login</RouterLink>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { inject } from 'vue'
+// Define the type for the theme
+type Theme = {
+  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary' | 'secondary' | 'accent') => string;
+};
+
+// Inject the global theme
+const theme = inject<Theme>('theme');
+if (!theme) {
+  throw new Error('Theme provider is not available!');
+}
+
+const { getThemeColor } = theme;
 </script>
 
 <style scoped>
 /* Container Styles */
 .email-check-container {
   text-align: center;
+  padding: 10px;
+  border: 2px solid;
+  border-radius: 2%;
 }
 
 /* Heading Styles */
