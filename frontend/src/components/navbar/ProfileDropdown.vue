@@ -80,7 +80,7 @@ withDefaults(
         list: [
           {
             name: 'changePassword',
-            to: 'preferences',
+            to: 'change-password',
             icon: 'KeyOutlined',
           },
         ],

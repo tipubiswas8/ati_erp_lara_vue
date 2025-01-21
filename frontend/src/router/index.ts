@@ -94,6 +94,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/preferences',
         component: () => import('../pages/preferences/Preferences.vue')
       },
+      {
+        name: 'change-password',
+        path: 'password-change',
+        component: () => import('../pages/preferences/modals/ResetPasswordModal.vue')
+      },
     ],
   },
   {

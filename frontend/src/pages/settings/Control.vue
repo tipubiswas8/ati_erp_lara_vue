@@ -7,6 +7,12 @@
       <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
       <p>Light</p>
     </div>
+    <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
+      <p class="text-regularLarge">Text Direction LTR/RTL</p>
+      <p>LTR</p>
+      <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForTextDirection" />
+      <p>RTL</p>
+    </div>
     <div class="notification-item">
       <p class="text-regularLarge">Collaps</p>
       <input type="checkbox" class="switch" v-model="isSidebarMinimized" />
@@ -102,6 +108,12 @@ watch(
   },
   { immediate: true }
 );
+
+
+const direction = ref('rtl');
+const toggleForTextDirection = () => {
+  direction.value = direction.value === 'ltr' ? 'rtl' : 'ltr';
+}
 
 </script>
 

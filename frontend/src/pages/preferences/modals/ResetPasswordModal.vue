@@ -1,44 +1,26 @@
 <template>
-  <div class="custom-modal">
+  <div v-if="isOpenModal" class="custom-modal">
     <div class="modal-inner">
       <!-- Close Button -->
-      <button class="close-button" @click="emits('cancel')">&times;</button>
+      <button class="close-button" @click="closeModal">&times;</button>
       <h1 class="modal-title">Reset password</h1>
       <form ref="form" class="form space-y-6" @submit.prevent="submit">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="form-group">
             <label for="oldPassword" class="form-label">Old password</label>
-            <input
-              v-model="oldPassword"
-              type="password"
-              id="oldPassword"
-              class="input"
-              placeholder="Old password"
-              required
-            />
+            <input v-model="oldPassword" type="password" id="oldPassword" class="input" placeholder="Old password"
+              required />
           </div>
           <div class="hidden md:block"></div>
           <div class="form-group">
             <label for="newPassword" class="form-label">New password</label>
-            <input
-              v-model="newPassword"
-              type="password"
-              id="newPassword"
-              class="input"
-              placeholder="New password"
-              required
-            />
+            <input v-model="newPassword" type="password" id="newPassword" class="input" placeholder="New password"
+              required />
           </div>
           <div class="form-group">
             <label for="repeatNewPassword" class="form-label">Repeat new password</label>
-            <input
-              v-model="repeatNewPassword"
-              type="password"
-              id="repeatNewPassword"
-              class="input"
-              placeholder="Repeat new password"
-              required
-            />
+            <input v-model="repeatNewPassword" type="password" id="repeatNewPassword" class="input"
+              placeholder="Repeat new password" required />
           </div>
         </div>
 
@@ -58,7 +40,7 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="button button-secondary" @click="emits('cancel')">Cancel</button>
+          <button type="button" class="button button-secondary" @click="closeModal">Cancel</button>
           <button type="submit" class="button button-primary">Update Password</button>
         </div>
       </form>
@@ -69,15 +51,22 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
+const isOpenModal = ref<boolean>(true)
 const oldPassword = ref<string>()
 const newPassword = ref<string>()
 const repeatNewPassword = ref<string>()
 const emits = defineEmits(['cancel'])
 
+const closeModal = () => {
+  emits('cancel');
+  isOpenModal.value = false;
+};
+
 const submit = () => {
   if (validate()) {
     showToast("You've successfully changed your password", 'success')
     emits('cancel')
+    isOpenModal.value = false
   }
 }
 
@@ -117,7 +106,8 @@ const showToast = (message: string, color: string) => {
 }
 
 .modal-inner {
-  position: relative; /* To position the close button relative to the modal */
+  position: relative;
+  /* To position the close button relative to the modal */
   background-color: white;
   padding: 20px;
   max-width: 530px;
@@ -216,7 +206,8 @@ const showToast = (message: string, color: string) => {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #4caf50; /* Success color by default */
+  background-color: #4caf50;
+  /* Success color by default */
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
