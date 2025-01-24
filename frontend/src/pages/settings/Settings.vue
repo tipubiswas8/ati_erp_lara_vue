@@ -7,7 +7,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <h3>{{ t('appSetting.theme') }}</h3>
+  <h3 style="margin: 0px; padding: 0px;">{{ t('appSetting.theme') }}</h3>
   <ThemeSwitcher />
   <h3>{{ t('appSetting.generalPreferences') }}</h3>
   <LanguageSwitcher />

@@ -75,7 +75,6 @@ const updateLanguage = (event: Event) => {
 }
 
 .custom-select-wrapper {
-  position: relative;
   display: inline-block;
   width: 20vw;
 }

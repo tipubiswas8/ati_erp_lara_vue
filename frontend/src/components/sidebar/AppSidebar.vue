@@ -3,7 +3,13 @@
     width: isSidebarMinimized ? '100px' : sidebarWidth,
     backgroundColor: getThemeColor('background'),
     color: getThemeColor('text')
-  }">
+  }"
+  
+
+
+  
+  style="margin-top: 100px;"
+  >
     <!-- Top-Level Routes -->
     <div v-for="(route, index) in routes" :key="index" class="sidebar-item"
       :class="{ active: routeHasActiveChild(route) }">

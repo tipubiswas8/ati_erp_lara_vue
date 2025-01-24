@@ -5,7 +5,7 @@
       <!-- Anchor Button -->
       <button class="dropdown-anchor">
         <slot />
-        <img src="/images/user-1.png" style="height: 35px; width: 35px;" alt="User Logo" />
+        <img src="/images/user-1.png" class="user-photo" alt="User Logo" />
       </button>
 
       <!-- Dropdown Content -->
@@ -16,12 +16,7 @@
             {{ t(`user.${group.name}`) }}
           </header>
           <!-- Group Items -->
-          <div
-            v-for="item in group.list"
-            :key="item.name"
-            class="dropdown-item"
-            @click="handleNavigation(item)"
-          >
+          <div v-for="item in group.list" :key="item.name" class="dropdown-item" @click="handleNavigation(item)">
             <span class="dropdown-item-icon">
               <component :is="getAntdIcon(item.icon)" />
             </span>
@@ -131,12 +126,12 @@ const handleNavigation = (item: ProfileListItem) => {
 .dropdown-anchor {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
   background-color: transparent;
   border: none;
   cursor: pointer;
   font-size: 14px;
-  color: #111827; /* Tailwind gray-900 */
+  color: #111827;
+  /* Tailwind gray-900 */
 }
 
 .dropdown-content {
@@ -144,7 +139,8 @@ const handleNavigation = (item: ProfileListItem) => {
   top: 100%;
   left: 0;
   background-color: #ffffff;
-  border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+  border: 1px solid #e5e7eb;
+  /* Tailwind gray-200 */
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   min-width: 240px;
@@ -160,7 +156,8 @@ const handleNavigation = (item: ProfileListItem) => {
   text-transform: uppercase;
   font-weight: bold;
   font-size: 12px;
-  color: #6b7280; /* Tailwind gray-500 */
+  color: #6b7280;
+  /* Tailwind gray-500 */
   padding: 8px 16px;
   opacity: 0.8;
 }
@@ -170,25 +167,61 @@ const handleNavigation = (item: ProfileListItem) => {
   align-items: center;
   padding: 8px 16px;
   font-size: 14px;
-  color: #111827; /* Tailwind gray-900 */
+  color: #111827;
+  /* Tailwind gray-900 */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .dropdown-item:hover {
-  background-color: #f3f4f6; /* Tailwind gray-100 */
+  background-color: #f3f4f6;
+  /* Tailwind gray-100 */
 }
 
 .dropdown-item-icon {
   margin-right: 8px;
   font-size: 18px;
-  color: #4f46e5; /* Tailwind indigo-600 */
+  color: #4f46e5;
+  /* Tailwind indigo-600 */
 }
 
 .dropdown-separator {
   height: 1px;
-  background: #e5e7eb; /* Tailwind gray-200 */
+  background: #e5e7eb;
+  /* Tailwind gray-200 */
   margin: 8px 16px;
 }
-</style>
 
+.user-photo {
+  height: 6vh;
+  width: 3vw;
+}
+
+/* Extra Small Devices (Phones, Portrait Mode) */
+@media (max-width: 575px) {
+
+  /* Styles for phones in portrait mode */
+  .dropdown-anchor {
+    padding-right: 16px;
+  }
+
+  .user-photo {
+    height: 35px;
+    width: 8vw;
+  }
+}
+
+/* Small Devices (Phones, Landscape Mode) */
+@media (min-width: 576px) and (max-width: 767px) {
+
+  /* Styles for phones in landscape mode */
+  .dropdown-anchor {
+    padding-right: 16px;
+  }
+
+  .user-photo {
+    height: 4vh;
+    width: 30px;
+  }
+}
+</style>

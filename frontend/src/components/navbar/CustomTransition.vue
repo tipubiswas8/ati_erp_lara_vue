@@ -1,10 +1,5 @@
 <template>
-  <div 
-    v-if="show" 
-    :class="transitionClasses"
-    @transitionend="handleTransitionEnd"
-    :style="style"
-  >
+  <div v-if="show" :class="computedClasses" @transitionend="handleTransitionEnd" :style="style">
     <slot />
   </div>
 </template>
@@ -12,33 +7,44 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-defineProps({
-  show: { type: Boolean, required: true },
+// Define props for the component
+const props = defineProps({
+  show: { type: Boolean, required: false },
   name: { type: String, default: 'fade' }, // Transition name
   duration: { type: Number, default: 300 }, // Duration in ms
-  style: { type: Object, default: () => ({}) }, // Additional styles
+  style: { type: Object, default: () => ({ padding: '5px', marginTop: '8px' }) }, // Additional styles
 });
 
-const transitionClasses = computed(() => ({
+// Computed property for transition classes
+const computedClasses = computed(() => ({
   [`${props.name}-enter-active`]: props.show,
   [`${props.name}-leave-active`]: !props.show,
 }));
 
+// Handle transition end event
 const handleTransitionEnd = () => {
   if (!props.show) {
-    transitionClasses.value = {};
+    // You might need additional logic here, but resetting classes isn't required
   }
 };
 </script>
 
 <style scoped>
-/* Default transition */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease-in-out;
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active in Vue <2.1.8 */
+  {
+  opacity: 0;
+  transform: scale(0.95);
 }
 
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0;
+/* Add hover effects for elements inside the transition */
+.slot-content {
+  transition: transform 0.3s ease;
+}
+
+.slot-content:hover {
+  transform: scale(1.05);
 }
 </style>

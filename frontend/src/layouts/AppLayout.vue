@@ -13,33 +13,49 @@
     </aside>
 
     <!-- Main Content -->
-    <div style="margin-top: 52px;" class="layout__content" :class="{ minimized: isSidebarMinimized }">
+    <div class="layout__content" :class="{ minimized: isSidebarMinimized }">
       <div class="layout__sidebar-wrapper">
         <div v-if="isFullScreenSidebar" class="layout__close-btn-wrapper">
           <button class="close-btn" @click="onCloseSidebarButtonClick">✖</button>
         </div>
       </div>
-      <AppLayoutNavigation v-if="!isMobile" class="layout__navigation" />
-      <main class="layout__main">
-        <article>
-          <RouterView />
-        </article>
-      </main>
+
+      <div style="border: 10px solid;" :style="{ borderColor: getThemeColor('primary') }">
+        <AppLayoutNavigation v-if="!isMobile" />
+        <main class="layout__main">
+          <article>
+            <RouterView />
+          </article>
+        </main>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
+<script lang="ts" setup>
+import { onMounted, onBeforeUnmount, ref, computed, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import { onBeforeRouteUpdate } from 'vue-router'
-
 import { useGlobalStore } from '../stores/global-store'
-
 import AppLayoutNavigation from '../components/app-layout-navigation/AppLayoutNavigation.vue'
 import AppNavbar from '../components/navbar/AppNavbar.vue'
 import AppSidebar from '../components/sidebar/AppSidebar.vue'
 
+// Inject the theme from the parent component
+type Theme = {
+  setTheme: (theme: 'light' | 'dark') => void;
+  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary') => string;
+  currentTheme: import('vue').ComputedRef<string>;
+};
+
+// Inject the global theme
+const theme = inject<Theme>('theme');
+if (!theme) {
+  throw new Error('Theme provider is not available!');
+}
+
+// Destructure the functions and properties from the theme
+const { getThemeColor } = theme;
 const GlobalStore = useGlobalStore()
 const { isSidebarMinimized } = storeToRefs(GlobalStore)
 
@@ -55,8 +71,9 @@ const windowWidth = ref(window.innerWidth)
 const isMobile = computed(() => windowWidth.value < breakpoints.sm)
 const isTablet = computed(() => windowWidth.value >= breakpoints.sm && windowWidth.value < breakpoints.md)
 
+console.log('mobile', isMobile.value)
 const sidebarWidth = ref('16rem')
-const sidebarMinimizedWidth = ref(undefined)
+const sidebarMinimizedWidth = ref<string | undefined>(undefined);
 
 const onResize = () => {
   windowWidth.value = window.innerWidth
@@ -94,7 +111,9 @@ const onCloseSidebarButtonClick = () => {
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 92vh;
+  margin-top: 8vh;
+  padding-top: 5px;
 }
 
 .layout__navbar {
@@ -116,7 +135,6 @@ const onCloseSidebarButtonClick = () => {
   height: 100vh;
   background-color: #fff;
   width: 16rem;
-  transition: all 0.3s ease;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -161,7 +179,7 @@ const onCloseSidebarButtonClick = () => {
 }
 
 .layout__main {
-  padding: 1rem;
+  padding: 0.5rem;
   background-color: #f4f5f7;
   overflow-y: auto;
 }
@@ -178,7 +196,7 @@ const onCloseSidebarButtonClick = () => {
   }
 }
 
-@media (max-width: 576px) {
+/* @media (max-width: 576px) {
   .layout__sidebar {
     width: 0;
   }
@@ -186,5 +204,52 @@ const onCloseSidebarButtonClick = () => {
   .layout__content {
     margin-left: 0;
   }
+} */
+
+
+/* Extra Small Devices (Phones, Portrait Mode) */
+/* Styles for phones in portrait mode */
+
+/* @media (max-width: 576px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    height: 84vh;
+    margin-top: 16vh;
+    padding-top: 5px;
+  }
+} */
+
+/* Small Devices (Phones, Landscape Mode) */
+/* Styles for phones in landscape mode */
+
+/* @media (min-width: 576px) and (max-width: 767px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    height: 84vh;
+    margin-top: 16vh;
+    padding-top: 5px;
+  }
+} */
+
+/* Medium Devices (Tablets, Portrait Mode) */
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Styles for tablets in portrait mode */
+}
+
+/* Large Devices (Tablets, Landscape Mode, Small Laptops) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  /* Styles for tablets in landscape mode or small laptops */
+}
+
+/* Extra Large Devices (Desktops, Small Screens) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  /* Styles for desktops with small screens */
+}
+
+/* XX-Large Devices (Desktops, Large Screens) */
+@media (min-width: 1400px) {
+  /* Styles for desktops with large screens */
 }
 </style>

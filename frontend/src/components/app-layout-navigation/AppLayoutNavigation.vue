@@ -1,20 +1,18 @@
 <template>
   <div :style="{
-            backgroundColor: getThemeColor('primary'),
-            color: getThemeColor('secondary')
-          }"
-          style="padding: 20px;"
-          >
-    <span style="display: inline; background-color: yellowgreen;">
+    backgroundColor: getThemeColor('primary'),
+    color: getThemeColor('text')
+  }">
+    <span style="display: inline;">
       <!-- Sidebar Toggle Icon -->
       <MenuUnfoldOutlined v-if="isSidebarMinimized" :class="{ 'x-flip': !isSidebarMinimized }" :style="{
         fontSize: '24px',
-        backgroundColor: getThemeColor('background'),
+        backgroundColor: getThemeColor('primary'),
         color: getThemeColor('text')
       }" @click="toggleSidebar" />
       <MenuFoldOutlined v-else :class="{ 'x-flip': !isSidebarMinimized }" :style="{
         fontSize: '24px',
-        backgroundColor: getThemeColor('background'),
+        backgroundColor: getThemeColor('primary'),
         color: getThemeColor('text')
       }" @click="toggleSidebar" />
     </span>
@@ -24,25 +22,25 @@
       <span class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="item.label">
         <template v-if="index !== breadcrumbs.length - 1">
           <router-link :style="{
-            backgroundColor: getThemeColor('background'),
+            backgroundColor: getThemeColor('primary'),
             color: getThemeColor('text')
           }" :to="item.to" class="breadcrumb-link">
             {{ item.label }}
           </router-link>
           <span :style="{
-            backgroundColor: getThemeColor('background'),
+            backgroundColor: getThemeColor('primary'),
             color: getThemeColor('text')
           }" class="breadcrumb-separator">/</span>
         </template>
         <template v-else>
           <span :style="{
-            backgroundColor: getThemeColor('background'),
+            backgroundColor: getThemeColor('primary'),
             color: getThemeColor('text')
           }" class="breadcrumb-current">{{ item.label }}</span>
         </template>
       </span>
     </span>
-    <div style="margin: 5px; padding: 5px; font-size: 16px; font-weight: bold;">{{ lastDisplayName }}</div>
+    <div style="margin-left: 24px; padding: 5px; font-size: 16px; font-weight: bold;">{{ lastDisplayName }}</div>
   </div>
 
 </template>

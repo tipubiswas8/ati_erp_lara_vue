@@ -4,5 +4,4 @@
 </script>
 
 <template>
-  <div>find</div>
 </template>
