@@ -193,5 +193,15 @@
     "light": "Light",
     "blue": "Blue",
     "solarized": "Solarized"
+  },
+  "sitebarItem": {
+    "setting": "Setting",
+    "global": "Global",
+    "lock": "Lock",
+    "control": "Control",
+    "power": "Power",
+    "shrink": "Shrink",
+    "menu": "Menu",
+    "customer": "Customer"
   }
 }

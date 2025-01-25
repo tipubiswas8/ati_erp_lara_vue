@@ -137,8 +137,8 @@ const handleNavigation = (item: ProfileListItem) => {
 .dropdown-content {
   position: absolute;
   top: 100%;
-  left: 0;
-  background-color: #ffffff;
+  right: 10px;
+  background-color: var(--background, #ffffff);
   border: 1px solid #e5e7eb;
   /* Tailwind gray-200 */
   border-radius: 6px;
@@ -167,21 +167,21 @@ const handleNavigation = (item: ProfileListItem) => {
   align-items: center;
   padding: 8px 16px;
   font-size: 14px;
-  color: #111827;
+  color: var(--text, #111827);
   /* Tailwind gray-900 */
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .dropdown-item:hover {
-  background-color: #f3f4f6;
+  background-color: var(--primary, #f3f4f6);
   /* Tailwind gray-100 */
 }
 
 .dropdown-item-icon {
   margin-right: 8px;
   font-size: 18px;
-  color: #4f46e5;
+  color: var(--text, #111827);
   /* Tailwind indigo-600 */
 }
 

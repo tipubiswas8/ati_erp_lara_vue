@@ -1,3 +1,4 @@
+<!-- This is collapse icon and breadcrumb  -->
 <template>
   <div :style="{
     backgroundColor: getThemeColor('primary'),

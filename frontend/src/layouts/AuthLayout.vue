@@ -1,3 +1,4 @@
+<!-- This is auth layout -->
 <template>
   <div v-if="isLgUp" class="layout lg-layout">
     <!-- Left Section -->

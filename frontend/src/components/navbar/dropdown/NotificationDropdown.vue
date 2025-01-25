@@ -12,7 +12,7 @@
           <template v-for="(item, index) in notificationsWithRelativeTime" :key="item.id">
             <li class="list-item">
               <div class="icon-section">
-                <component :is="getAntdIcon(item.icon) || MessageOutlined" style="color: #6c757d;" />
+                <component :is="getAntdIcon(item.icon) || MessageOutlined" />
               </div>
               <div class="text-section">
                 {{ item.message }}
@@ -35,7 +35,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import * as AntdIcons from '@ant-design/icons-vue'
 import { MessageOutlined } from '@ant-design/icons-vue'
@@ -173,20 +173,37 @@ const notificationsWithRelativeTime = computed(() => {
     }
   })
 })
+
+// Close dropdown when clicking outside
+const handleOutsideClick = (event: MouseEvent) => {
+  const dropdown = document.querySelector('.notification-dropdown');
+  if (dropdown && !dropdown.contains(event.target as Node)) {
+    displayDropdown.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('mousedown', handleOutsideClick);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('mousedown', handleOutsideClick);
+});
+
+
 </script>
 
 <style scoped>
 .notification-dropdown {
-  position: relative;
   cursor: pointer;
 }
 
 .notification-dropdown__icon {
-  margin-top: -1.5vh;
   display: flex;
   align-items: center;
-  font-size: 3vh;
-  height: 4vh;
+  margin-top: -1vh;
+  font-size: 3.5vh;
+  height: 4.5vh;
 }
 
 .notification-dropdown__anchor {
@@ -194,12 +211,12 @@ const notificationsWithRelativeTime = computed(() => {
 }
 
 .badge-text {
-  position: relative;
-  /* or absolute if needed */
+  position: absolute;
   display: flex;
   align-items: center;
   background-color: red;
   color: white;
+  margin-top: -1vh;
   font-size: 1.5vh;
   border-radius: 50%;
   margin-left: 6px;
@@ -208,10 +225,6 @@ const notificationsWithRelativeTime = computed(() => {
 }
 
 .dropdown-content {
-  position: absolute;
-  top: 110%; /* Align directly below the notification-dropdown__icon */
-  left: 10%; /* Center align with the icon */
-  transform: translateX(-50%); /* Adjust for perfect centering */
   background-color: var(--background, 'black');
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -228,7 +241,6 @@ const notificationsWithRelativeTime = computed(() => {
 .list {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .list-item {
@@ -240,6 +252,7 @@ const notificationsWithRelativeTime = computed(() => {
 
 .icon-section {
   margin-right: 10px;
+  color: var(--accent, 'white');
 }
 
 .text-section {
@@ -278,18 +291,24 @@ const notificationsWithRelativeTime = computed(() => {
   width: 100%;
 }
 
+.list-item:hover {
+  background-color: var(--secondary, 'green');
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
 
 /* Extra Small Devices (Phones, Portrait Mode) */
 @media (max-width: 575px) {
 
   /* Styles for phones in portrait mode */
   .notification-dropdown__icon {
+    margin-top: -10px;
     font-size: 24px;
     height: 14px;
-    margin-bottom: 12px;
   }
 
   .badge-text {
+    margin-top: -18px;
     font-size: 12px;
     margin-left: 10px;
     padding: 2px 8px;
@@ -308,6 +327,7 @@ const notificationsWithRelativeTime = computed(() => {
   }
 
   .badge-text {
+    margin-top: -1.5vh;
     padding: 0.3vh 0.6vh;
   }
 }

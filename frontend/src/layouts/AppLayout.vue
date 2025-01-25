@@ -1,3 +1,4 @@
+<!-- This is app layout including header, sitebar and footer -->
 <template>
   <div class="layout">
     <!-- Top Navigation -->
@@ -6,10 +7,9 @@
     </header>
 
     <!-- Sidebar -->
-    <aside class="layout__sidebar"
-      :class="{ minimized: isSidebarMinimized, absolute: isMobile, overlay: isMobile && !isSidebarMinimized }"
+    <aside class="layout__sidebar" :class="{ minimized: isSidebarMinimized, absolute: isMobile }"
       @click.self="isSidebarMinimized = true">
-      <AppSidebar :minimized="isSidebarMinimized" :animated="!isMobile" :mobile="isMobile" />
+      <AppSidebar :mobile="isMobile" />
     </aside>
 
     <!-- Main Content -->
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onBeforeUnmount, ref, computed, inject } from 'vue'
+import { onMounted, onBeforeUnmount, ref, computed, inject, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useGlobalStore } from '../stores/global-store'
@@ -58,7 +58,16 @@ if (!theme) {
 const { getThemeColor } = theme;
 const GlobalStore = useGlobalStore()
 const { isSidebarMinimized } = storeToRefs(GlobalStore)
+const watchSidebarMinimized = ref(isSidebarMinimized)
 
+watch(
+  () => isSidebarMinimized,
+  (newValue) => {
+    watchSidebarMinimized.value = newValue.value
+    console.log(watchSidebarMinimized.value)
+  },
+  { deep: true }
+);
 // Custom Breakpoints
 const breakpoints = {
   sm: 576,
@@ -67,19 +76,14 @@ const breakpoints = {
 }
 
 const windowWidth = ref(window.innerWidth)
-
 const isMobile = computed(() => windowWidth.value < breakpoints.sm)
 const isTablet = computed(() => windowWidth.value >= breakpoints.sm && windowWidth.value < breakpoints.md)
-
-console.log('mobile', isMobile.value)
-const sidebarWidth = ref('16rem')
 const sidebarMinimizedWidth = ref<string | undefined>(undefined);
 
 const onResize = () => {
   windowWidth.value = window.innerWidth
   isSidebarMinimized.value = windowWidth.value < breakpoints.md
-  sidebarMinimizedWidth.value = isMobile.value ? '0' : '4.5rem'
-  sidebarWidth.value = isTablet.value ? '100%' : '16rem'
+  sidebarMinimizedWidth.value = isMobile.value ? '0' : '15vw'
 }
 
 onMounted(() => {
@@ -99,7 +103,6 @@ onBeforeRouteUpdate(() => {
 })
 
 const isFullScreenSidebar = computed(() => isTablet.value && !isSidebarMinimized.value)
-
 const onCloseSidebarButtonClick = () => {
   isSidebarMinimized.value = true
 }
@@ -134,8 +137,13 @@ const onCloseSidebarButtonClick = () => {
   left: 0;
   height: 100vh;
   background-color: #fff;
-  width: 16rem;
+  width: 15vw;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.layout__sidebar.is_show_sidebar {
+  display: none;
+  /* This hides the sidebar */
 }
 
 .layout__sidebar.absolute {
@@ -143,17 +151,12 @@ const onCloseSidebarButtonClick = () => {
 }
 
 .layout__sidebar.minimized {
-  width: 4.5rem;
-}
-
-.layout__sidebar.overlay {
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 5vw;
 }
 
 .layout__content {
   flex-grow: 1;
-  margin-left: 16rem;
+  margin-left: 15vw;
   transition: margin-left 0.3s ease;
 }
 
@@ -185,7 +188,28 @@ const onCloseSidebarButtonClick = () => {
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+/* Extra Small Devices (Phones, Portrait Mode) */
+/* Styles for phones in portrait mode */
+
+@media (max-width: 576px) {
+  .layout {
+    margin-top: 5px;
+  }
+
+  .layout__content {
+    margin-top: 40px;
+    margin-left: 0;
+  }
+
+  .layout__content.minimized {
+    margin-left: 0;
+  }
+}
+
+/* Small Devices (Phones, Landscape Mode) */
+/* Styles for phones in landscape mode */
+
+@media (min-width: 576px) and (max-width: 767px) {
   .layout__sidebar {
     width: 100%;
     height: 100%;
@@ -195,43 +219,6 @@ const onCloseSidebarButtonClick = () => {
     margin-left: 0;
   }
 }
-
-/* @media (max-width: 576px) {
-  .layout__sidebar {
-    width: 0;
-  }
-
-  .layout__content {
-    margin-left: 0;
-  }
-} */
-
-
-/* Extra Small Devices (Phones, Portrait Mode) */
-/* Styles for phones in portrait mode */
-
-/* @media (max-width: 576px) {
-  .layout {
-    display: flex;
-    flex-direction: column;
-    height: 84vh;
-    margin-top: 16vh;
-    padding-top: 5px;
-  }
-} */
-
-/* Small Devices (Phones, Landscape Mode) */
-/* Styles for phones in landscape mode */
-
-/* @media (min-width: 576px) and (max-width: 767px) {
-  .layout {
-    display: flex;
-    flex-direction: column;
-    height: 84vh;
-    margin-top: 16vh;
-    padding-top: 5px;
-  }
-} */
 
 /* Medium Devices (Tablets, Portrait Mode) */
 @media (min-width: 768px) and (max-width: 991px) {

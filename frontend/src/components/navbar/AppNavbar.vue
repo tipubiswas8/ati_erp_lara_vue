@@ -1,4 +1,4 @@
-<!-- AppLayout.vue -->
+<!-- This is app header -->
 <template>
   <header v-if="isShowHeader" class="app-layout-navbar">
     <!-- Left section -->
@@ -111,6 +111,7 @@ import { useControlPanelSecond } from '../../stores/control-panel'
 defineProps({
   isMobile: { type: Boolean, default: false },
 })
+
 // Access the store
 const controlPanelSecond = useControlPanelSecond();
 // Destructure the state and actions using storeToRefs
@@ -224,28 +225,6 @@ a:hover,
 a:focus {
   color: inherit;
   text-decoration: none;
-}
-
-/* Fade and scale transition */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-/* .fade-leave-active in Vue <2.1.8 */
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-  transform: scale(0.95);
-}
-
-/* Add hover effects for elements inside the transition */
-.slot-content {
-  transition: transform 0.3s ease;
-}
-
-.slot-content:hover {
-  transform: scale(1.05);
 }
 
 /* Extra Small Devices (Phones, Portrait Mode) */
