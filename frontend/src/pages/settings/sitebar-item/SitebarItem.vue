@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="language-label">Select Sidebar Item</p>
+    <p class="sidebar-label">Select Sidebar Item</p>
     <a-select v-model="sidebarItems" mode="multiple" placeholder="Select items" class="custom-select"
       @change="handleSelectionChange">
       <a-select-option v-for="item in items" :key="item.url" :value="item.name">
@@ -111,7 +111,7 @@ const savedItems = computed(() => {
 </script>
 
 <style scoped>
-.language-label {
+.sidebar-label {
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 10px;

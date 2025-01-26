@@ -3,9 +3,11 @@
   <header v-if="isShowHeader" class="app-layout-navbar">
     <!-- Left section -->
     <div class="left">
+      <!-- Show menu bar and close button when screen is mobile -->
       <CustomTransition :show="isMobile" name="fade" :duration="500" @click="isSidebarMinimized = !isSidebarMinimized">
         <component :is="sidebarIcon" class="sidebar-toggle-icon" :style="{ color: collapseIconColor }" size="24px" />
       </CustomTransition>
+      <!-- Side image/icon/logo -->
       <RouterLink to="/" aria-label="Dashboard">
         <img src="/images/drug-logo.png" class="logo-style" alt="Side Logo" />
       </RouterLink>
@@ -64,7 +66,6 @@
         </RouterLink>
       </div>
     </div>
-
 
     <!-- AppNavbarActions -->
     <div class="custom-icon-profile user-profile">
@@ -140,17 +141,16 @@ const collapseIconColor = computed(() => getThemeColor('border'));
 
 <style scoped>
 .app-layout-navbar {
+  position: fixed;
   width: 100%;
   height: 8vh;
   padding: 5px;
   display: flex;
   align-items: center;
-  /* Center items vertically */
   justify-content: space-between;
-  /* Space between left and right sections */
-  z-index: 2;
   background-color: var(--background);
   color: var(--text);
+  z-index: 1;
 }
 
 .left {
@@ -229,7 +229,6 @@ a:focus {
 
 /* Extra Small Devices (Phones, Portrait Mode) */
 @media (max-width: 575px) {
-
   /* Styles for phones in portrait mode */
   .app-layout-navbar {
     width: 100%;

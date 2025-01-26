@@ -1,6 +1,6 @@
 <!-- This is collapse icon and breadcrumb  -->
 <template>
-  <div :style="{
+  <div class="breadcrumb-style" :style="{
     backgroundColor: getThemeColor('primary'),
     color: getThemeColor('text')
   }">
@@ -143,6 +143,13 @@ const navigateTo = (item: { label: string; to: any }) => {
 /* .x-flip {
   transform: scaleX(-1);
 } */
+
+.breadcrumb-style {
+  position: relative;
+  width: 100%;
+  height: 8vh;
+  margin-top: calc(8vh + 10px);
+}
 
 .custom-breadcrumbs {
   display: inline;

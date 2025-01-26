@@ -1,28 +1,31 @@
 <!-- This is app layout including header, sitebar and footer -->
 <template>
   <div class="layout">
-    <!-- Top Navigation -->
-    <header class="layout__navbar fixed">
+    <!-- Top Navigation/App Header -->
+    <header>
       <AppNavbar :is-mobile="isMobile" />
     </header>
 
-    <!-- Sidebar -->
-    <aside class="layout__sidebar" :class="{ minimized: isSidebarMinimized, absolute: isMobile }"
-      @click.self="isSidebarMinimized = true">
-      <AppSidebar :mobile="isMobile" />
+    <!-- App Sidebar -->
+    <aside @click.self="isSidebarMinimized = true">
+      <AppSidebar :mobile="isMobile" :tablet="isTablet" />
     </aside>
 
     <!-- Main Content -->
+    <!-- For Tablet -->
     <div class="layout__content" :class="{ minimized: isSidebarMinimized }">
-      <div class="layout__sidebar-wrapper">
-        <div v-if="isFullScreenSidebar" class="layout__close-btn-wrapper">
-          <button class="close-btn" @click="onCloseSidebarButtonClick">✖</button>
+      <div class="layout__sidebar__wrapper">
+        <div v-if="isFullScreenSidebar" class="layout__close__btn__wrapper">
+          <button class="close__btn" @click="onCloseSidebarButtonClick">✖</button>
         </div>
       </div>
-
-      <div style="border: 10px solid;" :style="{ borderColor: getThemeColor('primary') }">
-        <AppLayoutNavigation v-if="!isMobile" />
-        <main class="layout__main">
+      <!-- Collapse icon and breadcrumb  -->
+      <AppLayoutNavigation v-if="!isMobile" />
+      <!-- main content border -->
+      <div class="layout__main__border" :class="{ is__show__border: !isSidebarMinimized && isMobile }"
+        :style="{ borderColor: getThemeColor('primary') }">
+        <!-- main content -->
+        <main class="layout__main" :class="{ is__show__main__content: !isSidebarMinimized && isMobile }">
           <article>
             <RouterView />
           </article>
@@ -43,9 +46,7 @@ import AppSidebar from '../components/sidebar/AppSidebar.vue'
 
 // Inject the theme from the parent component
 type Theme = {
-  setTheme: (theme: 'light' | 'dark') => void;
   getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary') => string;
-  currentTheme: import('vue').ComputedRef<string>;
 };
 
 // Inject the global theme
@@ -58,16 +59,7 @@ if (!theme) {
 const { getThemeColor } = theme;
 const GlobalStore = useGlobalStore()
 const { isSidebarMinimized } = storeToRefs(GlobalStore)
-const watchSidebarMinimized = ref(isSidebarMinimized)
 
-watch(
-  () => isSidebarMinimized,
-  (newValue) => {
-    watchSidebarMinimized.value = newValue.value
-    console.log(watchSidebarMinimized.value)
-  },
-  { deep: true }
-);
 // Custom Breakpoints
 const breakpoints = {
   sm: 576,
@@ -78,12 +70,10 @@ const breakpoints = {
 const windowWidth = ref(window.innerWidth)
 const isMobile = computed(() => windowWidth.value < breakpoints.sm)
 const isTablet = computed(() => windowWidth.value >= breakpoints.sm && windowWidth.value < breakpoints.md)
-const sidebarMinimizedWidth = ref<string | undefined>(undefined);
 
 const onResize = () => {
   windowWidth.value = window.innerWidth
   isSidebarMinimized.value = windowWidth.value < breakpoints.md
-  sidebarMinimizedWidth.value = isMobile.value ? '0' : '15vw'
 }
 
 onMounted(() => {
@@ -96,13 +86,15 @@ onBeforeUnmount(() => {
 })
 
 onBeforeRouteUpdate(() => {
+  // Collapse sidebar after route change for Mobile
   if (windowWidth.value < breakpoints.md) {
-    // Collapse sidebar after route change for Mobile
     isSidebarMinimized.value = true
   }
 })
 
+// for Tablet
 const isFullScreenSidebar = computed(() => isTablet.value && !isSidebarMinimized.value)
+
 const onCloseSidebarButtonClick = () => {
   isSidebarMinimized.value = true
 }
@@ -111,93 +103,80 @@ const onCloseSidebarButtonClick = () => {
 
 <style scoped>
 /* Base styles */
+/* full application */
 .layout {
+  position: absolute;
   display: flex;
   flex-direction: column;
-  height: 92vh;
-  margin-top: 8vh;
-  padding-top: 5px;
-}
-
-.layout__navbar {
-  position: relative;
-  z-index: 2;
+  height: 100%;
   width: 100%;
-  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
 }
 
-.layout__navbar.fixed {
-  position: fixed;
-  top: 0;
-}
-
-.layout__sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  background-color: #fff;
-  width: 15vw;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.layout__sidebar.is_show_sidebar {
-  display: none;
-  /* This hides the sidebar */
-}
-
-.layout__sidebar.absolute {
-  position: absolute;
-}
-
-.layout__sidebar.minimized {
-  width: 5vw;
-}
-
+/* main content with border */
 .layout__content {
-  flex-grow: 1;
-  margin-left: 15vw;
+  margin-left: 16vw;
   transition: margin-left 0.3s ease;
 }
 
+/* main content with border */
 .layout__content.minimized {
-  margin-left: 4.5rem;
+  margin-left: 8vw;
 }
 
-.layout__sidebar-wrapper {
+/* main content border */
+.layout__main__border {
+  border: 10px solid;
+}
+
+/* main content border */
+/* hides the border when screen is mobile and show the sitebar */
+.layout__main__border.is__show__border {
+  display: none;
+}
+
+/* main content */
+.layout__main {
+  padding: 0.5rem;
+  overflow-y: auto;
+}
+
+/* main content */
+/* hides the main content when screen is mobile and show the sitebar */
+.layout__main.is__show__main__content {
+  display: none;
+}
+
+/* for tablet */
+.layout__sidebar__wrapper {
   position: relative;
 }
 
-.layout__close-btn-wrapper {
+/* for tablet */
+.layout__close__btn__wrapper {
   display: flex;
   justify-content: flex-end;
   padding: 1rem;
 }
 
-.close-btn {
+/* for tablet */
+.close__btn {
   border: none;
   background-color: transparent;
   font-size: 1.5rem;
   cursor: pointer;
 }
 
-.layout__main {
-  padding: 0.5rem;
-  background-color: #f4f5f7;
-  overflow-y: auto;
-}
 
 /* Responsive styles */
 /* Extra Small Devices (Phones, Portrait Mode) */
 /* Styles for phones in portrait mode */
 
 @media (max-width: 576px) {
-  .layout {
-    margin-top: 5px;
-  }
 
   .layout__content {
-    margin-top: 40px;
+    margin-top: 50px;
     margin-left: 0;
   }
 

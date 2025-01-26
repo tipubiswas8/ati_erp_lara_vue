@@ -1,6 +1,6 @@
 <!-- This is notification and profile dropdown -->
 <template>
-  <NotificationDropdown class="app-navbar-actions__item" />
+  <NotificationDropdown />
   <ProfileDropdown />
 </template>
 
