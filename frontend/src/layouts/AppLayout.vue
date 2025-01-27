@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onBeforeUnmount, ref, computed, inject, watch } from 'vue'
+import { onMounted, onBeforeUnmount, ref, computed, inject } from 'vue'
 import { storeToRefs } from 'pinia'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useGlobalStore } from '../stores/global-store'
@@ -117,7 +117,7 @@ const onCloseSidebarButtonClick = () => {
 /* main content with border */
 .layout__content {
   margin-left: 16vw;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease-in-out;
 }
 
 /* main content with border */
@@ -151,13 +151,13 @@ const onCloseSidebarButtonClick = () => {
 /* for tablet */
 .layout__sidebar__wrapper {
   position: relative;
+  background-color: var(--secondary, green);
 }
 
 /* for tablet */
 .layout__close__btn__wrapper {
   display: flex;
   justify-content: flex-end;
-  padding: 1rem;
 }
 
 /* for tablet */
@@ -189,11 +189,6 @@ const onCloseSidebarButtonClick = () => {
 /* Styles for phones in landscape mode */
 
 @media (min-width: 576px) and (max-width: 767px) {
-  .layout__sidebar {
-    width: 100%;
-    height: 100%;
-  }
-
   .layout__content {
     margin-left: 0;
   }

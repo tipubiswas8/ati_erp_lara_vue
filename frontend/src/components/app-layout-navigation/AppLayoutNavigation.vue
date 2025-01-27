@@ -6,13 +6,12 @@
   }">
     <span style="display: inline;">
       <!-- Sidebar Toggle Icon -->
-      <MenuUnfoldOutlined v-if="isSidebarMinimized" :class="{ 'x-flip': !isSidebarMinimized }" :style="{
-        fontSize: '24px',
-        backgroundColor: getThemeColor('primary'),
-        color: getThemeColor('text')
-      }" @click="toggleSidebar" />
-      <MenuFoldOutlined v-else :class="{ 'x-flip': !isSidebarMinimized }" :style="{
-        fontSize: '24px',
+      <MenuUnfoldOutlined v-if="isSidebarMinimized" :class="{ 'x-flip': !isSidebarMinimized }"
+        class="expand-collapse-icon" :style="{
+          backgroundColor: getThemeColor('primary'),
+          color: getThemeColor('text')
+        }" @click="toggleSidebar" />
+      <MenuFoldOutlined v-else :class="{ 'x-flip': !isSidebarMinimized }" class="expand-collapse-icon" :style="{
         backgroundColor: getThemeColor('primary'),
         color: getThemeColor('text')
       }" @click="toggleSidebar" />
@@ -41,7 +40,7 @@
         </template>
       </span>
     </span>
-    <div style="margin-left: 24px; padding: 5px; font-size: 16px; font-weight: bold;">{{ lastDisplayName }}</div>
+    <div class="menu-name">{{ lastDisplayName }}</div>
   </div>
 
 </template>
@@ -148,6 +147,7 @@ const navigateTo = (item: { label: string; to: any }) => {
   position: relative;
   width: 100%;
   height: 8vh;
+  min-height: 50px;
   margin-top: calc(8vh + 10px);
 }
 
@@ -182,5 +182,18 @@ const navigateTo = (item: { label: string; to: any }) => {
 .breadcrumb-separator {
   margin: 0 8px;
   color: #6c757d;
+}
+
+.expand-collapse-icon {
+  font-size: 24px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.menu-name {
+  margin-left: 34px;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: bold;
 }
 </style>

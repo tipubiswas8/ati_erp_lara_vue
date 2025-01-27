@@ -386,6 +386,7 @@ watch(
 @media (max-width: 576px) {
   .sidebar {
     width: 100vw;
+    margin-top: 50px;
   }
 
   /* .sidebar-item {
@@ -403,8 +404,8 @@ watch(
 
 @media (min-width: 576px) and (max-width: 767px) {
   /* .sidebar {
-    width: 200px;
-  }
+    margin-top: 10vh;
+  } 
 
   .sidebar-item {
     padding: 10px 16px;
