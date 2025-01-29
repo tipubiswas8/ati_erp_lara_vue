@@ -1,10 +1,11 @@
 <!-- This is app sidebar -->
 <template>
-  <div v-if="isShowSidebar" class="sidebar" :class="{ is__show__sidebar: isSidebarMinimized && props.mobile || !isSidebarMinimized && props.tablet }" :style="{
-    width: isSidebarMinimized ? '8vw' : sidebarWidth,
-    backgroundColor: getThemeColor('background'),
-    color: getThemeColor('text')
-  }">
+  <div v-if="isShowSidebar" class="sidebar"
+    :class="{ is__show__sidebar: isSidebarMinimized && props.mobile || !isSidebarMinimized && props.tablet }" :style="{
+      width: isSidebarMinimized ? '8vw' : sidebarWidth,
+      backgroundColor: getThemeColor('background'),
+      color: getThemeColor('text')
+    }">
     <!-- Top-Level Routes -->
     <div v-for="(route, index) in routes" :key="index" class="sidebar-item"
       :class="{ active: routeHasActiveChild(route) }">
@@ -146,19 +147,79 @@
         </div>
       </div>
     </div>
+
+    <div
+      :style="isSidebarMinimized ? { display: 'inline', padding: '10px' } : { display: 'flex', gap: '10px', padding: '10px', justifyContent: 'space-between' }">
+      <div v-for="item in sidebarItems" :key="item.id">
+        <router-link :to="{ name: item.url }">
+          <component :is="getAntdIcon2(item.id)" style="font-size: 24px;" />
+        </router-link>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, inject, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import * as AntdIcons from '@ant-design/icons-vue'
 import navigationRoutes from './NavigationRoutes';
-import { inject } from 'vue'
 import { storeToRefs } from 'pinia';
 import { useGlobalStore } from '../../stores/global-store';
 import { useControlPanelSecond } from '../../stores/control-panel'
+import { useSitebarItems } from '@/pages/settings/sitebar-item/items'; // Import the `useSitebarItems` hook
+// Using the hook to get items
+const { items } = useSitebarItems();
+const sidebarItems = ref<string[]>([]);
+
+// Function to update sidebar items from localStorage
+const updateSidebarItems = () => {
+  const savedItems = localStorage.getItem('sidebarItems');
+  if (savedItems) {
+    try {
+      const savedItemIds: string[] = JSON.parse(savedItems);
+      sidebarItems.value = items.value.filter((item) => savedItemIds.includes(item.id.toString()));
+    } catch (error) {
+      console.error("Error parsing sidebarItems from localStorage:", error);
+    }
+  } else {
+    sidebarItems.value = [];
+  }
+};
+
+// 🔹 Listen for localStorage changes across pages/tabs
+const handleStorageChange = (event: StorageEvent) => {
+  if (event.key === 'sidebarItems') {
+    updateSidebarItems();
+  }
+};
+
+// 🔹 Also detect changes in the **same page** by watching localStorage manually
+const observeLocalStorage = () => {
+  setInterval(() => {
+    updateSidebarItems();
+  }, 500); // Check every 500ms for updates
+};
+
+onMounted(() => {
+  updateSidebarItems();
+  window.addEventListener('storage', handleStorageChange);
+  observeLocalStorage(); // Ensure real-time update within the same tab
+});
+
+onUnmounted(() => {
+  window.removeEventListener('storage', handleStorageChange);
+});
+
+const getAntdIcon2 = (id: string) => {
+  const item = sidebarItems.value.find((item) => item.id.toString() === id);
+  return item && (AntdIcons as Record<string, any>)[item.icon]
+    ? (AntdIcons as Record<string, any>)[item.icon]
+    : AntdIcons.SettingOutlined;
+};
 // Access the store
 // Destructure the state and actions using storeToRefs
 const { isShowSidebar } = storeToRefs(useControlPanelSecond());
@@ -242,6 +303,7 @@ const getAntdIcon = (iconName: string) => {
   }
   return icon || null;
 };
+
 
 // Helper Functions
 const routeHasActiveChild = (section: any) => section.children?.some(({ name }: any) => route.name === name)
