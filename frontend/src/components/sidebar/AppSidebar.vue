@@ -1,7 +1,8 @@
 <!-- This is app sidebar -->
 <template>
   <div v-if="isShowSidebar" class="sidebar"
-    :class="{ is__show__sidebar: isSidebarMinimized && props.mobile || !isSidebarMinimized && props.tablet }" :style="{
+    :class="{ is__show__sidebar: isSidebarMinimized && props.mobile || !isSidebarMinimized && props.tablet, 'hide_header': !isShowHeader }"
+    :style="{
       width: isSidebarMinimized ? '8vw' : sidebarWidth,
       backgroundColor: getThemeColor('background'),
       color: getThemeColor('text')
@@ -150,13 +151,13 @@
 
     <div
       :style="isSidebarMinimized ? { display: 'inline', padding: '10px' } : { display: 'flex', gap: '10px', padding: '10px', justifyContent: 'space-between' }">
-      <div v-for="item in sidebarItems" :key="item.id">
+      <div v-for="(item, index) in sidebarItems" :key="item.id" draggable="true" @dragstart="dragStart(index)"
+        @dragover.prevent @drop="drop(index)">
         <router-link :to="{ name: item.url }">
           <component :is="getAntdIcon2(item.id)" style="font-size: 24px;" />
         </router-link>
       </div>
     </div>
-
 
   </div>
 </template>
@@ -173,7 +174,31 @@ import { useControlPanelSecond } from '../../stores/control-panel'
 import { useSitebarItems } from '@/pages/settings/sitebar-item/items'; // Import the `useSitebarItems` hook
 // Using the hook to get items
 const { items } = useSitebarItems();
-const sidebarItems = ref<string[]>([]);
+
+interface SidebarItem {
+  id: string;
+  name: string;
+  url: string;
+  icon: keyof typeof AntdIcons;
+}
+
+const sidebarItems = ref<SidebarItem[]>([]);
+let draggedIndex: number | null = null;
+
+const dragStart = (index: number) => {
+  draggedIndex = index;
+};
+
+const drop = (index: number) => {
+  if (draggedIndex === null || draggedIndex === index) return;
+  const items = [...sidebarItems.value];
+  const draggedItem = items.splice(draggedIndex, 1)[0];
+  items.splice(index, 0, draggedItem);
+  sidebarItems.value = items;
+  draggedIndex = null;
+  // Save new order after reordering
+  saveSidebarOrder();
+};
 
 // Function to update sidebar items from localStorage
 const updateSidebarItems = () => {
@@ -181,13 +206,23 @@ const updateSidebarItems = () => {
   if (savedItems) {
     try {
       const savedItemIds: string[] = JSON.parse(savedItems);
-      sidebarItems.value = items.value.filter((item) => savedItemIds.includes(item.id.toString()));
+      // Sort sidebarItems based on savedItemIds order
+      sidebarItems.value = savedItemIds
+        .map(id => items.value.find(item => item.id === id))
+        .filter(item => item !== undefined) as SidebarItem[];
+
     } catch (error) {
       console.error("Error parsing sidebarItems from localStorage:", error);
     }
   } else {
-    sidebarItems.value = [];
+    sidebarItems.value = items.value; // Default order if localStorage is empty
   }
+};
+
+// Function to save the current order of sidebar items in localStorage
+const saveSidebarOrder = () => {
+  const orderedIds = sidebarItems.value.map(item => item.id);
+  localStorage.setItem('sidebarItems', JSON.stringify(orderedIds));
 };
 
 // 🔹 Listen for localStorage changes across pages/tabs
@@ -222,7 +257,7 @@ const getAntdIcon2 = (id: string) => {
 };
 // Access the store
 // Destructure the state and actions using storeToRefs
-const { isShowSidebar } = storeToRefs(useControlPanelSecond());
+const { isShowHeader, isShowSidebar } = storeToRefs(useControlPanelSecond());
 // Sidebar State
 const { isSidebarMinimized } = storeToRefs(useGlobalStore());
 
@@ -385,6 +420,10 @@ watch(
   margin-top: 8vh;
   overflow: auto;
   transition: width 0.3s ease-in-out;
+}
+
+.hide_header {
+  margin-top: 0;
 }
 
 /* app sidebar show or not */

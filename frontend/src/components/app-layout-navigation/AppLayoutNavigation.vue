@@ -1,10 +1,10 @@
 <!-- This is collapse icon and breadcrumb  -->
 <template>
-  <div class="breadcrumb-style" :style="{
+  <div class="breadcrumb-style" :class="{ 'hide-header': !isShowHeader }" :style="{
     backgroundColor: getThemeColor('primary'),
     color: getThemeColor('text')
   }">
-    <span style="display: inline;">
+    <span :style="isShowSidebar ? {display: 'inline'} : {display: 'none'}">
       <!-- Sidebar Toggle Icon -->
       <MenuUnfoldOutlined v-if="isSidebarMinimized" :class="{ 'x-flip': !isSidebarMinimized }"
         class="expand-collapse-icon" :style="{
@@ -53,7 +53,12 @@ import { storeToRefs } from 'pinia';
 import { useGlobalStore } from '../../stores/global-store';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import navigationRoutes from '../sidebar/NavigationRoutes'; // Import NavigationRoutes
+import { useControlPanelSecond } from '../../stores/control-panel'
 import { inject } from 'vue'
+// Access the store
+const controlPanelSecond = useControlPanelSecond();
+// Destructure the state and actions using storeToRefs
+const { isShowHeader, isShowSidebar } = storeToRefs(controlPanelSecond);
 // Define the type for the theme
 type Theme = {
   setTheme: (theme: 'light' | 'dark' | 'blue' | 'solarized') => void;
@@ -144,11 +149,23 @@ const navigateTo = (item: { label: string; to: any }) => {
 } */
 
 .breadcrumb-style {
-  position: relative;
+  position: sticky;
   width: 100%;
   height: 8vh;
-  min-height: 50px;
+  min-height: 60px;
   margin-top: calc(8vh + 10px);
+  top: calc(8vh + 10px);
+  z-index: 99;
+}
+
+.hide-header {
+  position: sticky;
+  width: 100%;
+  height: 8vh;
+  min-height: 60px;
+  margin-top: 0;
+  top: 0;
+  z-index: 99;
 }
 
 .custom-breadcrumbs {

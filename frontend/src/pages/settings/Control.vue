@@ -1,32 +1,42 @@
 <template>
   <div class="flex flex-col p-4 bg-backgroundSecondary rounded-lg">
     <h3 class="h3 mb-6">General Settings</h3>
+    <hr class="divider" />
     <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
       <p class="text-regularLarge">Theme Dark/Light</p>
       <p>Dark</p>
       <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
       <p>Light</p>
     </div>
+    <hr class="divider" />
+
     <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
       <p class="text-regularLarge">Text Direction LTR/RTL</p>
       <p>LTR</p>
-      <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForTextDirection" />
+      <input type="checkbox" class="switch" @click="toggleForTextDirection" />
       <p>RTL</p>
     </div>
+    <hr class="divider" />
+
     <div class="notification-item">
       <p class="text-regularLarge">Collaps</p>
-      <input type="checkbox" class="switch" v-model="isSidebarMinimized" />
+      <input type="checkbox" class="switch" v-model="isSidebarMinimized" :disabled="!isShowSidebar" />
     </div>
+    <hr class="divider" />
+
     <div class="notification-item">
       <p class="text-regularLarge">Show Header</p>
       <input type="checkbox" class="switch" :checked="isShowHeader" @click="isShowHeader = !isShowHeader" />
     </div>
+    <hr class="divider" />
+
     <div class="notification-item">
       <p class="text-regularLarge">Show Sidebar</p>
       <input type="checkbox" class="switch" v-model="isShowSidebar" />
     </div>
+    <hr class="divider" />
 
-    <div v-for="(item, key) in controlItems" :key="key" class="group">
+    <div v-for="(item, key) in controlItems" :key="key">
       <div class="notification-item">
         <p class="text-regularLarge">{{ item.name }}</p>
         <div class="tooltip-container">
@@ -39,7 +49,7 @@
           </div>
         </div>
       </div>
-      <hr class="divider group-last:hidden" />
+      <hr class="divider" />
     </div>
   </div>
 </template>
@@ -175,10 +185,7 @@ const toggleForTextDirection = () => {
 
 /* Divider */
 .divider {
-  border: none;
   border-top: 1px solid #e0e0e0;
-  /* Example border color */
-  margin: 1rem 0;
 }
 
 /* Notification item container */
@@ -188,6 +195,7 @@ const toggleForTextDirection = () => {
   justify-content: space-between;
   /* Ensures content is evenly distributed */
   overflow: hidden;
+  margin-left: 5px;
 }
 
 /* Tooltip */

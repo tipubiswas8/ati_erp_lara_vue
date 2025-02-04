@@ -13,7 +13,7 @@
 
     <!-- Main Content -->
     <!-- For Tablet -->
-    <div class="layout__content" :class="{ minimized: isSidebarMinimized }">
+    <div class="layout__content" :class="{ minimized: isSidebarMinimized, 'hide__sidebar': !isShowSidebar }">
       <div class="layout__sidebar__wrapper">
         <div v-if="isFullScreenSidebar" class="layout__close__btn__wrapper">
           <button class="close__btn" @click="onCloseSidebarButtonClick">✖</button>
@@ -43,6 +43,10 @@ import { useGlobalStore } from '../stores/global-store'
 import AppLayoutNavigation from '../components/app-layout-navigation/AppLayoutNavigation.vue'
 import AppNavbar from '../components/navbar/AppNavbar.vue'
 import AppSidebar from '../components/sidebar/AppSidebar.vue'
+import { useControlPanelSecond } from '@/stores/control-panel'
+const controlPanelSecond = useControlPanelSecond();
+// Destructure the state and actions using storeToRefs
+const { isShowSidebar } = storeToRefs(controlPanelSecond);
 
 // Inject the theme from the parent component
 type Theme = {
@@ -118,6 +122,10 @@ const onCloseSidebarButtonClick = () => {
 .layout__content {
   margin-left: 16vw;
   transition: margin-left 0.3s ease-in-out;
+}
+
+.hide__sidebar {
+  margin-left: 0;
 }
 
 /* main content with border */
