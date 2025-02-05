@@ -32,6 +32,10 @@
         </main>
       </div>
     </div>
+    <!-- Footer -->
+    <div v-if="isShowFooter">
+      <FooterContainer />
+    </div>
   </div>
 </template>
 
@@ -44,6 +48,9 @@ import AppLayoutNavigation from '../components/app-layout-navigation/AppLayoutNa
 import AppNavbar from '../components/navbar/AppNavbar.vue'
 import AppSidebar from '../components/sidebar/AppSidebar.vue'
 import { useControlPanelSecond } from '@/stores/control-panel'
+import FooterContainer from '../components/footer/FooterContainer.vue'
+
+const isShowFooter = ref<boolean>(true);
 const controlPanelSecond = useControlPanelSecond();
 // Destructure the state and actions using storeToRefs
 const { isShowSidebar } = storeToRefs(controlPanelSecond);

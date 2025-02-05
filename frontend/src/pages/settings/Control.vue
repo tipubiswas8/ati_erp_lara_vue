@@ -2,6 +2,9 @@
   <div class="flex flex-col p-4 bg-backgroundSecondary rounded-lg">
     <h3 class="h3 mb-6">General Settings</h3>
     <hr class="divider" />
+
+
+
     <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
       <p class="text-regularLarge">Theme Dark/Light</p>
       <p>Dark</p>
@@ -51,6 +54,24 @@
       </div>
       <hr class="divider" />
     </div>
+
+    <div class="notification-item">
+      <p class="text-regularLarge">Footer</p>
+      <label class="footer-input-and-label" for="footer_one">Footer One
+        <input type="radio" id="footer_one" name="footer" @click="setFooter(1)" :checked="selectedFooter === 1" />
+      </label>
+      <label class="footer-input-and-label" for="footer_two">Footer Two
+        <input type="radio" id="footer_two" name="footer" @click="setFooter(2)" :checked="selectedFooter === 2" />
+      </label>
+      <label class="footer-input-and-label" for="footer_three">Footer Three
+        <input type="radio" id="footer_three" name="footer" @click="setFooter(3)" :checked="selectedFooter === 3" />
+      </label>
+      <label class="footer-input-and-label" for="footer_four">Footer Four
+        <input type="radio" id="footer_four" name="footer" @click="setFooter(4)" :checked="selectedFooter === 4" />
+      </label>
+    </div>
+    <hr class="divider" />
+
   </div>
 </template>
 
@@ -60,6 +81,7 @@ import { useControlPanelStore, useControlPanelSecond } from '../../stores/contro
 import { useGlobalStore } from '../../stores/global-store';
 import { storeToRefs } from 'pinia';
 import { inject, ref, watch } from 'vue';
+import { selectedFooter, setFooter } from '@/stores/footer-store';
 
 const { isSidebarMinimized } = storeToRefs(useGlobalStore());
 const { controlItems } = useControlPanelStore();
@@ -229,5 +251,9 @@ button:disabled,
 input:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.footer-input-and-label {
+  padding: 15px;
 }
 </style>
