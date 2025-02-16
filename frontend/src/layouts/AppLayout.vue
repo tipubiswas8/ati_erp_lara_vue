@@ -143,6 +143,8 @@ const onCloseSidebarButtonClick = () => {
 /* main content border */
 .layout__main__border {
   border: 10px solid;
+  /* footer height */
+  margin-bottom: 8vh;
 }
 
 /* main content border */

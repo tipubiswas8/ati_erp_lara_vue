@@ -4,7 +4,7 @@
     backgroundColor: getThemeColor('primary'),
     color: getThemeColor('text')
   }">
-    <span :style="isShowSidebar ? {display: 'inline'} : {display: 'none'}">
+    <span :style="isShowSidebar ? { display: 'inline' } : { display: 'none' }">
       <!-- Sidebar Toggle Icon -->
       <MenuUnfoldOutlined v-if="isSidebarMinimized" :class="{ 'x-flip': !isSidebarMinimized }"
         class="expand-collapse-icon" :style="{
@@ -152,7 +152,8 @@ const navigateTo = (item: { label: string; to: any }) => {
   position: sticky;
   width: 100%;
   height: 8vh;
-  min-height: 60px;
+  min-height: 70px;
+  /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
   margin-top: calc(8vh + 10px);
   top: calc(8vh + 10px);
   z-index: 99;

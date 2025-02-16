@@ -3,8 +3,6 @@
     <h3 class="h3 mb-6">General Settings</h3>
     <hr class="divider" />
 
-
-
     <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
       <p class="text-regularLarge">Theme Dark/Light</p>
       <p>Dark</p>

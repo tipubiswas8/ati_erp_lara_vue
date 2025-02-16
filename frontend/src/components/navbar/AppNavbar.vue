@@ -144,6 +144,7 @@ const collapseIconColor = computed(() => getThemeColor('border'));
   position: fixed;
   width: 100%;
   height: 8vh;
+  min-height: 20px;
   padding: 5px;
   display: flex;
   align-items: center;

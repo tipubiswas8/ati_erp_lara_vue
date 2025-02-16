@@ -1,22 +1,15 @@
 <template>
-  <div
-    v-if="isShowFooter"
-    style="position: fixed; bottom: 0; left: 0; width: 100%; margin: 0;"
-    :style="{
-      backgroundColor: getThemeColor('background') || '#000',
-      color: getThemeColor('accent') || '#fff',
-      fontFamily: currentThemeFontFamily
-    }"
-  >
+  <div v-if="isShowFooter" :style="{
+    backgroundColor: getThemeColor('background') || '#000',
+    // backgroundColor: 'aqua',
+    color: getThemeColor('accent') || '#fff',
+    fontFamily: currentThemeFontFamily
+  }" class="footer-one-style">
     <p style="text-align: center; font-size: 14px;">{{ copyrightText }}</p>
   </div>
-      <!-- Custom Toasts -->
+  <!-- Custom Toasts -->
   <div class="toast-container">
-    <div
-      v-for="toast in toasts"
-      :key="toast.id"
-      class="toast"
-    >
+    <div v-for="toast in toasts" :key="toast.id" class="toast">
       {{ toast.message }}
     </div>
   </div>
@@ -109,6 +102,16 @@ watch(
 </script>
 
 <style>
+.footer-one-style {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: calc(8vh - 10px);
+  padding: 5px;
+  min-height: 20px;
+}
+
 /* Toast Container */
 .toast-container {
   position: fixed;
@@ -137,6 +140,7 @@ watch(
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -148,6 +152,7 @@ watch(
     opacity: 1;
     transform: translateY(0);
   }
+
   to {
     opacity: 0;
     transform: translateY(10px);

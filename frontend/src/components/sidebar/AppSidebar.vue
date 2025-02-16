@@ -407,6 +407,8 @@ watch(
   },
   { immediate: true }
 )
+
+import { selectedFooter, setFooter } from '@/stores/footer-store';
 </script>
 
 <style scoped>
@@ -416,8 +418,10 @@ watch(
   position: fixed;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  margin-top: 8vh;
+  /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
+  height: calc(84vh - 10px);
+  margin-top: calc(8vh + 10px);
+  margin-bottom: 8hv;
   overflow: auto;
   transition: width 0.3s ease-in-out;
 }
