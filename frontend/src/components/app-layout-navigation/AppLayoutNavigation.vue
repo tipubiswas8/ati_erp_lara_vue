@@ -156,17 +156,13 @@ const navigateTo = (item: { label: string; to: any }) => {
   /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
   margin-top: calc(8vh + 10px);
   top: calc(8vh + 10px);
-  z-index: 99;
+  z-index: 1;
 }
 
 .hide-header {
-  position: sticky;
-  width: 100%;
-  height: 8vh;
   min-height: 60px;
   margin-top: 0;
   top: 0;
-  z-index: 99;
 }
 
 .custom-breadcrumbs {

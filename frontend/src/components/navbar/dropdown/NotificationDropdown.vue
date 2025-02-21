@@ -221,7 +221,7 @@ onUnmounted(() => {
   border-radius: 50%;
   margin-left: 6px;
   padding: 0.5vh 1vh;
-  z-index: 5;
+  z-index: 2;
 }
 
 .dropdown-content {
@@ -229,7 +229,7 @@ onUnmounted(() => {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
+  z-index: 2;
   width: 10vw;
   height: 40vh;
   padding: 10px;

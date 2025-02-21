@@ -144,7 +144,7 @@ const handleNavigation = (item: ProfileListItem) => {
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   min-width: 240px;
-  z-index: 1000;
+  z-index: 2;
   padding: 8px 0;
 }
 

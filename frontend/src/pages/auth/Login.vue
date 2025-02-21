@@ -271,7 +271,7 @@ const showToast = (message: string, type: string) => {
   color: #fff;
   border-radius: 5px;
   font-size: 1rem;
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .toast.success {

@@ -1,0 +1,14 @@
+// layout
+components\navbar\app-navbar(header) .app-layout-navbar z-index: 1
+components\app-layout-navigation\app-layout-navigation(breadcrumb) .breadcrumb-style z-index: 1 and .hide-header z-index: 1
+
+// header item (profile and notification)
+components\navbar\dropdown\profile-dropdown .dropdown-content z-index: 2
+components\navbar\dropdown\notification-dropdown .dropdown-content z-index: 2 and .badge-text z-index: 2
+
+// toast and tooltip
+components\footer\footer-one .toast-container z-index: 1000
+pages\settings\control .tooltip z-index: 1000
+pages\auth\signup .toast message z-index: 1000
+pages\auth\login .toast message z-index: 1000
+pages\preferences\setting .toast-container z-index: 1000
