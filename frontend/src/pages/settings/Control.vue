@@ -11,11 +11,16 @@
     </div>
     <hr class="divider" />
 
-    <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
+    <div class="notification-item">
       <p class="text-regularLarge">Text Direction LTR/RTL</p>
-      <p>LTR</p>
-      <input type="checkbox" class="switch" @click="toggleForTextDirection" />
-      <p>RTL</p>
+      <label class="footer-input-and-label" for="left_to_right">Left to Right
+        <input type="radio" id="left_to_right" name="text_direction" @click="setTextDirection('ltr')"
+          :checked="currentTextDirection === 'ltr'" />
+      </label>
+      <label class="footer-input-and-label" for="right_to_left">Right to Left
+        <input type="radio" id="right_to_left" name="text_direction" @click="setTextDirection('rtl')"
+          :checked="currentTextDirection === 'rtl'" />
+      </label>
     </div>
     <hr class="divider" />
 
@@ -37,6 +42,21 @@
     </div>
     <hr class="divider" />
 
+    <div v-if="isShowSidebar">
+      <div class="notification-item">
+        <p class="text-regularLarge">Sidebar Position</p>
+        <label class="footer-input-and-label" for="sidebar_left">Left
+          <input type="radio" id="sidebar_left" name="sidebar_position" @click="setSidebar('left')"
+            :checked="sidebarCurrentPosition === 'left'" />
+        </label>
+        <label class="footer-input-and-label" for="sidebar_right">Right
+          <input type="radio" id="sidebar_right" name="sidebar_position" @click="setSidebar('right')"
+            :checked="sidebarCurrentPosition === 'right'" />
+        </label>
+      </div>
+      <hr class="divider" />
+    </div>
+
     <div v-for="(item, key) in controlItems" :key="key">
       <div class="notification-item">
         <p class="text-regularLarge">{{ item.name }}</p>
@@ -54,7 +74,7 @@
     </div>
 
     <div class="notification-item">
-      <p class="text-regularLarge">Footer</p>
+      <p class="text-regularLarge">Set Footer</p>
       <label class="footer-input-and-label" for="footer_one">Footer One
         <input type="radio" id="footer_one" name="footer" @click="setFooter(1)" :checked="selectedFooter === 1" />
       </label>
@@ -80,6 +100,7 @@ import { useGlobalStore } from '../../stores/global-store';
 import { storeToRefs } from 'pinia';
 import { inject, ref, watch } from 'vue';
 import { selectedFooter, setFooter } from '@/stores/footer-store';
+import { sidebarCurrentPosition, setSidebar, currentTextDirection, setTextDirection } from '@/stores/control-panel';
 
 const { isSidebarMinimized } = storeToRefs(useGlobalStore());
 const { controlItems } = useControlPanelStore();
@@ -138,12 +159,6 @@ watch(
   },
   { immediate: true }
 );
-
-
-const direction = ref('rtl');
-const toggleForTextDirection = () => {
-  direction.value = direction.value === 'ltr' ? 'rtl' : 'ltr';
-}
 
 </script>
 

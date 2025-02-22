@@ -21,12 +21,13 @@ const { t, locale } = useI18n()
 // Define the language map
 type LanguageMap = Record<string, string>
 const languages: LanguageMap = {
+  ar: 'العربية',
   en: 'English',
   bn: 'বাংলা',
-  es: 'Spanish',
+  es: 'Español',
   br: 'Português',
-  cn: 'Simplified Chinese',
-  ir: 'Persian',
+  cn: '简体中文',
+  ir: 'فارسی'
 }
 
 // Convert the language map into options for the <select>

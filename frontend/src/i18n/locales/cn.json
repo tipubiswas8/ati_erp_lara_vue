@@ -1,20 +1,20 @@
 {
   "auth": {
     "agree": "我同意",
-    "createAccount": "创建账号",
-    "createNewAccount": "创建新账号",
-    "email": "电子邮箱",
+    "createAccount": "创建账户",
+    "createNewAccount": "创建新账户",
+    "email": "电子邮件",
     "login": "登录",
     "password": "密码",
-    "recover_password": "恢复密码",
+    "recover_password": "找回密码",
     "sign_up": "注册",
-    "keep_logged_in": "保持登录",
-    "termsOfUse": "使用条款",
+    "keep_logged_in": "保持登录状态",
+    "termsOfUse": "使用条款。",
     "reset_password": "重置密码"
   },
   "404": {
-    "title": "此页面已去钓鱼",
-    "text": "如果您觉得这不对，请给我们发送消息",
+    "title": "此页面已去钓鱼了。",
+    "text": "如果您觉得这不对，请给我们发送消息至 ",
     "back_button": "返回仪表板"
   },
   "typography": {
@@ -24,66 +24,14 @@
   "dashboard": {
     "versions": "版本",
     "setupRemoteConnections": "设置远程连接",
-    "currentVisitors": "当前访问者",
-    "charts": {
-      "trendyTrends": "流行趋势",
-      "showInMoreDetail": "显示更多细节",
-      "showInLessDetail": "显示较少细节",
-      "loadingSpeed": "加载速度",
-      "topContributors": "主要贡献者",
-      "showNextFive": "显示接下来的五个",
-      "commits": "提交"
-    },
-    "info": {
-      "componentRichTheme": "组件丰富的主题",
-      "completedPullRequests": "已完成的拉取请求",
-      "users": "用户",
-      "points": "点数",
-      "units": "单位",
-      "exploreGallery": "探索画廊",
-      "viewLibrary": "查看库",
-      "commits": "提交",
-      "components": "组件",
-      "teamMembers": "团队成员"
-    },
-    "tabs": {
-      "overview": {
-        "title": "概述",
-        "built": "使用 Vue.js 框架构建",
-        "free": "对所有人完全免费",
-        "fresh": "新鲜和清新的设计",
-        "mobile": "响应式且优化移动",
-        "components": "大量有用的组件",
-        "nojQuery": "完全不使用 jQuery"
-      },
-      "billingAddress": {
-        "title": "账单地址",
-        "personalInfo": "个人信息",
-        "firstName": "名字 & 姓氏",
-        "email": "电子邮箱",
-        "address": "地址",
-        "companyInfo": "公司信息",
-        "city": "城市",
-        "country": "国家",
-        "infiniteConnections": "无限连接",
-        "addConnection": "添加连接"
-      },
-      "bankDetails": {
-        "title": "银行详情",
-        "detailsFields": "详情字段",
-        "bankName": "银行名称",
-        "accountName": "账户名称",
-        "sortCode": "排序代码",
-        "accountNumber": "账号",
-        "notes": "备注",
-        "sendDetails": "发送详情"
-      }
-    },
+    "currentVisitors": "当前访客",
     "navigationLayout": "导航布局",
-    "topBarButton": "顶部按钮",
-    "sideBarButton": "侧边按钮"
+    "topBarButton": "顶部栏",
+    "sideBarButton": "侧边栏",
+    "home": "首页"
   },
   "language": {
+    "language": "语言",
     "brazilian_portuguese": "葡萄牙语",
     "english": "英语",
     "spanish": "西班牙语",
@@ -91,41 +39,57 @@
     "persian": "波斯语"
   },
   "menu": {
-    "auth": "授权",
+    "auth": "认证",
     "buttons": "按钮",
     "timelines": "时间线",
     "dashboard": "仪表板",
-    "billing": "计费",
     "login": "登录",
-    "signUp": "注册",
-    "preferences": "偏好",
-    "payments": "支付",
-    "pricing-plans": "定价计划",
-    "login-singup": "登录/注册",
-    "404": "404 页面",
-    "faq": "常见问题解答"
+    "preferences": "账户偏好",
+    "settings": "应用程序设置",
+    "signup": "注册",
+    "recover-password": "找回密码",
+    "recover-password-email": "找回密码邮件",
+    "404": "404",
+    "faq": "常见问题",
+    "users": "用户",
+    "employees": "员工",
+    "organizations": "组织",
+    "test": "测试",
+    "projects": "项目",
+    "security-access": "安全访问",
+    "hr": "人力资源",
+    "role": "角色",
+    "permission": "权限",
+    "sub-menu": {
+      "grand-submenu-one": "子菜单1",
+      "grand-submenu-two": "子菜单2",
+      "grand-submenu-three": "子菜单3",
+      "grand-submenu-four": "子菜单4"
+    }
   },
   "messages": {
     "all": "查看所有消息",
-    "new": "来自 {name} 的新消息",
+    "new": "{name}的新消息",
     "mark_as_read": "标记为已读"
   },
   "navbar": {
-    "messageUs": "需要Web开发帮助吗？请联系我们。",
-    "repository": "GitHub 仓库"
+    "messageUs": "网页开发咨询：",
+    "repository": "GitHub仓库"
   },
   "notifications": {
     "all": "查看所有通知",
-    "mark_as_read": "标为已读",
-    "sentMessage": "{name} 给你发了一条消息",
-    "uploadedZip": "{name} 上传了一个新的 Zip 文件 {type}",
-    "startedTopic": "{name} 开始了一个新话题"
+    "less": "查看更少通知",
+    "mark_as_read": "标记为已读",
+    "sentMessage": "给你发送了一条消息",
+    "uploadedZip": "上传了一个新的Zip文件，类型为{type}",
+    "startedTopic": "开始了一个新话题"
   },
   "user": {
-    "language": "修改语言",
-    "logout": "登出",
-    "logout": "登出",
-    "profile": "我的资料",
+    "language": "更改语言",
+    "profile": "个人资料",
+    "logout": "退出登录",
+    "changePassword": "更改密码",
+    "signOut": "退出",
     "settings": "设置",
     "billing": "账单",
     "faq": "常见问题",
@@ -135,50 +99,109 @@
     "explore": "探索"
   },
   "treeView": {
-    "basic": "基本型",
+    "basic": "基本",
     "icons": "图标",
     "selectable": "可选择",
     "editable": "可编辑",
     "advanced": "高级"
   },
   "chat": {
-    "title": "聊天"
+    "title": "聊天",
+    "sendButton": "发送"
+  },
+  "spacingPlayground": {
+    "value": "值",
+    "margin": "外边距",
+    "padding": "内边距"
+  },
+  "spacing": {
+    "title": "间距"
   },
   "cards": {
     "cards": "卡片",
-    "fixed": "固定的",
-    "floating": "浮动的",
-    "contentText": "独特的斑马条纹使它们成为人们最熟悉的动物之一。",
+    "fixed": "固定",
+    "floating": "浮动",
+    "contentText": "斑马独特的条纹使它们成为人们最熟悉的动物之一。",
+    "contentTextLong": "斑马独特的条纹使它们成为人们最熟悉的动物之一。它们生活在各种栖息地中，如草原、稀树草原、林地、荆棘灌木丛、山脉和沿海丘陵。各种人为因素对斑马种群产生了严重影响，特别是为了皮毛的狩猎和栖息地的破坏。细纹斑马和山斑马濒临灭绝。而平原斑马数量更多，其中一个亚种，斑驴。",
     "rowHeight": "行高",
     "title": {
-      "dark": "暗色背景",
-      "bright": "亮色卡片",
-      "titleOnImageNoOverlay": "图像上的标题，但没有叠加",
-      "normal": "标准卡",
-      "overlayAndTextOnImage": "图像上有覆盖和文本的卡片",
-      "stripeNoImage": "无图像条纹卡"
+      "default": "默认",
+      "withControls": "带控件",
+      "customHeader": "自定义标题",
+      "withoutHeader": "无标题",
+      "withImage": "带图片",
+      "withTitleOnImage": "图片上带标题",
+      "withCustomTitleOnImage": "图片上带自定义标题",
+      "withStripe": "带条纹",
+      "withBackground": "带背景"
     },
     "button": {
       "main": "主要",
-      "cancel": "取消"
+      "cancel": "取消",
+      "showMore": "显示更多",
+      "readMore": "阅读更多"
     },
     "link": {
       "edit": "编辑",
       "setAsDefault": "设为默认",
       "delete": "删除",
-      "traveling": "Traveling",
+      "traveling": "旅行",
       "france": "法国",
       "review": "评论",
-      "feedback": "反馈信息",
+      "feedback": "留下反馈",
       "readFull": "阅读全文",
-      "secondaryAction": "第二行为",
-      "action1": "行为 1",
-      "action2": "行为 2"
+      "secondaryAction": "次要操作",
+      "action1": "操作1",
+      "action2": "操作2"
     }
   },
+  "colors": {
+    "themeColors": "主题颜色",
+    "extraColors": "额外颜色",
+    "gradients": {
+      "basic": {
+        "title": "按钮渐变"
+      },
+      "hovered": {
+        "title": "悬停按钮渐变",
+        "text": "悬停状态下，原始样式（渐变或纯色）变亮15%。"
+      },
+      "pressed": {
+        "title": "按下按钮渐变",
+        "text": "按下状态下，原始样式（渐变或纯色）变暗15%。"
+      }
+    }
+  },
+  "tabs": {
+    "alignment": "标签对齐",
+    "overflow": "标签溢出",
+    "hidden": "隐藏滑块的标签",
+    "grow": "标签扩展"
+  },
   "helpAndSupport": "帮助与支持",
-  "aboutVuesticAdmin": "关于 Vuestic Admin",
+  "aboutVuesticAdmin": "关于Vuestic Admin",
+  "supportAndConsulting": "支持与咨询",
   "search": {
     "placeholder": "搜索..."
+  },
+  "appSetting": {
+    "theme": "主题",
+    "generalPreferences": "通用偏好"
+  },
+  "buttonSelect": {
+    "dark": "深色",
+    "light": "浅色",
+    "blue": "蓝色",
+    "solarized": "Solarized"
+  },
+  "sitebarItem": {
+    "setting": "设置",
+    "global": "全局",
+    "lock": "锁定",
+    "control": "控制",
+    "power": "电源",
+    "shrink": "缩小",
+    "menu": "菜单",
+    "customer": "客户"
   }
 }

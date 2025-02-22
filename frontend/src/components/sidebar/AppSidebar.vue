@@ -4,6 +4,8 @@
     :class="{ is__show__sidebar: isSidebarMinimized && props.mobile || !isSidebarMinimized && props.tablet, 'hide_header': !isShowHeader }"
     :style="{
       width: isSidebarMinimized ? '8vw' : sidebarWidth,
+      marginLeft: sidebarCurrentPosition === 'right' ? '84vw' : '',
+      direction: currentTextDirection === 'rtl' ? 'rtl' : 'ltr',
       backgroundColor: getThemeColor('background'),
       color: getThemeColor('text')
     }">
@@ -170,7 +172,7 @@ import * as AntdIcons from '@ant-design/icons-vue'
 import navigationRoutes from './NavigationRoutes';
 import { storeToRefs } from 'pinia';
 import { useGlobalStore } from '../../stores/global-store';
-import { useControlPanelSecond } from '../../stores/control-panel'
+import { useControlPanelSecond, sidebarCurrentPosition, currentTextDirection } from '@/stores/control-panel'
 import { useSitebarItems } from '@/pages/settings/sitebar-item/items'; // Import the `useSitebarItems` hook
 // Using the hook to get items
 const { items } = useSitebarItems();
@@ -407,8 +409,6 @@ watch(
   },
   { immediate: true }
 )
-
-import { selectedFooter, setFooter } from '@/stores/footer-store';
 </script>
 
 <style scoped>

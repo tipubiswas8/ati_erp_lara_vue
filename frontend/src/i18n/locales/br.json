@@ -1,89 +1,37 @@
 {
   "auth": {
-    "agree": "Eu aceito.",
+    "agree": "Eu concordo com os",
     "createAccount": "Criar conta",
-    "createNewAccount": "Criar uma nova conta",
-    "email": "Email",
+    "createNewAccount": "Criar nova conta",
+    "email": "E-mail",
     "login": "Entrar",
     "password": "Senha",
     "recover_password": "Recuperar senha",
-    "sign_up": "Cadastrar-se",
-    "keep_logged_in": "Mantenha-me conectado",
-    "termsOfUse": "Termos de uso.",
+    "sign_up": "Cadastrar",
+    "keep_logged_in": "Manter-me conectado",
+    "termsOfUse": "Termos de Uso.",
     "reset_password": "Redefinir senha"
   },
   "404": {
-    "title": "Esta página está pescando.",
-    "text": "Se você acha que isso não está certo, envie-nos uma mensagem em ",
-    "back_button": "Voltar para o painel"
+    "title": "Esta página foi pescar.",
+    "text": "Se você acha que isso não está certo, por favor nos envie uma mensagem para ",
+    "back_button": "Voltar ao painel"
   },
   "typography": {
-    "primary": "Estilos de texto primários",
-    "secondary": "Estilos de texto secundários"
+    "primary": "Estilos de texto primário",
+    "secondary": "Estilos de texto secundário"
   },
   "dashboard": {
     "versions": "Versões",
-    "setupRemoteConnections": "Configurar Conexões Remotas",
-    "currentVisitors": "Visitantes Atuais",
-    "charts": {
-      "trendyTrends": "Tendências na moda",
-      "showInMoreDetail": "Mostrar em mais detalhes",
-      "showInLessDetail": "Mostrar em menos detalhes",
-      "loadingSpeed": "Velocidade de carregamento",
-      "topContributors": "Principais colaboradores",
-      "showNextFive": "Mostrar próximos cinco",
-      "commits": "Commits"
-    },
-    "info": {
-      "componentRichTheme": "tema rico em componentes",
-      "completedPullRequests": "solicitações de pull concluídas",
-      "users": "usuários",
-      "points": "pontos",
-      "units": "unidades",
-      "exploreGallery": "Explorar galeria",
-      "viewLibrary": "Ver Biblioteca",
-      "commits": "commits",
-      "components": "componentes",
-      "teamMembers": "membros da equipe"
-    },
-    "tabs": {
-      "overview": {
-        "title": "Visão Geral",
-        "built": "Construído com o framework Vue.js",
-        "free": "Totalmente gratuito para todos",
-        "fresh": "Design fresco e nítido",
-        "mobile": "Responsivo e otimizado para dispositivos móveis",
-        "components": "Toneladas de componentes úteis",
-        "nojQuery": "Completamente livre de jQuery"
-      },
-      "billingAddress": {
-        "title": "Endereço de Cobrança",
-        "personalInfo": "Informação Pessoal",
-        "firstName": "Nome e Sobrenome",
-        "email": "Email",
-        "address": "Endereço",
-        "companyInfo": "Informação da Empresa",
-        "city": "Cidade",
-        "country": "País",
-        "infiniteConnections": "Conexões infinitas",
-        "addConnection": "Adicionar Conexão"
-      },
-      "bankDetails": {
-        "title": "Detalhes Bancários",
-        "detailsFields": "Campos de Detalhes",
-        "bankName": "Nome do Banco",
-        "accountName": "Nome da Conta",
-        "sortCode": "Código de Ordenação",
-        "accountNumber": "Número da Conta",
-        "notes": "Notas",
-        "sendDetails": "Enviar Detalhes"
-      }
-    },
-    "navigationLayout": "layout de navegação",
-    "topBarButton": "Barra Superior",
-    "sideBarButton": "Barra Lateral"
+    "setupRemoteConnections": "Configurar conexões remotas",
+    "currentVisitors": "Visitantes atuais",
+    "navigationLayout": "Layout de navegação",
+    "topBarButton": "Barra superior",
+    "sideBarButton": "Barra lateral",
+    "home": "Início"
   },
   "language": {
+    "language": "Idioma",
     "brazilian_portuguese": "Português",
     "english": "Inglês",
     "spanish": "Espanhol",
@@ -93,59 +41,167 @@
   "menu": {
     "auth": "Autenticação",
     "buttons": "Botões",
-    "timelines": "Linhas do Tempo",
-    "dashboard": "Painel de Controle",
-    "billing": "Cobrança",
+    "timelines": "Linhas do tempo",
+    "dashboard": "Painel",
     "login": "Entrar",
-    "signUp": "Cadastrar-se",
-    "preferences": "Preferências",
-    "payments": "Pagamentos",
-    "pricing-plans": "Planos de Preços",
-    "login-singup": "Entrar/Cadastrar",
-    "404": "Páginas 404",
-    "faq": "FAQ"
+    "preferences": "Preferências da conta",
+    "settings": "Configurações do aplicativo",
+    "signup": "Cadastrar",
+    "recover-password": "Recuperar senha",
+    "recover-password-email": "E-mail de recuperação de senha",
+    "404": "404",
+    "faq": "Perguntas frequentes",
+    "users": "Usuários",
+    "employees": "Funcionários",
+    "organizations": "Organizações",
+    "test": "Teste",
+    "projects": "Projetos",
+    "security-access": "Acesso de segurança",
+    "hr": "Recursos humanos",
+    "role": "Função",
+    "permission": "Permissão",
+    "sub-menu": {
+      "grand-submenu-one": "Submenu 1",
+      "grand-submenu-two": "Submenu 2",
+      "grand-submenu-three": "Submenu 3",
+      "grand-submenu-four": "Submenu 4"
+    }
   },
   "messages": {
     "all": "Ver todas as mensagens",
     "new": "Novas mensagens de {name}",
-    "mark_as_read": "Marcar como Lido"
+    "mark_as_read": "Marcar como lida"
   },
   "navbar": {
-    "messageUs": "Perguntas de desenvolvimento web:",
+    "messageUs": "Consultas de desenvolvimento web:",
     "repository": "Repositório GitHub"
   },
   "notifications": {
     "all": "Ver todas as notificações",
+    "less": "Ver menos notificações",
     "mark_as_read": "Marcar como lida",
-    "sentMessage": "enviou uma mensagem",
-    "uploadedZip": "fez upload de um novo arquivo Zip com {type}",
+    "sentMessage": "enviou uma mensagem para você",
+    "uploadedZip": "enviou um novo arquivo Zip com {type}",
     "startedTopic": "iniciou um novo tópico"
   },
   "user": {
-    "language": "Mudar Idioma",
+    "language": "Mudar idioma",
+    "profile": "Perfil",
     "logout": "Sair",
-    "profile": "Meu Perfil",
+    "changePassword": "Alterar senha",
+    "signOut": "Sair",
     "settings": "Configurações",
-    "billing": "Faturamento",
-    "faq": "FAQ",
-    "helpAndSupport": "Ajuda & Suporte",
+    "billing": "Cobrança",
+    "faq": "Perguntas frequentes",
+    "helpAndSupport": "Ajuda e suporte",
     "projects": "Projetos",
     "account": "Conta",
     "explore": "Explorar"
   },
   "treeView": {
     "basic": "Básico",
-    "icons": "Icones",
+    "icons": "Ícones",
     "selectable": "Selecionável",
     "editable": "Editável",
-    "advanced": "Advançado"
+    "advanced": "Avançado"
   },
   "chat": {
-    "title": "Gráficos"
+    "title": "Chat",
+    "sendButton": "Enviar"
   },
-  "helpAndSupport": "Ajuda & Suporte",
-  "aboutVuesticAdmin": "Sobre Vuestic Admin",
+  "spacingPlayground": {
+    "value": "Valor",
+    "margin": "Margem",
+    "padding": "Preenchimento"
+  },
+  "spacing": {
+    "title": "Espaçamento"
+  },
+  "cards": {
+    "cards": "Cartões",
+    "fixed": "Fixo",
+    "floating": "Flutuante",
+    "contentText": "As listras únicas das zebras as tornam um dos animais mais familiares para as pessoas.",
+    "contentTextLong": "As listras únicas das zebras as tornam um dos animais mais familiares para as pessoas. Elas ocorrem em uma variedade de habitats, como pastagens, savanas, florestas, matagais espinhosos, montanhas e colinas costeiras. Vários fatores antropogênicos tiveram um impacto severo nas populações de zebras, em particular a caça por peles e a destruição do habitat. A zebra de Grévy e a zebra da montanha estão em perigo de extinção. Enquanto as zebras das planícies são muito mais numerosas, uma subespécie, a quagga.",
+    "rowHeight": "Altura da linha",
+    "title": {
+      "default": "Padrão",
+      "withControls": "Com controles",
+      "customHeader": "Cabeçalho personalizado",
+      "withoutHeader": "Sem cabeçalho",
+      "withImage": "Com imagem",
+      "withTitleOnImage": "Com título na imagem",
+      "withCustomTitleOnImage": "Com título personalizado na imagem",
+      "withStripe": "Com listra",
+      "withBackground": "Com fundo"
+    },
+    "button": {
+      "main": "Principal",
+      "cancel": "Cancelar",
+      "showMore": "Mostrar mais",
+      "readMore": "Ler mais"
+    },
+    "link": {
+      "edit": "Editar",
+      "setAsDefault": "Definir como padrão",
+      "delete": "Excluir",
+      "traveling": "Viajando",
+      "france": "França",
+      "review": "Revisar",
+      "feedback": "Deixar feedback",
+      "readFull": "Ler artigo completo",
+      "secondaryAction": "Ação secundária",
+      "action1": "Ação 1",
+      "action2": "Ação 2"
+    }
+  },
+  "colors": {
+    "themeColors": "Cores do tema",
+    "extraColors": "Cores extras",
+    "gradients": {
+      "basic": {
+        "title": "Gradientes de botões"
+      },
+      "hovered": {
+        "title": "Gradientes de botões ao passar o mouse",
+        "text": "Clarear 15% aplicado ao estilo original (gradiente ou cor sólida) para o estado de hover."
+      },
+      "pressed": {
+        "title": "Gradientes de botões ao pressionar",
+        "text": "Escurecer 15% aplicado ao estilo original (gradiente ou cor sólida) para o estado de pressionado."
+      }
+    }
+  },
+  "tabs": {
+    "alignment": "Alinhamento das abas",
+    "overflow": "Transbordamento das abas",
+    "hidden": "Abas com controle deslizante oculto",
+    "grow": "Abas que crescem"
+  },
+  "helpAndSupport": "Ajuda e suporte",
+  "aboutVuesticAdmin": "Sobre o Vuestic Admin",
+  "supportAndConsulting": "Suporte e consultoria",
   "search": {
-    "placeholder": "Buscar..."
+    "placeholder": "Pesquisar..."
+  },
+  "appSetting": {
+    "theme": "Tema",
+    "generalPreferences": "Preferências gerais"
+  },
+  "buttonSelect": {
+    "dark": "Escuro",
+    "light": "Claro",
+    "blue": "Azul",
+    "solarized": "Solarizado"
+  },
+  "sitebarItem": {
+    "setting": "Configuração",
+    "global": "Global",
+    "lock": "Bloquear",
+    "control": "Controle",
+    "power": "Energia",
+    "shrink": "Reduzir",
+    "menu": "Menu",
+    "customer": "Cliente"
   }
 }

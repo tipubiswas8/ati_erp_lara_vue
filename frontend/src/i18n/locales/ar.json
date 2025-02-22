@@ -1,0 +1,207 @@
+{
+    "auth": {
+        "agree": "أوافق على",
+        "createAccount": "إنشاء حساب",
+        "createNewAccount": "إنشاء حساب جديد",
+        "email": "البريد الإلكتروني",
+        "login": "تسجيل الدخول",
+        "password": "كلمة المرور",
+        "recover_password": "استعادة كلمة المرور",
+        "sign_up": "التسجيل",
+        "keep_logged_in": "ابقني مسجلاً",
+        "termsOfUse": "شروط الاستخدام.",
+        "reset_password": "إعادة تعيين كلمة المرور"
+    },
+    "404": {
+        "title": "هذه الصفحة ذهبت لصيد السمك.",
+        "text": "إذا كنت تعتقد أن هذا غير صحيح، يرجى إرسال رسالة إلينا على ",
+        "back_button": "العودة إلى لوحة التحكم"
+    },
+    "typography": {
+        "primary": "أنماط النص الأساسية",
+        "secondary": "أنماط النص الثانوية"
+    },
+    "dashboard": {
+        "versions": "الإصدارات",
+        "setupRemoteConnections": "إعداد الاتصالات البعيدة",
+        "currentVisitors": "الزوار الحاليون",
+        "navigationLayout": "تخطيط التنقل",
+        "topBarButton": "الشريط العلوي",
+        "sideBarButton": "الشريط الجانبي",
+        "home": "الصفحة الرئيسية"
+    },
+    "language": {
+        "language": "اللغة",
+        "brazilian_portuguese": "البرتغالية البرازيلية",
+        "english": "الإنجليزية",
+        "spanish": "الإسبانية",
+        "simplified_chinese": "الصينية المبسطة",
+        "persian": "الفارسية"
+    },
+    "menu": {
+        "auth": "المصادقة",
+        "buttons": "الأزرار",
+        "timelines": "الخطوط الزمنية",
+        "dashboard": "لوحة التحكم",
+        "login": "تسجيل الدخول",
+        "preferences": "تفضيلات الحساب",
+        "settings": "إعدادات التطبيق",
+        "signup": "التسجيل",
+        "recover-password": "استعادة كلمة المرور",
+        "recover-password-email": "بريد استعادة كلمة المرور",
+        "404": "404",
+        "faq": "الأسئلة الشائعة",
+        "users": "المستخدمون",
+        "employees": "الموظفون",
+        "organizations": "المنظمات",
+        "test": "اختبار",
+        "projects": "المشاريع",
+        "security-access": "الوصول الأمني",
+        "hr": "الموارد البشرية",
+        "role": "الدور",
+        "permission": "الإذن",
+        "sub-menu": {
+            "grand-submenu-one": "القائمة الفرعية 1",
+            "grand-submenu-two": "القائمة الفرعية 2",
+            "grand-submenu-three": "القائمة الفرعية 3",
+            "grand-submenu-four": "القائمة الفرعية 4"
+        }
+    },
+    "messages": {
+        "all": "عرض جميع الرسائل",
+        "new": "رسائل جديدة من {name}",
+        "mark_as_read": "وضع علامة كمقروء"
+    },
+    "navbar": {
+        "messageUs": "استفسارات تطوير الويب:",
+        "repository": "مستودع GitHub"
+    },
+    "notifications": {
+        "all": "عرض جميع الإشعارات",
+        "less": "عرض إشعارات أقل",
+        "mark_as_read": "وضع علامة كمقروء",
+        "sentMessage": "أرسل لك رسالة",
+        "uploadedZip": "قام بتحميل ملف Zip جديد بنوع {type}",
+        "startedTopic": "بدأ موضوعًا جديدًا"
+    },
+    "user": {
+        "language": "تغيير اللغة",
+        "profile": "الملف الشخصي",
+        "logout": "تسجيل الخروج",
+        "changePassword": "تغيير كلمة المرور",
+        "signOut": "تسجيل الخروج",
+        "settings": "الإعدادات",
+        "billing": "الفواتير",
+        "faq": "الأسئلة الشائعة",
+        "helpAndSupport": "المساعدة والدعم",
+        "projects": "المشاريع",
+        "account": "الحساب",
+        "explore": "استكشاف"
+    },
+    "treeView": {
+        "basic": "أساسي",
+        "icons": "الأيقونات",
+        "selectable": "قابل للتحديد",
+        "editable": "قابل للتعديل",
+        "advanced": "متقدم"
+    },
+    "chat": {
+        "title": "الدردشة",
+        "sendButton": "إرسال"
+    },
+    "spacingPlayground": {
+        "value": "القيمة",
+        "margin": "الهامش",
+        "padding": "الحشو"
+    },
+    "spacing": {
+        "title": "المسافات"
+    },
+    "cards": {
+        "cards": "البطاقات",
+        "fixed": "ثابت",
+        "floating": "عائم",
+        "contentText": "الخطوط الفريدة للحمير الوحشية تجعلها واحدة من الحيوانات الأكثر شهرة للناس.",
+        "contentTextLong": "الخطوط الفريدة للحمير الوحشية تجعلها واحدة من الحيوانات الأكثر شهرة للناس. توجد في مجموعة متنوعة من الموائل، مثل الأراضي العشبية، السافانا، الغابات، الأدغال الشائكة، الجبال والتلال الساحلية. العديد من العوامل البشرية كان لها تأثير كبير على أعداد الحمير الوحشية، خاصة الصيد من أجل الجلود وتدمير الموائل. حمار الزرد غريفي وحمار الزرد الجبلي مهددان بالانقراض. بينما حمار الزرد السهلي أكثر وفرة، نوع فرعي واحد، الكواجا.",
+        "rowHeight": "ارتفاع الصف",
+        "title": {
+            "default": "افتراضي",
+            "withControls": "مع عناصر التحكم",
+            "customHeader": "رأس مخصص",
+            "withoutHeader": "بدون رأس",
+            "withImage": "مع صورة",
+            "withTitleOnImage": "مع عنوان على الصورة",
+            "withCustomTitleOnImage": "مع عنوان مخصص على الصورة",
+            "withStripe": "مع شريط",
+            "withBackground": "مع خلفية"
+        },
+        "button": {
+            "main": "رئيسي",
+            "cancel": "إلغاء",
+            "showMore": "عرض المزيد",
+            "readMore": "قراءة المزيد"
+        },
+        "link": {
+            "edit": "تعديل",
+            "setAsDefault": "تعيين كافتراضي",
+            "delete": "حذف",
+            "traveling": "السفر",
+            "france": "فرنسا",
+            "review": "مراجعة",
+            "feedback": "ترك تعليق",
+            "readFull": "قراءة المقال كاملاً",
+            "secondaryAction": "إجراء ثانوي",
+            "action1": "الإجراء 1",
+            "action2": "الإجراء 2"
+        }
+    },
+    "colors": {
+        "themeColors": "ألوان السمة",
+        "extraColors": "ألوان إضافية",
+        "gradients": {
+            "basic": {
+                "title": "تدرجات الأزرار"
+            },
+            "hovered": {
+                "title": "تدرجات الأزرار عند التمرير",
+                "text": "تم تطبيق تفتيح بنسبة 15% على النمط الأصلي (التدرج أو اللون المسطح) لحالة التمرير."
+            },
+            "pressed": {
+                "title": "تدرجات الأزرار عند الضغط",
+                "text": "تم تطبيق تظليل بنسبة 15% على النمط الأصلي (التدرج أو اللون المسطح) لحالة الضغط."
+            }
+        }
+    },
+    "tabs": {
+        "alignment": "محاذاة التبويبات",
+        "overflow": "فيض التبويبات",
+        "hidden": "تبويبات مع شريط تمرير مخفي",
+        "grow": "تبويبات قابلة للنمو"
+    },
+    "helpAndSupport": "المساعدة والدعم",
+    "aboutVuesticAdmin": "حول Vuestic Admin",
+    "supportAndConsulting": "الدعم والاستشارات",
+    "search": {
+        "placeholder": "بحث..."
+    },
+    "appSetting": {
+        "theme": "السمة",
+        "generalPreferences": "التفضيلات العامة"
+    },
+    "buttonSelect": {
+        "dark": "داكن",
+        "light": "فاتح",
+        "blue": "أزرق",
+        "solarized": "مشمس"
+    },
+    "sitebarItem": {
+        "setting": "الإعدادات",
+        "global": "عام",
+        "lock": "قفل",
+        "control": "التحكم",
+        "power": "الطاقة",
+        "shrink": "تصغير",
+        "menu": "القائمة",
+        "customer": "العميل"
+    }
+}

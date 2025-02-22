@@ -13,7 +13,8 @@
 
     <!-- Main Content -->
     <!-- For Tablet -->
-    <div class="layout__content" :class="{ minimized: isSidebarMinimized, 'hide__sidebar': !isShowSidebar }">
+    <div class="layout__content" :class="{ minimized: isSidebarMinimized, 'hide__sidebar': !isShowSidebar }"
+      :style="computedStyles">
       <div class="layout__sidebar__wrapper">
         <div v-if="isFullScreenSidebar" class="layout__close__btn__wrapper">
           <button class="close__btn" @click="onCloseSidebarButtonClick">✖</button>
@@ -47,8 +48,16 @@ import { useGlobalStore } from '../stores/global-store'
 import AppLayoutNavigation from '../components/app-layout-navigation/AppLayoutNavigation.vue'
 import AppNavbar from '../components/navbar/AppNavbar.vue'
 import AppSidebar from '../components/sidebar/AppSidebar.vue'
-import { useControlPanelSecond } from '@/stores/control-panel'
+import { useControlPanelSecond, sidebarCurrentPosition, currentTextDirection } from '@/stores/control-panel'
 import FooterContainer from '../components/footer/FooterContainer.vue'
+
+const computedStyles = computed(() => {
+  return {
+    marginLeft: sidebarCurrentPosition.value === 'right' ? '0' : undefined,
+    marginRight: sidebarCurrentPosition.value === 'right' ? '16vw' : undefined,
+    direction: currentTextDirection.value === 'rtl' ? 'rtl' : undefined
+  }
+})
 
 const isShowFooter = ref<boolean>(true);
 const controlPanelSecond = useControlPanelSecond();

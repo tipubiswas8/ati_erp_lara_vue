@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { ref, watch } from 'vue';
 
 export const useControlPanelStore = defineStore('control', {
   state: () => {
@@ -74,7 +75,34 @@ export const useControlPanelSecond = defineStore('control2', {
       this.isShowFooter = !this.isShowFooter
     },
   },
-  
+
 })
+
+
+// Reactive global state
+export const currentTextDirection = ref<string>(localStorage.getItem('text-direction') || 'ltr');
+
+// Function to update the text direction
+export const setTextDirection = (val: string) => {
+  currentTextDirection.value = val;
+};
+
+// Watch for changes and update localStorage
+watch(currentTextDirection, (newValue) => {
+  localStorage.setItem('text-direction', newValue.toString());
+});
+
+// Reactive global state
+export const sidebarCurrentPosition = ref<string>(localStorage.getItem('sidebar-position') || 'left');
+
+// Function to update the sidebar position
+export const setSidebar = (val: string) => {
+  sidebarCurrentPosition.value = val;
+};
+
+// Watch for changes and update localStorage
+watch(sidebarCurrentPosition, (newValue) => {
+  localStorage.setItem('sidebar-position', newValue.toString());
+});
 
 

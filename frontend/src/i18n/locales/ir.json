@@ -1,192 +1,207 @@
 {
   "auth": {
-    "agree": "با شرایط استفاده موافقم.",
-    "createAccount": "ساخت حساب کاربری",
-    "createNewAccount": "ساخت حساب کاربری تازه",
-    "email": "رایانامه",
+    "agree": "موافقم با",
+    "createAccount": "ایجاد حساب کاربری",
+    "createNewAccount": "ایجاد حساب کاربری جدید",
+    "email": "ایمیل",
     "login": "ورود",
-    "password": "گذرواژه",
-    "recover_password": "فراموشی رمز عبور",
-    "sign_up": "ساخت حساب کاربری",
-    "keep_logged_in": "مرا در این مرورگر بخاطر بسپار",
-    "termsOfUse": "شرایط استفاده",
-    "reset_password": "بازنشانی گذرواژه"
+    "password": "رمز عبور",
+    "recover_password": "بازیابی رمز عبور",
+    "sign_up": "ثبت نام",
+    "keep_logged_in": "مرا وارد نگه دار",
+    "termsOfUse": "شرایط استفاده.",
+    "reset_password": "بازنشانی رمز عبور"
   },
   "404": {
-    "title": "این صفحه رفته گل بچینه :)",
-    "text": "اگر فکر میکنید چیزی درست نیست برای ما پیام بفرستید.",
-    "back_button": "بازگشت به پیشخوان"
+    "title": "این صفحه به دنبال ماهیگیری رفته است.",
+    "text": "اگر احساس می کنید که این درست نیست، لطفاً به ما پیام دهید به آدرس ",
+    "back_button": "بازگشت به داشبورد"
   },
   "typography": {
-    "primary": "سبک های متن اصلی",
-    "secondary": "سبکه های متن ثانوی"
+    "primary": "سبک‌های متن اصلی",
+    "secondary": "سبک‌های متن ثانویه"
   },
   "dashboard": {
-    "versions": "ورژن ها",
-    "setupRemoteConnections": "راه اندازی اتصالات از راه دور",
-    "currentVisitors": "بازکنندگان فعلی",
-    "charts": {
-      "trendyTrends": "ترند های روز",
-      "showInMoreDetail": "نمایش جزییات بیشتر",
-      "showInLessDetail": "نمایش جزییات کمتر",
-      "loadingSpeed": "سرعت بارگزاری",
-      "topContributors": "مشارکت کنندگان برتر",
-      "showNextFive": "نمایش پنج تای بعدی",
-      "commits": "کامیت ها"
-    },
-    "info": {
-      "componentRichTheme": "تم غنی از کامپوننت",
-      "completedPullRequests": "درخواست های کشیدن کامل شده",
-      "users": "کاربران",
-      "points": "امتیازات",
-      "units": "واحد ها",
-      "exploreGallery": "گشت و گذار در گالری",
-      "viewLibrary": "مشاهده کتابخانه",
-      "commits": "کامیت ها",
-      "components": "کامپوننت ها",
-      "teamMembers": "اعضای تیم"
-    },
-    "tabs": {
-      "overview": {
-        "title": "نمای کلی",
-        "built": "ساخته شده با فریم ورک Vue.js",
-        "free": "کاملا رایگان برای همه",
-        "fresh": "طراحی تازه و باحال",
-        "mobile": "واکنش گرا و بهینه سازی برای موبایل",
-        "components": "پر از مولفه های باحال",
-        "nojQuery": "کاملا بدون jQuery"
-      },
-      "billingAddress": {
-        "title": "نشانی صورتحساب",
-        "personalInfo": "اطلاعات شخصی",
-        "firstName": "نام و نام خانوادگی",
-        "email": "رایانما",
-        "address": "نشانی",
-        "companyInfo": "اطلاعات شرکت",
-        "city": "شهر",
-        "country": "کشور",
-        "infiniteConnections": "اتصالات نامحدود",
-        "addConnection": "افزودن اتصال"
-      },
-      "bankDetails": {
-        "title": "اطلاعات بانکی",
-        "detailsFields": "فیلد های جزئیات",
-        "bankName": "نام بانک",
-        "accountName": "نام حساب",
-        "sortCode": "کد مرتب سازی",
-        "accountNumber": "شماره حساب",
-        "notes": "یادداشت ها",
-        "sendDetails": "ارسال جزئیات"
-      }
-    },
+    "versions": "نسخه‌ها",
+    "setupRemoteConnections": "تنظیم اتصالات از راه دور",
+    "currentVisitors": "بازدیدکنندگان فعلی",
     "navigationLayout": "چیدمان ناوبری",
-    "topBarButton": "دکمه نوار بالا",
-    "sideBarButton": "دکمه نوار کناری"
+    "topBarButton": "نوار بالا",
+    "sideBarButton": "نوار کناری",
+    "home": "خانه"
   },
   "language": {
-    "brazilian_portuguese": "پرتغالی برزیل",
+    "language": "زبان",
+    "brazilian_portuguese": "پرتغالی برزیلی",
     "english": "انگلیسی",
     "spanish": "اسپانیایی",
-    "simplified_chinese": "چینی ساده شده",
+    "simplified_chinese": "چینی ساده‌شده",
     "persian": "فارسی"
   },
   "menu": {
     "auth": "احراز هویت",
-    "buttons": "دکمه ها",
-    "timelines": "جدول زمانی",
+    "buttons": "دکمه‌ها",
+    "timelines": "خطوط زمانی",
     "dashboard": "داشبورد",
-    "billing": "صورتحساب",
     "login": "ورود",
-    "signUp": "ثبت نام",
-    "preferences": "ترجیحات",
-    "payments": "پرداخت ها",
-    "pricing-plans": "طرح های قیمت گذاری",
-    "login-singup": "ورود/ثبت نام",
-    "404": "صفحات 404",
-    "faq": "سوالات متداول"
+    "preferences": "ترجیحات حساب",
+    "settings": "تنظیمات برنامه",
+    "signup": "ثبت نام",
+    "recover-password": "بازیابی رمز عبور",
+    "recover-password-email": "ایمیل بازیابی رمز عبور",
+    "404": "404",
+    "faq": "سوالات متداول",
+    "users": "کاربران",
+    "employees": "کارمندان",
+    "organizations": "سازمان‌ها",
+    "test": "تست",
+    "projects": "پروژه‌ها",
+    "security-access": "دسترسی امنیتی",
+    "hr": "منابع انسانی",
+    "role": "نقش",
+    "permission": "مجوز",
+    "sub-menu": {
+      "grand-submenu-one": "فرزند بزرگ ۱",
+      "grand-submenu-two": "فرزند بزرگ ۲",
+      "grand-submenu-three": "فرزند بزرگ ۳",
+      "grand-submenu-four": "فرزند بزرگ ۴"
+    }
   },
   "messages": {
-    "all": "مشاهده تمام پیام ها",
-    "new": "پیام های جدید از {name}",
-    "mark_as_read": "علامت زدن به عنوان خوانده شده"
+    "all": "مشاهده همه پیام‌ها",
+    "new": "پیام‌های جدید از {name}",
+    "mark_as_read": "علامت به عنوان خوانده شده"
   },
   "navbar": {
-    "messageUs": "پرسش های مربوط به توسعه وب:",
-    "repository": "مخزن گیت هاب"
+    "messageUs": "سوالات توسعه وب:",
+    "repository": "مخزن GitHub"
   },
   "notifications": {
-    "all": "مشاهده تمام اعلان ها",
-    "mark_as_read": "علامت زدن به عنوان خوانده شده",
-    "sentMessage": "پیامی برای شما فرستاد",
-    "uploadedZip": "یک فایل زیپ جدید با {type} آپلود کرد",
-    "startedTopic": "یک موضوع جدید را شروع کرد"
+    "all": "مشاهده همه اعلان‌ها",
+    "less": "مشاهده اعلان‌های کمتر",
+    "mark_as_read": "علامت به عنوان خوانده شده",
+    "sentMessage": "به شما پیامی ارسال کرد",
+    "uploadedZip": "یک فایل Zip جدید با {type} آپلود کرد",
+    "startedTopic": "یک موضوع جدید شروع کرد"
   },
   "user": {
     "language": "تغییر زبان",
+    "profile": "پروفایل",
     "logout": "خروج",
-    "profile": "پروفایل من",
+    "changePassword": "تغییر رمز عبور",
+    "signOut": "خروج",
     "settings": "تنظیمات",
     "billing": "صورتحساب",
-    "faq": "سؤالات متداول",
-    "helpAndSupport": "کمک و پشتیبانی",
-    "projects": "پروژه ها",
+    "faq": "سوالات متداول",
+    "helpAndSupport": "راهنما و پشتیبانی",
+    "projects": "پروژه‌ها",
     "account": "حساب",
     "explore": "کاوش"
   },
   "treeView": {
-    "basic": "اصلی",
-    "icons": "آيکون ها",
+    "basic": "پایه",
+    "icons": "آیکون‌ها",
     "selectable": "قابل انتخاب",
     "editable": "قابل ویرایش",
     "advanced": "پیشرفته"
   },
   "chat": {
-    "title": "گفتگو"
+    "title": "چت",
+    "sendButton": "ارسال"
   },
   "spacingPlayground": {
     "value": "مقدار",
     "margin": "حاشیه",
     "padding": "پدینگ"
   },
+  "spacing": {
+    "title": "فاصله‌گذاری"
+  },
   "cards": {
-    "cards": "کارت ها",
+    "cards": "کارت‌ها",
     "fixed": "ثابت",
     "floating": "شناور",
-    "contentText": "از قیافت معلومه خیلی وقته روی صندلی نشستی. کپک نزنی! پاشو یه تکونی بده ",
-    "contentTextLong": "یک برنامه نویس حتما نباید سیگار دستش باشد تا جامعه متوجه بشود که او برنامه نویس است. مشخص نیست این تصور غلط از کجا و به چه شکل به وجود آمد اما اصلا درست نیست. برنامه نویس\u200Cهای بزرگ و موفق غیرسیگاری زیاد هستند. اشخاصی مثل بیل گیتس، ریچارد استالمن یا علی شریفی نیستانی که در دنیای برنامه نویسی کاملا شناخته شده می\u200Cباشند و سیگاری نیستند. در مقابل بعضی از برنامه نویس\u200Cها هم سیگار می\u200Cکشند و این موضوع کاملا به خود شخص برمی\u200Cگردد",
-    "rowHeight": "ارتفاع سطر",
+    "contentText": "نوارهای منحصر به فرد گورخرها آن‌ها را به یکی از حیوانات آشنا برای مردم تبدیل کرده است.",
+    "contentTextLong": "نوارهای منحصر به فرد گورخرها آن‌ها را به یکی از حیوانات آشنا برای مردم تبدیل کرده است. آن‌ها در انواع زیستگاه‌ها مانند مراتع، ساواناها، جنگل‌ها، بوته‌زارهای خاردار، کوه‌ها و تپه‌های ساحلی یافت می‌شوند. عوامل انسانی مختلف تأثیر شدیدی بر جمعیت گورخرها داشته‌اند، به ویژه شکار برای پوست و تخریب زیستگاه. گورخر گرِوی و گورخر کوهی در خطر انقراض هستند. در حالی که گورخرهای دشتی بسیار بیشتر هستند، یک زیرگونه، کوآگا.",
+    "rowHeight": "ارتفاع ردیف",
     "title": {
-      "default": "پیش فرض",
-      "withControls": "همراه کنترل",
-      "customHeader": "سربرگ سفارشی",
-      "withoutHeader": "بدون سربرگ",
-      "withImage": "همراه تصویر",
-      "withTitleOnImage": "همراه عنوان و بدون تصویر",
-      "withCustomTitleOnImage": "بدون تصویر یا عنوان",
-      "withStripe": "همراه نوار",
-      "withBackground": "همراه پس زمینه"
+      "default": "پیش‌فرض",
+      "withControls": "با کنترل‌ها",
+      "customHeader": "هدر سفارشی",
+      "withoutHeader": "بدون هدر",
+      "withImage": "با تصویر",
+      "withTitleOnImage": "با عنوان روی تصویر",
+      "withCustomTitleOnImage": "با عنوان سفارشی روی تصویر",
+      "withStripe": "با نوار",
+      "withBackground": "با پس‌زمینه"
     },
     "button": {
       "main": "اصلی",
-      "cancel": "لغو"
+      "cancel": "لغو",
+      "showMore": "نمایش بیشتر",
+      "readMore": "نمایش بیشتر"
     },
     "link": {
       "edit": "ویرایش",
-      "setAsDefault": "تنظیم به عنوان پیش فرض",
+      "setAsDefault": "تنظیم به عنوان پیش‌فرض",
       "delete": "حذف",
       "traveling": "مسافرت",
-      "france": "فرانسیه",
+      "france": "فرانسه",
       "review": "بررسی",
-      "feedback": "ترک کردن بازخورد",
-      "readFull": "خواندن تمام مقالات",
-      "secondaryAction": "افدام دوم",
-      "action1": "اقدام یک",
-      "action2": "اقدام دو"
+      "feedback": "ارسال بازخورد",
+      "readFull": "مطالعه مقاله کامل",
+      "secondaryAction": "عمل ثانویه",
+      "action1": "عمل ۱",
+      "action2": "عمل ۲"
     }
   },
-  "helpAndSupport": "کمک و پشتیبانی",
+  "colors": {
+    "themeColors": "رنگ‌های تم",
+    "extraColors": "رنگ‌های اضافی",
+    "gradients": {
+      "basic": {
+        "title": "گرادیان‌های دکمه"
+      },
+      "hovered": {
+        "title": "گرادیان‌های دکمه هنگام هاور",
+        "text": "روشن‌تر ۱۵٪ برای حالت هاور اعمال شده است."
+      },
+      "pressed": {
+        "title": "گرادیان‌های دکمه هنگام فشار",
+        "text": "تیره‌تر ۱۵٪ برای حالت فشار اعمال شده است."
+      }
+    }
+  },
+  "tabs": {
+    "alignment": "تراز تب‌ها",
+    "overflow": "سرریز تب‌ها",
+    "hidden": "تب‌ها با اسلایدر مخفی",
+    "grow": "تب‌ها رشد می‌کنند"
+  },
+  "helpAndSupport": "راهنما و پشتیبانی",
   "aboutVuesticAdmin": "درباره Vuestic Admin",
+  "supportAndConsulting": "پشتیبانی و مشاوره",
   "search": {
     "placeholder": "جستجو..."
+  },
+  "appSetting": {
+    "theme": "تم",
+    "generalPreferences": "ترجیحات عمومی"
+  },
+  "buttonSelect": {
+    "dark": "تیره",
+    "light": "روشن",
+    "blue": "آبی",
+    "solarized": "سولاریزه"
+  },
+  "sitebarItem": {
+    "setting": "تنظیمات",
+    "global": "جهانی",
+    "lock": "قفل",
+    "control": "کنترل",
+    "power": "قدرت",
+    "shrink": "کوچک کردن",
+    "menu": "منو",
+    "customer": "مشتری"
   }
 }
