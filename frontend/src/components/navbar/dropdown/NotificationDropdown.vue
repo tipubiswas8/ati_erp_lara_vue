@@ -1,7 +1,7 @@
 <template>
   <div class="notification-dropdown">
     <div class="notification-dropdown__anchor">
-      <button class="btn-secondary text-primary" @click="  = !displayDropdown">
+      <button class="btn-secondary text-primary" @click="displayDropdown = !displayDropdown">
         <span class="badge-text">2+</span>
         <i class="notification-dropdown__icon">🔔</i>
       </button>
