@@ -43,6 +43,12 @@
         <RouterLink to="/settings">
           <ShrinkOutlined class="icon-style" />
         </RouterLink>
+        <RouterLink to="/">
+          <BulbOutlined class="icon-style" />
+        </RouterLink>
+        <RouterLink to="/">
+          <CloudOutlined class="icon-style" />
+        </RouterLink>
         <RouterLink to="/settings">
           <ArrowDownOutlined class="icon-style" />
         </RouterLink>
@@ -56,7 +62,7 @@
           <ArrowRightOutlined class="icon-style" />
         </RouterLink>
         <RouterLink to="/">
-          <GlobalOutlined class="icon-style" />
+          <LanguageDropdown />
         </RouterLink>
         <RouterLink to="/">
           <SwitcherOutlined class="icon-style" />
@@ -81,30 +87,33 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGlobalStore } from '../../stores/global-store';
 import AppNavbarActions from './AppNavbarActions.vue';
+import LanguageDropdown from './dropdown/LanguageDropdown.vue'
 import {
-  SettingOutlined,
-  ControlOutlined,
-  LockOutlined,
-  PoweroffOutlined,
-  MessageOutlined,
-  WechatOutlined,
-  CustomerServiceOutlined,
-  MenuOutlined,
-  CloseOutlined,
-  FullscreenOutlined,
-  ZoomInOutlined,
-  NotificationOutlined,
-  SwitcherOutlined,
+  // SettingOutlined,
+  // ControlOutlined,
+  // LockOutlined,
+  // PoweroffOutlined,
+  // MessageOutlined,
+  // WechatOutlined,
+  // CustomerServiceOutlined,
+  // MenuOutlined,
+  // CloseOutlined,
+  // FullscreenOutlined,
+  // ZoomInOutlined,
+  // NotificationOutlined,
+  // SwitcherOutlined,
+  // BulbOutlined,
+  // CloudOutlined,
   GlobalOutlined,
-  ArrowRightOutlined,
-  ArrowLeftOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-  ShrinkOutlined
+  // ArrowRightOutlined,
+  // ArrowLeftOutlined,
+  // ArrowUpOutlined,
+  // ArrowDownOutlined,
+  // ShrinkOutlined
 } from '@ant-design/icons-vue';
 import CustomTransition from './CustomTransition.vue';
 import { useControlPanelSecond } from '../../stores/control-panel'
@@ -119,9 +128,7 @@ const controlPanelSecond = useControlPanelSecond();
 const { isShowHeader } = storeToRefs(controlPanelSecond);
 // Inject the theme from the parent component
 type Theme = {
-  setTheme: (theme: 'light' | 'dark') => void;
-  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary') => string;
-  currentTheme: import('vue').ComputedRef<string>;
+  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary' | 'secondary' | 'accent') => string;
 };
 
 // Inject the global theme

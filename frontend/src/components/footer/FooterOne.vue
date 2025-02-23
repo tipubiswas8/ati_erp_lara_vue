@@ -43,14 +43,13 @@ const showToast = (message: string) => {
 
 // Define the type for the theme
 type Theme = {
-  setTheme: (theme: 'light' | 'dark' | 'blue' | 'solarized') => void;
   getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary' | 'secondary' | 'accent') => string;
-  currentTheme: import('vue').ComputedRef<'light' | 'dark' | 'blue' | 'solarized'>;
+  currentTheme: import('vue').ComputedRef<'light' | 'dark' | 'blue' | 'solarized' | 'dracula' | 'pastel'>;
   getThemeFontFamily: () => string;
 };
 
 // Allowed themes
-const allowedThemes = ['light', 'dark', 'blue', 'solarized'] as const;
+const allowedThemes = ['light', 'dark', 'blue', 'solarized', 'dracula', 'pastel'] as const;
 type ThemeType = typeof allowedThemes[number];
 
 // Inject the global theme
@@ -107,9 +106,13 @@ watch(
   bottom: 0;
   left: 0;
   width: 100%;
-  height: calc(8vh - 10px);
-  padding: 5px;
+  height: 4vh;
   min-height: 20px;
+  display: flex;
+  align-items: center;
+  /* Vertical centering */
+  justify-content: center;
+  /* Horizontal centering (optional) */
 }
 
 /* Toast Container */

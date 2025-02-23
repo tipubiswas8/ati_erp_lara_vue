@@ -192,7 +192,9 @@
     "dark": "ডার্ক",
     "light": "লাইট",
     "blue": "নীল",
-    "solarized": "সোলারাইজড"
+    "solarized": "সোলারাইজড",
+    "dracula": "ড্রাকুলা",
+    "pastel": "প্যাস্টেল"
   },
   "sitebarItem": {
     "setting": "সেটিং",

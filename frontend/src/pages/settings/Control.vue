@@ -1,6 +1,5 @@
 <template>
-  <div class="flex flex-col p-4 bg-backgroundSecondary rounded-lg">
-    <h3 class="h3 mb-6">General Settings</h3>
+    <h3 class="h3">General Settings</h3>
     <hr class="divider" />
 
     <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
@@ -57,22 +56,6 @@
       <hr class="divider" />
     </div>
 
-    <div v-for="(item, key) in controlItems" :key="key">
-      <div class="notification-item">
-        <p class="text-regularLarge">{{ item.name }}</p>
-        <div class="tooltip-container">
-          <!-- Checkbox with conditional disabling -->
-          <input type="checkbox" class="switch" v-model="item.isEnabled"
-            :disabled="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" />
-          <!-- Tooltip for footer only -->
-          <div v-if="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" class="tooltip">
-            {{ item.tooltip }}
-          </div>
-        </div>
-      </div>
-      <hr class="divider" />
-    </div>
-
     <div class="notification-item">
       <p class="text-regularLarge">Set Footer</p>
       <label class="footer-input-and-label" for="footer_one">Footer One
@@ -90,9 +73,29 @@
     </div>
     <hr class="divider" />
 
-  </div>
-</template>
+    <div v-for="(item, key) in controlItems" :key="key">
+      <div class="notification-item">
+        <p class="text-regularLarge">{{ item.name }}</p>
+        <div class="tooltip-container">
+          <!-- Checkbox with conditional disabling -->
+          <input type="checkbox" class="switch" v-model="item.isEnabled"
+            :disabled="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" />
+          <!-- Tooltip for footer only -->
+          <div v-if="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" class="tooltip">
+            {{ item.tooltip }}
+          </div>
+        </div>
+      </div>
+      <hr class="divider" />
+    </div>
 
+    <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
+      <p class="text-regularLarge">Theme Dark/Light</p>
+      <p>Dark</p>
+      <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
+      <p>Light</p>
+    </div>
+</template>
 
 <script lang="ts" setup>
 import { useControlPanelStore, useControlPanelSecond } from '../../stores/control-panel'
@@ -111,10 +114,10 @@ const { isShowHeader, isShowSidebar } = storeToRefs(controlPanelSecond);
 // Define the type for the theme
 type Theme = {
   setTheme: (theme: string) => void;
-  currentTheme: import('vue').ComputedRef<'light' | 'dark' | 'blue' | 'solarized'>;
+  currentTheme: import('vue').ComputedRef<'light' | 'dark' | 'blue' | 'solarized' | 'dracula' | 'pastel'>;
 };
 // Allowed themes
-const allowedThemes = ['light', 'dark', 'blue', 'solarized'] as const;
+const allowedThemes = ['light', 'dark', 'blue', 'solarized', 'dracula', 'pastel'] as const;
 type ThemeType = typeof allowedThemes[number];
 
 // Inject the global theme
@@ -163,12 +166,6 @@ watch(
 </script>
 
 <style scoped>
-/* Styling for the container */
-.bg-backgroundSecondary {
-  background-color: #f8f9fa;
-  /* Example background color */
-}
-
 .h3 {
   font-size: 1.5rem;
   /* Example heading size */
@@ -178,7 +175,7 @@ watch(
 .text-regularLarge {
   font-size: 1rem;
   /* Example text size */
-  color: #333;
+  color: var(--text, black);
   /* Example text color */
   margin-right: auto;
   /* Ensures it aligns to the left */

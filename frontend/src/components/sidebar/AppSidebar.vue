@@ -295,9 +295,7 @@ const isGrandchildActive = (parentIndex: number, childIndex: number, grandchildI
 
 // Define the type for the theme
 type Theme = {
-  setTheme: (theme: 'light' | 'dark') => void;
   getThemeColor: (colorKey: 'background' | 'border' | 'accent' | 'text' | 'primary' | 'secondary') => string;
-  currentTheme: import('vue').ComputedRef<string>;
 };
 
 // Inject the global theme
@@ -418,10 +416,10 @@ watch(
   position: fixed;
   display: flex;
   flex-direction: column;
+  /* header height 8vh and header padding 10px (top 5px + bottom 5px) and footer one height 4vh */
+  height: calc(88vh - 10px);
   /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
-  height: calc(84vh - 10px);
   margin-top: calc(8vh + 10px);
-  margin-bottom: 8hv;
   overflow: auto;
   transition: width 0.3s ease-in-out;
 }

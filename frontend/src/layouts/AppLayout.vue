@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onBeforeUnmount, ref, computed, inject } from 'vue'
+import { onMounted, onBeforeUnmount, ref, computed, inject, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { useGlobalStore } from '../stores/global-store'
@@ -66,7 +66,8 @@ const { isShowSidebar } = storeToRefs(controlPanelSecond);
 
 // Inject the theme from the parent component
 type Theme = {
-  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary') => string;
+  getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary' | 'secondary' | 'accent') => string;
+  currentTheme: import('vue').ComputedRef<'light' | 'dark' | 'blue' | 'solarized' | 'dracula' | 'pastel'>;
 };
 
 // Inject the global theme
@@ -76,9 +77,16 @@ if (!theme) {
 }
 
 // Destructure the functions and properties from the theme
-const { getThemeColor } = theme;
+const { getThemeColor, currentTheme } = theme;
 const GlobalStore = useGlobalStore()
 const { isSidebarMinimized } = storeToRefs(GlobalStore)
+const activeTheme = ref<string>(currentTheme.value);
+
+watch(currentTheme, (newTheme) => {
+  activeTheme.value = newTheme
+});
+
+console.log(activeTheme.value)
 
 // Custom Breakpoints
 const breakpoints = {
@@ -152,8 +160,8 @@ const onCloseSidebarButtonClick = () => {
 /* main content border */
 .layout__main__border {
   border: 10px solid;
-  /* footer height */
-  margin-bottom: 8vh;
+  /* footer one height */
+  margin-bottom: 4vh;
 }
 
 /* main content border */
@@ -164,8 +172,16 @@ const onCloseSidebarButtonClick = () => {
 
 /* main content */
 .layout__main {
-  padding: 0.5rem;
   overflow-y: auto;
+  padding: 5px;
+  background-color: var(--background, white);
+  /* header height 8vh and header padding 10px (top 5px + bottom 5px) 
+    and breadcrumb height 8vh and border 20px (top 10px + bottom 10px)
+    and footer one height 4vh
+    and this padding 10px (top 5px + bottom 5px)
+    total (8vh + 10px + 8vh + 20px + 4vh + 10px) = (20vh + 40px)
+  */
+  min-height: calc(100vh - (20vh + 40px));
 }
 
 /* main content */

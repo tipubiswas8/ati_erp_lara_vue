@@ -61,9 +61,7 @@ const controlPanelSecond = useControlPanelSecond();
 const { isShowHeader, isShowSidebar } = storeToRefs(controlPanelSecond);
 // Define the type for the theme
 type Theme = {
-  setTheme: (theme: 'light' | 'dark' | 'blue' | 'solarized') => void;
   getThemeColor: (colorKey: 'background' | 'border' | 'text' | 'primary' | 'secondary' | 'accent') => string;
-  currentTheme: import('vue').ComputedRef<string>;
 };
 
 // Inject the global theme

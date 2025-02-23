@@ -1,37 +1,35 @@
 <template>
-  <div :style="{ backgroundColor: getThemeColor('background'), color: getThemeColor('text') }">
-    <!-- Display Current Theme -->
-    <p>Current Theme: {{ currentTheme }}</p>
+  <!-- Display Current Theme -->
+  <p>Current Theme: {{ currentTheme }}</p>
 
-    <!-- Buttons for Theme Toggle -->
-    <div>
-      <button v-for="option in options" :key="option.value" :style="{
-        backgroundColor: option.value === currentTheme ? getThemeColor('primary') : getThemeColor('border'),
-        color: option.value === currentTheme ? getThemeColor('text') : getThemeColor('background'),
-        border: `1px solid ${getThemeColor('border')}`,
-        padding: '10px 20px',
-        margin: '5px',
-        cursor: 'pointer',
-        borderRadius: '5px',
-        transition: 'background-color 0.3s, color 0.3s',
-      }" @click="changeTheme(option.value)">
+  <!-- Buttons for Theme Toggle -->
+  <div>
+    <button v-for="option in options" :key="option.value" :style="{
+      backgroundColor: option.value === currentTheme ? getThemeColor('primary') : getThemeColor('border'),
+      color: option.value === currentTheme ? getThemeColor('text') : getThemeColor('background'),
+      border: `1px solid ${getThemeColor('border')}`,
+      width: '100px', /* Set a fixed width */
+      height: '40px', /* Set a fixed height */
+      padding: '10px 20px',
+      margin: '5px',
+      cursor: 'pointer',
+      borderRadius: '5px',
+      transition: 'background-color 0.3s, color 0.3s',
+    }" @click="changeTheme(option.value)">
+      {{ option.label }}
+    </button>
+  </div>
+
+  <!-- Dropdown for Theme Selection -->
+  <div class="custom-select-wrapper">
+    <label for="theme-select" class="custom-select-label">{{ t('theme.select') }}</label>
+    <select id="theme-select" v-model="model" class="custom-select" @change="changeTheme($event)">
+      <option v-for="option in options" :key="option.value" :value="option.value">
         {{ option.label }}
-      </button>
-    </div>
-
-    <!-- Dropdown for Theme Selection -->
-    <div class="custom-select-wrapper">
-      <label for="theme-select" class="custom-select-label">{{ t('theme.select') }}</label>
-      <select id="theme-select" v-model="model" class="custom-select" @change="changeTheme($event)">
-        <option v-for="option in options" :key="option.value" :value="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-    </div>
+      </option>
+    </select>
   </div>
 </template>
-
-
 
 <script lang="ts" setup>
 import { inject, ref, watch } from 'vue';
@@ -62,6 +60,8 @@ const options = [
   { label: t('buttonSelect.light'), value: 'light' },
   { label: t('buttonSelect.blue'), value: 'blue' },
   { label: t('buttonSelect.solarized'), value: 'solarized' },
+  { label: t('buttonSelect.dracula'), value: 'dracula' },
+  { label: t('buttonSelect.pastel'), value: 'pastel' },
 ];
 
 // Bind `model` to the current theme for dropdown

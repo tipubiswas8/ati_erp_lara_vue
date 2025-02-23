@@ -192,7 +192,9 @@
     "dark": "Dark",
     "light": "Light",
     "blue": "Blue",
-    "solarized": "Solarized"
+    "solarized": "Solarized",
+    "dracula": "Dracula",
+    "pastel": "Pastel"
   },
   "sitebarItem": {
     "setting": "Setting",
