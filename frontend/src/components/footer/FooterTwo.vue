@@ -10,6 +10,7 @@ import { copyrightText } from '@/stores/side-info-store';
 
 <style scoped>
 .footer-two-style {
+  position: relative;
   background-color: var(--background, black);
   background-color: aqua;
   color: var(--text, white);
@@ -18,5 +19,10 @@ import { copyrightText } from '@/stores/side-info-store';
   display: flex;
   flex-direction: column;
   min-height: auto;
+  display: flex;
+  align-items: center;
+  /* Vertical centering */
+  justify-content: center;
+  /* Horizontal centering (optional) */
 }
 </style>

@@ -1,100 +1,101 @@
 <template>
-    <h3 class="h3">General Settings</h3>
-    <hr class="divider" />
+  <h3 class="h3">General Settings</h3>
+  <hr class="divider" />
 
-    <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
-      <p class="text-regularLarge">Theme Dark/Light</p>
-      <p>Dark</p>
-      <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
-      <p>Light</p>
-    </div>
-    <hr class="divider" />
+  <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
+    <p class="text-regularLarge">Theme Dark/Light</p>
+    <p>Dark</p>
+    <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
+    <p>Light</p>
+  </div>
+  <hr v-if="(currentTheme == 'light' || currentTheme == 'dark')" class="divider" />
 
+  <div class="notification-item">
+    <p class="text-regularLarge">Text Direction LTR/RTL</p>
+    <label class="footer-input-and-label" for="left_to_right">Left to Right
+      <input type="radio" id="left_to_right" name="text_direction" @click="setTextDirection('ltr')"
+        :checked="currentTextDirection === 'ltr'" />
+    </label>
+    <label class="footer-input-and-label" for="right_to_left">Right to Left
+      <input type="radio" id="right_to_left" name="text_direction" @click="setTextDirection('rtl')"
+        :checked="currentTextDirection === 'rtl'" />
+    </label>
+  </div>
+  <hr class="divider" />
+
+  <div class="notification-item">
+    <p class="text-regularLarge">Collaps</p>
+    <input type="checkbox" class="switch" v-model="isSidebarMinimized" :disabled="!isShowSidebar" />
+  </div>
+  <hr class="divider" />
+
+  <div class="notification-item">
+    <p class="text-regularLarge">Show Header</p>
+    <input type="checkbox" class="switch" :checked="isShowHeader" @click="isShowHeader = !isShowHeader" />
+  </div>
+  <hr class="divider" />
+
+  <div class="notification-item">
+    <p class="text-regularLarge">Show Sidebar</p>
+    <input type="checkbox" class="switch" v-model="isShowSidebar" />
+  </div>
+  <hr class="divider" />
+
+  <div v-if="isShowSidebar">
     <div class="notification-item">
-      <p class="text-regularLarge">Text Direction LTR/RTL</p>
-      <label class="footer-input-and-label" for="left_to_right">Left to Right
-        <input type="radio" id="left_to_right" name="text_direction" @click="setTextDirection('ltr')"
-          :checked="currentTextDirection === 'ltr'" />
+      <p class="text-regularLarge">Sidebar Position</p>
+      <label class="footer-input-and-label" for="sidebar_left">Left
+        <input type="radio" id="sidebar_left" name="sidebar_position" @click="setSidebar('left')"
+          :checked="sidebarCurrentPosition === 'left'" />
       </label>
-      <label class="footer-input-and-label" for="right_to_left">Right to Left
-        <input type="radio" id="right_to_left" name="text_direction" @click="setTextDirection('rtl')"
-          :checked="currentTextDirection === 'rtl'" />
+      <label class="footer-input-and-label" for="sidebar_right">Right
+        <input type="radio" id="sidebar_right" name="sidebar_position" @click="setSidebar('right')"
+          :checked="sidebarCurrentPosition === 'right'" />
       </label>
     </div>
     <hr class="divider" />
+  </div>
 
+  <div class="notification-item">
+    <!-- v-if="(activeTheme !== 'dark' && activeTheme !== 'solarized')" -->
+    <p class="text-regularLarge">Set Footer</p>
+    <label class="footer-input-and-label" for="footer_one">Footer One
+      <input type="radio" id="footer_one" name="footer" @click="setFooter(1)" :checked="selectedFooter === 1" />
+    </label>
+    <label class="footer-input-and-label" for="footer_two">Footer Two
+      <input type="radio" id="footer_two" name="footer" @click="setFooter(2)" :checked="selectedFooter === 2" />
+    </label>
+    <label class="footer-input-and-label" for="footer_three">Footer Three
+      <input type="radio" id="footer_three" name="footer" @click="setFooter(3)" :checked="selectedFooter === 3" />
+    </label>
+    <label class="footer-input-and-label" for="footer_four">Footer Four
+      <input type="radio" id="footer_four" name="footer" @click="setFooter(4)" :checked="selectedFooter === 4" />
+    </label>
+  </div>
+  <hr class="divider" />
+
+  <div v-for="(item, key) in controlItems" :key="key">
     <div class="notification-item">
-      <p class="text-regularLarge">Collaps</p>
-      <input type="checkbox" class="switch" v-model="isSidebarMinimized" :disabled="!isShowSidebar" />
-    </div>
-    <hr class="divider" />
-
-    <div class="notification-item">
-      <p class="text-regularLarge">Show Header</p>
-      <input type="checkbox" class="switch" :checked="isShowHeader" @click="isShowHeader = !isShowHeader" />
-    </div>
-    <hr class="divider" />
-
-    <div class="notification-item">
-      <p class="text-regularLarge">Show Sidebar</p>
-      <input type="checkbox" class="switch" v-model="isShowSidebar" />
-    </div>
-    <hr class="divider" />
-
-    <div v-if="isShowSidebar">
-      <div class="notification-item">
-        <p class="text-regularLarge">Sidebar Position</p>
-        <label class="footer-input-and-label" for="sidebar_left">Left
-          <input type="radio" id="sidebar_left" name="sidebar_position" @click="setSidebar('left')"
-            :checked="sidebarCurrentPosition === 'left'" />
-        </label>
-        <label class="footer-input-and-label" for="sidebar_right">Right
-          <input type="radio" id="sidebar_right" name="sidebar_position" @click="setSidebar('right')"
-            :checked="sidebarCurrentPosition === 'right'" />
-        </label>
-      </div>
-      <hr class="divider" />
-    </div>
-
-    <div class="notification-item">
-      <p class="text-regularLarge">Set Footer</p>
-      <label class="footer-input-and-label" for="footer_one">Footer One
-        <input type="radio" id="footer_one" name="footer" @click="setFooter(1)" :checked="selectedFooter === 1" />
-      </label>
-      <label class="footer-input-and-label" for="footer_two">Footer Two
-        <input type="radio" id="footer_two" name="footer" @click="setFooter(2)" :checked="selectedFooter === 2" />
-      </label>
-      <label class="footer-input-and-label" for="footer_three">Footer Three
-        <input type="radio" id="footer_three" name="footer" @click="setFooter(3)" :checked="selectedFooter === 3" />
-      </label>
-      <label class="footer-input-and-label" for="footer_four">Footer Four
-        <input type="radio" id="footer_four" name="footer" @click="setFooter(4)" :checked="selectedFooter === 4" />
-      </label>
-    </div>
-    <hr class="divider" />
-
-    <div v-for="(item, key) in controlItems" :key="key">
-      <div class="notification-item">
-        <p class="text-regularLarge">{{ item.name }}</p>
-        <div class="tooltip-container">
-          <!-- Checkbox with conditional disabling -->
-          <input type="checkbox" class="switch" v-model="item.isEnabled"
-            :disabled="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" />
-          <!-- Tooltip for footer only -->
-          <div v-if="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" class="tooltip">
-            {{ item.tooltip }}
-          </div>
+      <p class="text-regularLarge">{{ item.name }}</p>
+      <div class="tooltip-container">
+        <!-- Checkbox with conditional disabling -->
+        <input type="checkbox" class="switch" v-model="item.isEnabled"
+          :disabled="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" />
+        <!-- Tooltip for footer only -->
+        <div v-if="key === 'footer' && (activeTheme === 'dark' || activeTheme === 'solarized')" class="tooltip">
+          {{ item.tooltip }}
         </div>
       </div>
-      <hr class="divider" />
     </div>
+    <hr class="divider" />
+  </div>
 
-    <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
-      <p class="text-regularLarge">Theme Dark/Light</p>
-      <p>Dark</p>
-      <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
-      <p>Light</p>
-    </div>
+  <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
+    <p class="text-regularLarge">Theme Dark/Light</p>
+    <p>Dark</p>
+    <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
+    <p>Light</p>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -104,7 +105,6 @@ import { storeToRefs } from 'pinia';
 import { inject, ref, watch } from 'vue';
 import { selectedFooter, setFooter } from '@/stores/footer-store';
 import { sidebarCurrentPosition, setSidebar, currentTextDirection, setTextDirection } from '@/stores/control-panel';
-
 const { isSidebarMinimized } = storeToRefs(useGlobalStore());
 const { controlItems } = useControlPanelStore();
 // Access the store

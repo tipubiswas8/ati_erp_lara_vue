@@ -23,10 +23,9 @@
       <!-- Collapse icon and breadcrumb  -->
       <AppLayoutNavigation v-if="!isMobile" />
       <!-- main content border -->
-      <div class="layout__main__border" :class="{ is__show__border: !isSidebarMinimized && isMobile }"
-        :style="{ borderColor: getThemeColor('primary') }">
+      <div class="layout__main__border" :class="borderClasses" :style="{ borderColor: getThemeColor('primary') }">
         <!-- main content -->
-        <main class="layout__main" :class="{ is__show__main__content: !isSidebarMinimized && isMobile }">
+        <main class="layout__main" :class="mainClasses">
           <article>
             <RouterView />
           </article>
@@ -49,6 +48,7 @@ import AppLayoutNavigation from '../components/app-layout-navigation/AppLayoutNa
 import AppNavbar from '../components/navbar/AppNavbar.vue'
 import AppSidebar from '../components/sidebar/AppSidebar.vue'
 import { useControlPanelSecond, sidebarCurrentPosition, currentTextDirection } from '@/stores/control-panel'
+import { selectedFooter } from '@/stores/footer-store'
 import FooterContainer from '../components/footer/FooterContainer.vue'
 
 const computedStyles = computed(() => {
@@ -86,7 +86,21 @@ watch(currentTheme, (newTheme) => {
   activeTheme.value = newTheme
 });
 
-console.log(activeTheme.value)
+// Make isSupportFooter reactive by using computed()
+const isSupportFooter = computed(() => {
+  return activeTheme.value !== 'dark' && activeTheme.value !== 'solarized';
+});
+
+const borderClasses = computed(() => ({
+  is__show__border: !isSidebarMinimized.value && isMobile.value,
+  layout__main__border__for__footer__one: selectedFooter.value === 1 && isSupportFooter.value,
+}));
+
+const mainClasses = computed(() => ({
+  is__show__main__content: !isSidebarMinimized.value && isMobile.value,
+  layout__main__for__footer__one: selectedFooter.value === 1 && isSupportFooter.value,
+}));
+
 
 // Custom Breakpoints
 const breakpoints = {
@@ -160,6 +174,9 @@ const onCloseSidebarButtonClick = () => {
 /* main content border */
 .layout__main__border {
   border: 10px solid;
+}
+
+.layout__main__border__for__footer__one {
   /* footer one height */
   margin-bottom: 4vh;
 }
@@ -177,10 +194,14 @@ const onCloseSidebarButtonClick = () => {
   background-color: var(--background, white);
   /* header height 8vh and header padding 10px (top 5px + bottom 5px) 
     and breadcrumb height 8vh and border 20px (top 10px + bottom 10px)
-    and footer one height 4vh
     and this padding 10px (top 5px + bottom 5px)
-    total (8vh + 10px + 8vh + 20px + 4vh + 10px) = (20vh + 40px)
+    total (8vh + 10px + 8vh + 20px + 10px) = (16vh + 40px)
   */
+  min-height: calc(100vh - (16vh + 40px));
+}
+
+.layout__main__for__footer__one {
+  /* add footer one height 4vh */
   min-height: calc(100vh - (20vh + 40px));
 }
 

@@ -49,6 +49,7 @@
 
 <style scoped>
 footer {
+  position: relative;
   background-color: var(--background, #1a202c);
   background-color: aqua;
   color: var(--text, white);

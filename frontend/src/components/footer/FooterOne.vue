@@ -1,7 +1,6 @@
 <template>
   <div v-if="isShowFooter" :style="{
     backgroundColor: getThemeColor('background') || '#000',
-    // backgroundColor: 'aqua',
     color: getThemeColor('accent') || '#fff',
     fontFamily: currentThemeFontFamily
   }" class="footer-one-style">
@@ -109,10 +108,8 @@ watch(
   height: 4vh;
   min-height: 20px;
   display: flex;
-  align-items: center;
-  /* Vertical centering */
-  justify-content: center;
-  /* Horizontal centering (optional) */
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering (optional) */
 }
 
 /* Toast Container */

@@ -1,14 +1,12 @@
 <!-- This is app sidebar -->
 <template>
-  <div v-if="isShowSidebar" class="sidebar"
-    :class="{ is__show__sidebar: isSidebarMinimized && props.mobile || !isSidebarMinimized && props.tablet, 'hide_header': !isShowHeader }"
-    :style="{
-      width: isSidebarMinimized ? '8vw' : sidebarWidth,
-      marginLeft: sidebarCurrentPosition === 'right' ? '84vw' : '',
-      direction: currentTextDirection === 'rtl' ? 'rtl' : 'ltr',
-      backgroundColor: getThemeColor('background'),
-      color: getThemeColor('text')
-    }">
+  <div v-if="isShowSidebar" class="sidebar" :class="sidebarClasses" :style="{
+    width: isSidebarMinimized ? '8vw' : sidebarWidth,
+    marginLeft: sidebarCurrentPosition === 'right' ? '84vw' : '',
+    direction: currentTextDirection === 'rtl' ? 'rtl' : 'ltr',
+    backgroundColor: getThemeColor('background'),
+    color: getThemeColor('text')
+  }">
     <!-- Top-Level Routes -->
     <div v-for="(route, index) in routes" :key="index" class="sidebar-item"
       :class="{ active: routeHasActiveChild(route) }">
@@ -172,6 +170,7 @@ import * as AntdIcons from '@ant-design/icons-vue'
 import navigationRoutes from './NavigationRoutes';
 import { storeToRefs } from 'pinia';
 import { useGlobalStore } from '../../stores/global-store';
+import { selectedFooter } from '@/stores/footer-store'
 import { useControlPanelSecond, sidebarCurrentPosition, currentTextDirection } from '@/stores/control-panel'
 import { useSitebarItems } from '@/pages/settings/sitebar-item/items'; // Import the `useSitebarItems` hook
 // Using the hook to get items
@@ -296,6 +295,7 @@ const isGrandchildActive = (parentIndex: number, childIndex: number, grandchildI
 // Define the type for the theme
 type Theme = {
   getThemeColor: (colorKey: 'background' | 'border' | 'accent' | 'text' | 'primary' | 'secondary') => string;
+  currentTheme: import('vue').ComputedRef<'light' | 'dark' | 'blue' | 'solarized' | 'dracula' | 'pastel'>;
 };
 
 // Inject the global theme
@@ -305,7 +305,7 @@ if (!theme) {
 }
 
 // Destructure functions and properties from the theme
-const { getThemeColor } = theme
+const { getThemeColor, currentTheme } = theme
 
 const routes = navigationRoutes;
 
@@ -407,6 +407,19 @@ watch(
   },
   { immediate: true }
 )
+const activeTheme = computed(() => currentTheme.value);
+
+// Make isSupportFooter reactive by using computed()
+const isSupportFooter = computed(() => {
+  return activeTheme.value !== 'dark' && activeTheme.value !== 'solarized';
+});
+
+const sidebarClasses = computed(() => ({
+  is__show__sidebar: (isSidebarMinimized.value && props.mobile) || (!isSidebarMinimized.value && props.tablet),
+  'hide_header': !isShowHeader.value,
+  sidebar_for_footer_one: selectedFooter.value === 1 && isSupportFooter.value
+}));
+
 </script>
 
 <style scoped>
@@ -416,12 +429,17 @@ watch(
   position: fixed;
   display: flex;
   flex-direction: column;
-  /* header height 8vh and header padding 10px (top 5px + bottom 5px) and footer one height 4vh */
-  height: calc(88vh - 10px);
+  /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
+  height: calc(92vh - 10px);
   /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
   margin-top: calc(8vh + 10px);
   overflow: auto;
   transition: width 0.3s ease-in-out;
+}
+
+.sidebar_for_footer_one {
+  /* add footer one height 4vh */
+  height: calc(88vh - 10px);
 }
 
 .hide_header {
