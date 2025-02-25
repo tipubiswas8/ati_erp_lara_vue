@@ -11,9 +11,6 @@ import { copyrightText } from '@/stores/side-info-store';
 <style scoped>
 .footer-two-style {
   position: relative;
-  background-color: var(--background, black);
-  background-color: aqua;
-  color: var(--text, white);
   margin: 0;
   padding: 0;
   display: flex;

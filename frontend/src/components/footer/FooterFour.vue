@@ -50,9 +50,6 @@
 <style scoped>
 footer {
   position: relative;
-  background-color: var(--background, #1a202c);
-  background-color: aqua;
-  color: var(--text, white);
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
 }
@@ -83,7 +80,7 @@ a:hover {
 }
 
 .container {
-  margin-left: auto;
+  margin-left: 5vw;
   margin-right: auto;
   padding-left: 1.5rem;
   padding-right: 1.5rem;

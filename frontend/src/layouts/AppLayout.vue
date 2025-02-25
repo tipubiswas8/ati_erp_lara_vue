@@ -152,8 +152,6 @@ const onCloseSidebarButtonClick = () => {
   flex-direction: column;
   height: 100%;
   width: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 /* main content with border */
@@ -173,12 +171,15 @@ const onCloseSidebarButtonClick = () => {
 
 /* main content border */
 .layout__main__border {
+  position: relative;
+  /* relative to breadcrumb, breadcrumb height 8vh */
+  top: clamp(60px, 8vh, 120px);
   border: 10px solid;
 }
 
 .layout__main__border__for__footer__one {
   /* footer one height */
-  margin-bottom: 4vh;
+  margin-bottom: clamp(30px, 4vh, 60px);
 }
 
 /* main content border */
@@ -190,19 +191,16 @@ const onCloseSidebarButtonClick = () => {
 /* main content */
 .layout__main {
   overflow-y: auto;
-  padding: 5px;
-  background-color: var(--background, white);
-  /* header height 8vh and header padding 10px (top 5px + bottom 5px) 
-    and breadcrumb height 8vh and border 20px (top 10px + bottom 10px)
-    and this padding 10px (top 5px + bottom 5px)
-    total (8vh + 10px + 8vh + 20px + 10px) = (16vh + 40px)
+  padding: 0.5rem;
+  /* header height 8vh and breadcrumb height 8vh and border 20px (top 10px + bottom 10px)
+    total (8vh + 8vh + 10px) = (16vh + 20px)
   */
-  min-height: calc(100vh - (16vh + 40px));
+  min-height: calc(84vh - 20px);
 }
 
 .layout__main__for__footer__one {
   /* add footer one height 4vh */
-  min-height: calc(100vh - (20vh + 40px));
+  min-height: calc(80vh - 20px);
 }
 
 /* main content */

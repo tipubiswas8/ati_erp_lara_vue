@@ -147,13 +147,13 @@ const navigateTo = (item: { label: string; to: any }) => {
 } */
 
 .breadcrumb-style {
+  /* relative to layout */
   position: sticky;
   width: 100%;
-  height: 8vh;
-  min-height: 70px;
-  /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
-  margin-top: calc(8vh + 10px);
-  top: calc(8vh + 10px);
+  /* header height */
+  top: clamp(60px, 8vh, 120px);
+  /* header self height */
+  height: clamp(60px, 8vh, 120px);
   z-index: 1;
 }
 

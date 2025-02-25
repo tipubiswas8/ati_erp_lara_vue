@@ -1,9 +1,5 @@
 <template>
-  <div v-if="isShowFooter" :style="{
-    backgroundColor: getThemeColor('background') || '#000',
-    color: getThemeColor('accent') || '#fff',
-    fontFamily: currentThemeFontFamily
-  }" class="footer-one-style">
+  <div v-if="isShowFooter" class="footer-one-style">
     <p style="text-align: center; font-size: 14px;">{{ copyrightText }}</p>
   </div>
   <!-- Custom Toasts -->
@@ -106,10 +102,11 @@ watch(
   left: 0;
   width: 100%;
   height: 4vh;
-  min-height: 20px;
+  min-height: 30px;
   display: flex;
   align-items: center; /* Vertical centering */
   justify-content: center; /* Horizontal centering (optional) */
+  background-color: aquamarine;
 }
 
 /* Toast Container */

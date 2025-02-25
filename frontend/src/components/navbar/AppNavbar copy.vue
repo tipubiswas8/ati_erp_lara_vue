@@ -148,16 +148,17 @@ const collapseIconColor = computed(() => getThemeColor('border'));
 
 <style scoped>
 .app-layout-navbar {
-  /* relative to layout */
   position: fixed;
   width: 100%;
-  height: clamp(60px, 8vh, 120px);
-  /* Fixed height */
+  height: 8vh;
+  min-height: 20px;
   padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
+  background-color: var(--background);
+  color: var(--text);
+  z-index: 1;
 }
 
 .left {
@@ -236,7 +237,6 @@ a:focus {
 
 /* Extra Small Devices (Phones, Portrait Mode) */
 @media (max-width: 575px) {
-
   /* Styles for phones in portrait mode */
   .app-layout-navbar {
     width: 100%;

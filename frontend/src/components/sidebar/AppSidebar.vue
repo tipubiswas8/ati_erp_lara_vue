@@ -2,10 +2,9 @@
 <template>
   <div v-if="isShowSidebar" class="sidebar" :class="sidebarClasses" :style="{
     width: isSidebarMinimized ? '8vw' : sidebarWidth,
+    minWidth: '200px',
     marginLeft: sidebarCurrentPosition === 'right' ? '84vw' : '',
-    direction: currentTextDirection === 'rtl' ? 'rtl' : 'ltr',
-    backgroundColor: getThemeColor('background'),
-    color: getThemeColor('text')
+    direction: currentTextDirection === 'rtl' ? 'rtl' : 'ltr'
   }">
     <!-- Top-Level Routes -->
     <div v-for="(route, index) in routes" :key="index" class="sidebar-item"
@@ -13,28 +12,25 @@
       <!-- Main Route Item -->
 
       <div :style="isParentActive(index) ? {
-        color: getThemeColor('primary'),
-      } : {}">
+        backgroundColor: getThemeColor('primary'),
+        color: getThemeColor('background')
+      } : {}" class="module">
         <!-- Router Link -->
         <router-link v-if="!route.children" :to="{ name: route.name }" class="sidebar-link"
           @click="setActiveParent(index)">
           <!-- Icon -->
           <span v-if="route.meta?.icon" :style="isParentActive(index) ? {
-            color: getThemeColor('primary'),
-          } : {
-            backgroundColor: getThemeColor('background'),
-            color: getThemeColor('text')
-          }">
+            backgroundColor: getThemeColor('primary'),
+            color: getThemeColor('background')
+          } : {}">
             <component :is="getAntdIcon(route.meta.icon)" />
           </span>
 
           <!-- Name -->
           <component :style="isParentActive(index) ? {
-            color: getThemeColor('primary'),
-          } : {
-            backgroundColor: getThemeColor('background'),
-            color: getThemeColor('text')
-          }">
+            backgroundColor: getThemeColor('primary'),
+            color: getThemeColor('background')
+          } : {}">
             <span v-if="!isSidebarMinimized">
               {{ t(route.displayName || 'Unnamed Route') }}
             </span>
@@ -43,7 +39,8 @@
 
         <!-- If Route has Children -->
         <div v-else @click="toggleCollapse(index)" :style="isParentActive(index) ? {
-          color: getThemeColor('primary'),
+          backgroundColor: getThemeColor('primary'),
+          color: getThemeColor('background')
         } : {}">
           <!-- Icon -->
           <span v-if="route.meta?.icon">
@@ -66,27 +63,24 @@
       <div v-if="route.children && !isRouteCollapsed(index)">
         <div v-for="(childRoute, childIndex) in route.children" :key="childIndex">
           <div :style="isChildActive(index, childIndex) ? {
-            color: getThemeColor('secondary'),
+            backgroundColor: getThemeColor('primary'),
+            color: getThemeColor('background')
           } : {}">
             <router-link v-if="!childRoute.grandChildren" :to="{ name: childRoute.name }" class="sidebar-link"
               @click="setActiveChild(index, childIndex)">
               <!-- Icon -->
               <span v-if="childRoute.meta?.icon" class="child" :style="isChildActive(index, childIndex) ? {
-                color: getThemeColor('secondary'),
-              } : {
-                backgroundColor: getThemeColor('background'),
-                color: getThemeColor('text')
-              }">
+                backgroundColor: getThemeColor('primary'),
+                color: getThemeColor('background')
+              } : {}">
                 <component :is="getAntdIcon(childRoute.meta.icon)" />
               </span>
 
               <!-- Name -->
               <component :style="isChildActive(index, childIndex) ? {
-                color: getThemeColor('secondary'),
-              } : {
-                backgroundColor: getThemeColor('background'),
-                color: getThemeColor('text')
-              }">
+                backgroundColor: getThemeColor('primary'),
+                color: getThemeColor('background')
+              } : {}">
                 <span v-if="!isSidebarMinimized">
                   {{ t(childRoute.displayName || 'Unnamed Route') }}
                 </span>
@@ -95,7 +89,8 @@
 
             <!-- If Child has Grandchildren -->
             <div v-else @click="toggleCollapse2(index, childIndex)" :style="isChildActive(index, childIndex) ? {
-              color: getThemeColor('secondary'),
+              backgroundColor: getThemeColor('primary'),
+              color: getThemeColor('background')
             } : {}">
               <!-- Icon -->
               <span v-if="childRoute.meta?.icon" class="child">
@@ -117,27 +112,24 @@
           <!-- Grandchild Routes -->
           <div v-if="childRoute.grandChildren && !isRouteCollapsed2(index, childIndex)">
             <div v-for="(grandChildRoute, grandChildIndex) in childRoute.grandChildren" :key="grandChildIndex" :style="isGrandchildActive(index, childIndex, grandChildIndex) ? {
-              color: getThemeColor('accent'),
+              backgroundColor: getThemeColor('primary'),
+              color: getThemeColor('background')
             } : {}">
               <router-link :to="{ name: grandChildRoute.name }" class="sidebar-link"
                 @click="setActiveGrandchild(index, childIndex, grandChildIndex)">
                 <!-- Icon -->
                 <span v-if="grandChildRoute.meta?.icon" class="grand-child" :style="isGrandchildActive(index, childIndex, grandChildIndex) ? {
-                  color: getThemeColor('accent'),
-                } : {
-                  backgroundColor: getThemeColor('background'),
-                  color: getThemeColor('text')
-                }">
+                  backgroundColor: getThemeColor('primary'),
+                  color: getThemeColor('background')
+                } : {}">
                   <component :is="getAntdIcon(grandChildRoute.meta.icon)" />
                 </span>
 
                 <!-- Name -->
                 <component :style="isGrandchildActive(index, childIndex, grandChildIndex) ? {
-                  color: getThemeColor('accent'),
-                } : {
-                  backgroundColor: getThemeColor('background'),
-                  color: getThemeColor('text')
-                }">
+                  backgroundColor: getThemeColor('primary'),
+                  color: getThemeColor('background')
+                } : {}">
                   <span v-if="!isSidebarMinimized">
                     {{ t(grandChildRoute.displayName || 'Unnamed Route') }}
                   </span>
@@ -426,20 +418,21 @@ const sidebarClasses = computed(() => ({
 /* General Sidebar Styles */
 /* app sidebar */
 .sidebar {
+  /* relative to layout */
   position: fixed;
   display: flex;
   flex-direction: column;
-  /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
-  height: calc(92vh - 10px);
-  /* header height 8vh and header padding 10px (top 5px + bottom 5px) */
-  margin-top: calc(8vh + 10px);
+  /* header height 8vh */
+  height: 92vh;
+  /* header height 8vh */
+  top: clamp(60px, 8vh, 120px);
   overflow: auto;
   transition: width 0.3s ease-in-out;
 }
 
 .sidebar_for_footer_one {
   /* add footer one height 4vh */
-  height: calc(88vh - 10px);
+  height: 88vh;
 }
 
 .hide_header {
@@ -453,11 +446,16 @@ const sidebarClasses = computed(() => ({
 }
 
 .sidebar-item {
-  margin-left: 5px;
-  padding: 8px 12px;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  padding: 0.6rem 0.75rem;
   cursor: pointer;
   overflow: auto;
   transition: background-color 0.2s, color 0.2s;
+}
+
+.module:hover {
+  background-color: cadetblue;
 }
 
 .sidebar-link {
