@@ -102,11 +102,13 @@ watch(
   left: 0;
   width: 100%;
   height: 4vh;
-  min-height: 30px;
+  
   display: flex;
-  align-items: center; /* Vertical centering */
-  justify-content: center; /* Horizontal centering (optional) */
-  background-color: aquamarine;
+  align-items: center;
+  /* Vertical centering */
+  justify-content: center;
+  /* Horizontal centering (optional) */
+  background-color: blue;
 }
 
 /* Toast Container */

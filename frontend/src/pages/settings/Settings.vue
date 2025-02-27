@@ -23,11 +23,11 @@ const { getThemeColor } = theme;
 </script>
 
 <template>
-  <div :style="{ backgroundColor: getThemeColor('background'), color: getThemeColor('text') }">
-    <h3 style="margin: 0px; padding: 0px;">Sitebar Item</h3>
+  <div>
+    <h3>Sitebar Item</h3>
     <SitebarItem />
     <br>
-    <h3 style="margin: 0px; padding: 0px;">{{ t('appSetting.theme') }}</h3>
+    <h3>{{ t('appSetting.theme') }}</h3>
     <ThemeSwitcher />
     <h3>{{ t('appSetting.generalPreferences') }}</h3>
     <LanguageSwitcher />

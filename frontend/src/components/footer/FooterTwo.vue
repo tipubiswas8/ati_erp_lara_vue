@@ -11,15 +11,14 @@ import { copyrightText } from '@/stores/side-info-store';
 <style scoped>
 .footer-two-style {
   position: relative;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: auto;
   display: flex;
   align-items: center;
   /* Vertical centering */
   justify-content: center;
   /* Horizontal centering (optional) */
+  height: clamp(30px, 4vh, 60px);
+
+  margin-top: clamp(30px, 4vh, 60px);
+  background-color: cadetblue;
 }
 </style>

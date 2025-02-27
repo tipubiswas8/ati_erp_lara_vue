@@ -56,24 +56,6 @@
     <hr class="divider" />
   </div>
 
-  <div class="notification-item">
-    <!-- v-if="(activeTheme !== 'dark' && activeTheme !== 'solarized')" -->
-    <p class="text-regularLarge">Set Footer</p>
-    <label class="footer-input-and-label" for="footer_one">Footer One
-      <input type="radio" id="footer_one" name="footer" @click="setFooter(1)" :checked="selectedFooter === 1" />
-    </label>
-    <label class="footer-input-and-label" for="footer_two">Footer Two
-      <input type="radio" id="footer_two" name="footer" @click="setFooter(2)" :checked="selectedFooter === 2" />
-    </label>
-    <label class="footer-input-and-label" for="footer_three">Footer Three
-      <input type="radio" id="footer_three" name="footer" @click="setFooter(3)" :checked="selectedFooter === 3" />
-    </label>
-    <label class="footer-input-and-label" for="footer_four">Footer Four
-      <input type="radio" id="footer_four" name="footer" @click="setFooter(4)" :checked="selectedFooter === 4" />
-    </label>
-  </div>
-  <hr class="divider" />
-
   <div v-for="(item, key) in controlItems" :key="key">
     <div class="notification-item">
       <p class="text-regularLarge">{{ item.name }}</p>
@@ -90,11 +72,21 @@
     <hr class="divider" />
   </div>
 
-  <div class="notification-item" v-if="(currentTheme == 'light' || currentTheme == 'dark')">
-    <p class="text-regularLarge">Theme Dark/Light</p>
-    <p>Dark</p>
-    <input type="checkbox" :checked="(currentTheme == 'light')" class="switch" @click="toggleForSetTheme" />
-    <p>Light</p>
+  <div class="notification-item">
+    <!-- v-if="(activeTheme !== 'dark' && activeTheme !== 'solarized')" -->
+    <p class="text-regularLarge">Set Footer</p>
+    <label class="footer-input-and-label" for="footer_one">Footer One
+      <input type="radio" id="footer_one" name="footer" @click="setFooter(1)" :checked="selectedFooter === 1" />
+    </label>
+    <label class="footer-input-and-label" for="footer_two">Footer Two
+      <input type="radio" id="footer_two" name="footer" @click="setFooter(2)" :checked="selectedFooter === 2" />
+    </label>
+    <label class="footer-input-and-label" for="footer_three">Footer Three
+      <input type="radio" id="footer_three" name="footer" @click="setFooter(3)" :checked="selectedFooter === 3" />
+    </label>
+    <label class="footer-input-and-label" for="footer_four">Footer Four
+      <input type="radio" id="footer_four" name="footer" @click="setFooter(4)" :checked="selectedFooter === 4" />
+    </label>
   </div>
 </template>
 
@@ -179,6 +171,7 @@ watch(
   /* Example text color */
   margin-right: auto;
   /* Ensures it aligns to the left */
+  padding: 1rem;
 }
 
 .switch {
@@ -264,6 +257,6 @@ input:disabled {
 }
 
 .footer-input-and-label {
-  padding: 15px;
+  padding: 1rem;
 }
 </style>

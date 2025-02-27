@@ -151,8 +151,8 @@ const collapseIconColor = computed(() => getThemeColor('border'));
   /* relative to layout */
   position: fixed;
   width: 100%;
+  /* header minimum height 60px default height 8vh maximum height 120px */
   height: clamp(60px, 8vh, 120px);
-  /* Fixed height */
   padding: 0.5rem;
   display: flex;
   align-items: center;

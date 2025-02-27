@@ -192,15 +192,13 @@ const onCloseSidebarButtonClick = () => {
 .layout__main {
   overflow-y: auto;
   padding: 0.5rem;
-  /* header height 8vh and breadcrumb height 8vh and border 20px (top 10px + bottom 10px)
-    total (8vh + 8vh + 10px) = (16vh + 20px)
-  */
-  min-height: calc(84vh - 20px);
+  /* header height 8vh and breadcrumb height 8vh and border 20px (top 10px + bottom 10px) total (8vh + 8vh + 20px) = (16vh + 20px) */
+  height: calc(84vh - 20px);
 }
 
 .layout__main__for__footer__one {
   /* add footer one height 4vh */
-  min-height: calc(80vh - 20px);
+  height: calc(80vh - 20px);
 }
 
 /* main content */
