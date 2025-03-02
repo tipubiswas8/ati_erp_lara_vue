@@ -23,7 +23,7 @@
       <!-- Collapse icon and breadcrumb  -->
       <AppLayoutNavigation v-if="!isMobile" />
       <!-- main content border -->
-      <div class="layout__main__border" :class="borderClasses" :style="{ borderColor: getThemeColor('primary') }">
+      <div class="layout__main__border" :class="borderClasses" :style="{ borderColor: getThemeColor('secondary') }">
         <!-- main content -->
         <main class="layout__main" :class="mainClasses">
           <article>
@@ -171,16 +171,17 @@ const onCloseSidebarButtonClick = () => {
 
 /* main content border */
 .layout__main__border {
+  /* relative to layout */
   position: relative;
-  /* relative to breadcrumb, breadcrumb height 8vh */
-  top: clamp(60px, 8vh, 120px);
+  /* header minimum height 60px default height 8vh maximum height 120px 
+    breadcrumb minimum height 60px default height 8vh maximum height 120px
+    total minimum top 120px default top 16vh maximum top 240px
+  */
+  top: clamp(120px, 16vh, 240px);
   border: 10px solid;
 }
 
-.layout__main__border__for__footer__one {
-  /* footer one height */
-  margin-bottom: clamp(30px, 4vh, 60px);
-}
+
 
 /* main content border */
 /* hides the border when screen is mobile and show the sitebar */
@@ -192,12 +193,7 @@ const onCloseSidebarButtonClick = () => {
 .layout__main {
   overflow-y: auto;
   padding: 0.5rem;
-  /* header height 8vh and breadcrumb height 8vh and border 20px (top 10px + bottom 10px) total (8vh + 8vh + 20px) = (16vh + 20px) */
-  height: calc(84vh - 20px);
-}
-
-.layout__main__for__footer__one {
-  /* add footer one height 4vh */
+  /* header height 8vh and breadcrumb height 8vh and border 20px (top 10px + bottom 10px) total (8vh + 8vh + 10px) = (16vh + 20px) */
   height: calc(80vh - 20px);
 }
 

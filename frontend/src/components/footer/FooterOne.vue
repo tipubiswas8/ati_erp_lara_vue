@@ -1,6 +1,6 @@
 <template>
   <div v-if="isShowFooter" class="footer-one-style">
-    <p style="text-align: center; font-size: 14px;">{{ copyrightText }}</p>
+    <p style="text-align: center;">{{ copyrightText }}</p>
   </div>
   <!-- Custom Toasts -->
   <div class="toast-container">
@@ -97,18 +97,21 @@ watch(
 
 <style>
 .footer-one-style {
+  /* relative to layout */
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 4vh;
-  
+  min-height: 30px;
   display: flex;
   align-items: center;
   /* Vertical centering */
   justify-content: center;
   /* Horizontal centering (optional) */
-  background-color: blue;
+  z-index: 1;
+  background-color: gray;
+  margin-top:90px;
 }
 
 /* Toast Container */

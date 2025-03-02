@@ -422,18 +422,14 @@ const sidebarClasses = computed(() => ({
   position: fixed;
   display: flex;
   flex-direction: column;
-  /* header height 8vh */
-  height: 92vh;
-  /* header height 8vh */
+  /* header minimum height 60px default height 8vh maximum height 120px */
   top: clamp(60px, 8vh, 120px);
+  height: 92vh;
   overflow: auto;
   transition: width 0.3s ease-in-out;
+  z-index: 1;
 }
 
-.sidebar_for_footer_one {
-  /* add footer one height 4vh */
-  height: 88vh;
-}
 
 .hide_header {
   margin-top: 0;

@@ -4,43 +4,7 @@
     backgroundColor: getThemeColor('primary'),
     color: getThemeColor('text')
   }">
-    <span :style="isShowSidebar ? { display: 'inline' } : { display: 'none' }">
-      <!-- Sidebar Toggle Icon -->
-      <MenuUnfoldOutlined v-if="isSidebarMinimized" :class="{ 'x-flip': !isSidebarMinimized }"
-        class="expand-collapse-icon" :style="{
-          backgroundColor: getThemeColor('primary'),
-          color: getThemeColor('text')
-        }" @click="toggleSidebar" />
-      <MenuFoldOutlined v-else :class="{ 'x-flip': !isSidebarMinimized }" class="expand-collapse-icon" :style="{
-        backgroundColor: getThemeColor('primary'),
-        color: getThemeColor('text')
-      }" @click="toggleSidebar" />
-    </span>
 
-    <!-- Breadcrumbs -->
-    <span class="custom-breadcrumbs">
-      <span class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="item.label">
-        <template v-if="index !== breadcrumbs.length - 1">
-          <router-link :style="{
-            backgroundColor: getThemeColor('primary'),
-            color: getThemeColor('text')
-          }" :to="item.to" class="breadcrumb-link">
-            {{ item.label }}
-          </router-link>
-          <span :style="{
-            backgroundColor: getThemeColor('primary'),
-            color: getThemeColor('text')
-          }" class="breadcrumb-separator">/</span>
-        </template>
-        <template v-else>
-          <span :style="{
-            backgroundColor: getThemeColor('primary'),
-            color: getThemeColor('text')
-          }" class="breadcrumb-current">{{ item.label }}</span>
-        </template>
-      </span>
-    </span>
-    <div class="menu-name">{{ lastDisplayName }}</div>
   </div>
 
 </template>
@@ -148,11 +112,11 @@ const navigateTo = (item: { label: string; to: any }) => {
 
 .breadcrumb-style {
   /* relative to layout */
-  position: sticky;
+  position: fixed;
   width: 100%;
-  /* header height */
+  /* header minimum height 60px default height 8vh maximum height 120px */
   top: clamp(60px, 8vh, 120px);
-  /* header self height */
+  /* breadcrumb minimum height 60px default height 8vh maximum height 120px */
   height: clamp(60px, 8vh, 120px);
   z-index: 1;
 }
