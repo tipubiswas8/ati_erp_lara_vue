@@ -1,12 +1,47 @@
 <!-- This is collapse icon and breadcrumb  -->
 <template>
-  <div class="breadcrumb-style" :class="{ 'hide-header': !isShowHeader }" :style="{
+  <div class="breadcrumb-style" :style="{
     backgroundColor: getThemeColor('primary'),
     color: getThemeColor('text')
   }">
+    <span style="display: inline;">
+      <!-- Sidebar Toggle Icon -->
+      <MenuUnfoldOutlined v-if="isSidebarMinimized" :class="{ 'x-flip': !isSidebarMinimized }"
+        class="expand-collapse-icon" :style="{
+          backgroundColor: getThemeColor('primary'),
+          color: getThemeColor('text')
+        }" @click="toggleSidebar" />
+      <MenuFoldOutlined v-else :class="{ 'x-flip': !isSidebarMinimized }" class="expand-collapse-icon" :style="{
+        backgroundColor: getThemeColor('primary'),
+        color: getThemeColor('text')
+      }" @click="toggleSidebar" />
+    </span>
 
+    <!-- Breadcrumbs -->
+    <span class="custom-breadcrumbs">
+      <span class="breadcrumb-item" v-for="(item, index) in breadcrumbs" :key="item.label">
+        <template v-if="index !== breadcrumbs.length - 1">
+          <router-link :style="{
+            backgroundColor: getThemeColor('primary'),
+            color: getThemeColor('text')
+          }" :to="item.to" class="breadcrumb-link">
+            {{ item.label }}
+          </router-link>
+          <span :style="{
+            backgroundColor: getThemeColor('primary'),
+            color: getThemeColor('text')
+          }" class="breadcrumb-separator">/</span>
+        </template>
+        <template v-else>
+          <span :style="{
+            backgroundColor: getThemeColor('primary'),
+            color: getThemeColor('text')
+          }" class="breadcrumb-current">{{ item.label }}</span>
+        </template>
+      </span>
+    </span>
+    <div class="menu-name">{{ lastDisplayName }}</div>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -114,15 +149,15 @@ const navigateTo = (item: { label: string; to: any }) => {
   /* relative to layout */
   position: fixed;
   width: 100%;
-  /* header minimum height 60px default height 8vh maximum height 120px */
-  top: clamp(60px, 8vh, 120px);
-  /* breadcrumb minimum height 60px default height 8vh maximum height 120px */
-  height: clamp(60px, 8vh, 120px);
+  /* header minimum height 4rem default height 8vh maximum height 8rem */
+  top: clamp(4rem, 8vh, 8rem);
+  /* breadcrumb minimum height 4rem default height 8vh maximum height 8rem */
+  height: clamp(4rem, 8vh, 8rem);
   z-index: 1;
 }
 
 .hide-header {
-  min-height: 60px;
+  min-height: 4rem;
   margin-top: 0;
   top: 0;
 }

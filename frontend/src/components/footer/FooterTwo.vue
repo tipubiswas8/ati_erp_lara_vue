@@ -16,9 +16,8 @@ import { copyrightText } from '@/stores/side-info-store';
   /* Vertical centering */
   justify-content: center;
   /* Horizontal centering (optional) */
-  height: clamp(30px, 4vh, 60px);
-
-  margin-top: clamp(30px, 4vh, 60px);
+  height: clamp(2rem, 4vh, 4rem);
   background-color: cadetblue;
+  
 }
 </style>

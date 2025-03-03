@@ -102,16 +102,15 @@ watch(
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 4vh;
-  min-height: 30px;
+  height: clamp(2rem, 4vh, 4rem);
   display: flex;
   align-items: center;
   /* Vertical centering */
   justify-content: center;
   /* Horizontal centering (optional) */
   z-index: 1;
-  background-color: gray;
-  margin-top:90px;
+  /* header mimimum height 4rem breadcrumb mimimum height 4rem border 20px (top 10px + bottom 10px) and layout main padding 1rem (top 0.5rem + bottom 0.5rem) */
+  /* top: clamp(calc(8rem + 20px + 1rem), 84vh, 80vh); */
 }
 
 /* Toast Container */

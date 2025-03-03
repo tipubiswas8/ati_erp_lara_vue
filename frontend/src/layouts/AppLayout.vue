@@ -173,15 +173,18 @@ const onCloseSidebarButtonClick = () => {
 .layout__main__border {
   /* relative to layout */
   position: relative;
-  /* header minimum height 60px default height 8vh maximum height 120px 
-    breadcrumb minimum height 60px default height 8vh maximum height 120px
-    total minimum top 120px default top 16vh maximum top 240px
+  /* header minimum height 4rem default height 8vh maximum height 8rem 
+    breadcrumb minimum height 4rem default height 8vh maximum height 8rem
+    total minimum top 8rem default top 16vh maximum top 16rem
   */
-  top: clamp(120px, 16vh, 240px);
+  top: clamp(8rem, 16vh, 16rem);
   border: 10px solid;
 }
 
-
+.layout__main__border__for__footer__one {
+  /* footer one height */
+  margin-bottom: clamp(2rem, 4vh, 4rem);
+}
 
 /* main content border */
 /* hides the border when screen is mobile and show the sitebar */
@@ -191,10 +194,16 @@ const onCloseSidebarButtonClick = () => {
 
 /* main content */
 .layout__main {
-  overflow-y: auto;
+  overflow: auto;
   padding: 0.5rem;
   /* header height 8vh and breadcrumb height 8vh and border 20px (top 10px + bottom 10px) total (8vh + 8vh + 10px) = (16vh + 20px) */
-  height: calc(80vh - 20px);
+  top: clamp(8rem, 16vh, 16rem);
+  height: calc(100vh - (clamp(8rem, 16vh, 16rem) + 20px));
+}
+
+.layout__main__for__footer__one {
+  /* add footer one height 4vh */
+  height: calc(100vh - (clamp(8rem, 16vh, 16rem) + 20px + clamp(2rem, 4vh, 4rem)));
 }
 
 /* main content */
