@@ -487,12 +487,13 @@ const sidebarClasses = computed(() => ({
   overflow: auto;
 }
 
-.parent, .child, .grand-child {
-  overflow: visible; /* Allow content to overflow */
-  transition: background-color 0.3s ease, 
-              border-radius 0.3s ease, 
-              transform 0.3s ease, 
-              box-shadow 0.3s ease;
+.parent,
+.child,
+.grand-child {
+  transition: background-color 0.3s ease,
+    border-radius 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .parent:hover,
@@ -500,12 +501,12 @@ const sidebarClasses = computed(() => ({
 .grand-child:hover {
   background-color: var(--accent, rebeccapurple);
   border-radius: 10px 0 0 10px;
-  transform: scale(1.05); /* Slight scale effect to make it pop */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
-  
-  /* Hide overflow when hovering */
-  overflow: hidden; 
+
+  /* Slight scale effect to make it pop */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
+
 
 /* Responsive Design */
 
