@@ -23,7 +23,7 @@
       <!-- Collapse icon and breadcrumb  -->
       <AppLayoutNavigation v-if="!isMobile" />
       <!-- main content border -->
-      <div class="layout__main__border" :class="borderClasses" :style="{ borderColor: getThemeColor('secondary') }">
+      <div class="layout__main__border" :class="borderClasses" :style="{ borderColor: getThemeColor('primary') }">
         <!-- main content -->
         <main class="layout__main" :class="mainClasses">
           <article>

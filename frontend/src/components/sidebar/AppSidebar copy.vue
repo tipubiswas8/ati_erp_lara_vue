@@ -2,6 +2,7 @@
 <template>
   <div v-if="isShowSidebar" class="sidebar" :class="sidebarClasses" :style="{
     width: isSidebarMinimized ? '8vw' : sidebarWidth,
+    minWidth: '200px',
     marginLeft: sidebarCurrentPosition === 'right' ? '84vw' : '',
     direction: currentTextDirection === 'rtl' ? 'rtl' : 'ltr'
   }">
@@ -15,7 +16,6 @@
         color: getThemeColor('background'),
         border: '1px solid',
         borderColor: getThemeColor('secondary'),
-        borderRadius: '10px 0 0 10px'
       } : {}" class="parent">
         <!-- Router Link -->
         <router-link v-if="!route.children" :to="{ name: route.name }" class="sidebar-link"
@@ -69,7 +69,6 @@
             color: getThemeColor('background'),
             border: '1px solid',
             borderColor: getThemeColor('secondary'),
-            borderRadius: '10px 0 0 10px',
             margin: '0.1rem 0 0 1.5rem'
           } : {}" class="child">
             <router-link v-if="!childRoute.grandChildren" :to="{ name: childRoute.name }" class="sidebar-link"
@@ -122,8 +121,7 @@
               color: getThemeColor('background'),
               border: '1px solid',
               borderColor: getThemeColor('secondary'),
-              borderRadius: '10px 0 0 10px',
-              margin: '0.05rem 0 0 3rem'
+              margin: '0.05rem 0 0 3rem',
             } : {}" class="grand-child">
               <router-link :to="{ name: grandChildRoute.name }" class="sidebar-link"
                 @click="setActiveGrandchild(index, childIndex, grandChildIndex)">
@@ -430,17 +428,15 @@ const sidebarClasses = computed(() => ({
 /* General Sidebar Styles */
 /* app sidebar */
 .sidebar {
-  /* relative to layout */
   position: fixed;
-  display: flex;
-  flex-direction: column;
+  width: 16vw;
   /* header minimum height 4rem default height 8vh maximum height 8rem */
   top: clamp(4rem, 8vh, 8rem);
-  /* subtract header height */
+  /* subtract header and footer height*/
   height: calc(100vh - clamp(4rem, 8vh, 8rem));
+
   overflow: auto;
-  transition: width 0.3s ease-in-out;
-  z-index: 1;
+  transition: width 0.5s ease-in-out;
 }
 
 .sidebar_for_footer_one {
@@ -474,6 +470,12 @@ const sidebarClasses = computed(() => ({
   padding: 0.5rem;
 }
 
+.parent:hover,
+.child:hover,
+.grand-child:hover {
+  background-color: var(--accent, rebeccapurple);
+}
+
 /* Child and Grandchild Styles */
 .child {
   margin-left: 1.5rem;
@@ -485,26 +487,6 @@ const sidebarClasses = computed(() => ({
   margin-left: 3rem;
   padding: 0.5rem 0;
   overflow: auto;
-}
-
-.parent, .child, .grand-child {
-  overflow: visible; /* Allow content to overflow */
-  transition: background-color 0.3s ease, 
-              border-radius 0.3s ease, 
-              transform 0.3s ease, 
-              box-shadow 0.3s ease;
-}
-
-.parent:hover,
-.child:hover,
-.grand-child:hover {
-  background-color: var(--accent, rebeccapurple);
-  border-radius: 10px 0 0 10px;
-  transform: scale(1.05); /* Slight scale effect to make it pop */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
-  
-  /* Hide overflow when hovering */
-  overflow: hidden; 
 }
 
 /* Responsive Design */

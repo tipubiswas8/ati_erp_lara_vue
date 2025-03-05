@@ -157,8 +157,6 @@ const collapseIconColor = computed(() => getThemeColor('border'));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
-  z-index: 1;
 }
 
 .left {
