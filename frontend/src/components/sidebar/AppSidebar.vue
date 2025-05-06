@@ -501,7 +501,8 @@ const sidebarClasses = computed(() => ({
 .grand-child:hover {
   background-color: var(--accent, rebeccapurple);
   border-radius: 10px 0 0 10px;
-
+  /* Slight enlargement on hover */
+  transform: scale(1.05);
   /* Slight scale effect to make it pop */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }

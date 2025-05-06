@@ -3,6 +3,7 @@
 namespace App\Models\Hr;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 // use Illuminate\Database\Eloquent\Model;
 // use MongoDB\Laravel\Eloquent\Model;
@@ -15,7 +16,7 @@ if (env('USE_MONGODB', false)) {
 
 class HrOrganization extends BaseModel
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $primaryKey = 'org_id';
     public $incrementing = false; // Since the primary key is not auto-incrementing

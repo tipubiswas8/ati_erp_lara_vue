@@ -3,6 +3,7 @@
 namespace App\Models\Sa;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Models\Hr\HrOrganization;
@@ -19,7 +20,7 @@ if (env('USE_MONGODB', false)) {
 
 class SaRole extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = ['name', 'org_id', 'created_by'];
 

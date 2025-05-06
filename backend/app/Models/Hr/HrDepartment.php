@@ -3,6 +3,7 @@
 namespace App\Models\Hr;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 // use Illuminate\Database\Eloquent\Model;
 // use MongoDB\Laravel\Eloquent\Model;
@@ -15,13 +16,12 @@ if (env('USE_MONGODB', false)) {
 
 class HrDepartment extends DeptModel
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     protected $primaryKey = 'dept_id';
     public $incrementing = false; // Since the primary key is not auto-incrementing
     protected $keyType = 'string'; // Primary key is a string
-   
-
+    
     // protected static function boot()
     // {
     //     parent::boot();
